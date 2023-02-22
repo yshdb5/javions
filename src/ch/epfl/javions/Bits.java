@@ -11,25 +11,21 @@ public class Bits
 
     public static int extractUInt(long value, int start, int size)
     {
-        if (size < 0 || size > Integer.SIZE)
+        if (size <= 0 || size >= Integer.SIZE)
         {
             throw new IllegalArgumentException();
         }
-        if (((start + size) < 0) || ((start + size) >= Long.SIZE))
-        {
-            throw new IndexOutOfBoundsException();
-        }
 
-        int mask = (1 << size) - 1;
-        return (int) (value >> (start - 1)) & mask;
+        Objects.checkFromIndexSize(start, size, Long.SIZE);
+
+        long mask = (1L << size) - 1;
+        long extractedValue = (value >>> start) & mask;
+        return (int) extractedValue;
     }
 
     public static boolean testBit(long value, int index)
     {
-        if (index < 0 || index >= Long.SIZE) {
-            throw new IndexOutOfBoundsException();
-        }
-
+        Objects.checkIndex(index, Long.SIZE);
 
         long mask = 1L << index;
         return (value & mask) != 0;

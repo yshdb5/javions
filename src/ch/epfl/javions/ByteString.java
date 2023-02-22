@@ -39,7 +39,7 @@ public final class ByteString
             throw new IndexOutOfBoundsException();
         }
 
-        return bytes[index];
+        return bytes[index] & 0xff;
     }
     public long bytesInRange(int fromIndex, int toIndex)
     {
@@ -52,9 +52,9 @@ public final class ByteString
 
         long mask = bytes[fromIndex];
 
-        for (int i = fromIndex + 1; i < toIndex; i++)
+        for (int i = (fromIndex + 1); i < toIndex; i++)
         {
-            mask = ((mask << 8) | bytes[i]);
+            mask = ((mask << 8) | (bytes[i] & 0xFF));
         }
 
         return mask;

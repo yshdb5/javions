@@ -9,7 +9,7 @@ public class WebMercator
 
     public static double x (int zoomLevel, double longitude)
     {
-        return Math.scalb(1, 8 + zoomLevel)*(longitude/(2*Math.PI + 0.5));
+        return Math.scalb(1, 8 + zoomLevel)*(longitude/(2*Math.PI) + 0.5);
     }
 
     public static double y(int zoomLevel, double latitude)
