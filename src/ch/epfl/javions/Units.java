@@ -53,11 +53,11 @@ public final class Units
 
     public static double convertFrom(double value, double fromUnit)
     {
-        return (value / fromUnit);
+        return (value * fromUnit);
     }
 
     public static double convertTo(double value, double toUnit)
     {
-        return (value * toUnit);
+        return (value / toUnit);
     }
 }
