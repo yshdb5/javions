@@ -1,0 +1,71 @@
+package ch.epfl.javions;
+
+public final class Crc24
+{
+    public static int GENERATOR = 0xFFF409;
+    private static final int CRC_BITS = 24;
+
+    private final byte [] table;
+
+    public Crc24(int generator)
+    {
+        table = buildTable(generator);
+    }
+
+    private static int crc_bitwise(int generator, byte [] bytes)
+    {
+        int [] tab = {0, generator};
+        int crc = 0;
+
+        for (byte octet : bytes)
+        {
+            for (int i = 7; i >= 0; i--)
+            {
+                int b = Bits.extractUInt(octet, i, 1);
+
+                crc = ((crc << 1) | b) ^ tab[Bits.extractUInt(crc, (CRC_BITS - 1), 1)];
+            }
+        }
+
+        for (int i = 0; i < CRC_BITS; i++)
+        {
+            crc = (crc << 1) ^ tab[Bits.extractUInt(crc, (CRC_BITS -1), 1)];
+        }
+
+        crc = Bits.extractUInt(crc, 0 , CRC_BITS);
+
+        return crc;
+    }
+
+    public int crc(byte[] bytes)
+    {
+        int crc = 0;
+
+        for (byte o : bytes)
+        {
+            crc = ((crc << 8) | Byte.toUnsignedInt(o)) ^ table[Bits.extractUInt(crc, (CRC_BITS - 8), 8)];
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            crc = (crc << 8) ^ table[Bits.extractUInt(crc, (CRC_BITS - 8), 8)];
+        }
+
+        crc = Bits.extractUInt(crc, 0 , CRC_BITS);
+
+        return crc;
+    }
+
+    private static byte [] buildTable(int generator)
+    {
+        byte [] table = new byte[256];
+
+        for (int i = 0; i < 256; i++)
+        {
+            byte[] tab = {(byte) i};
+            table[i] = (byte) crc_bitwise(generator, tab);
+        }
+
+        return table;
+    }
+}
