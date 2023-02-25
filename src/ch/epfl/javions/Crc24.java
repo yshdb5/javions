@@ -2,9 +2,8 @@ package ch.epfl.javions;
 
 public final class Crc24
 {
-    public static int GENERATOR = 0xFFF409;
+    public static final int GENERATOR = 0xFFF409;
     private static final int CRC_BITS = 24;
-
     private final byte [] table;
 
     public Crc24(int generator)
