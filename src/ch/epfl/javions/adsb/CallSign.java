@@ -10,6 +10,6 @@ public record CallSign(String string)
 
     public CallSign
     {
-        Preconditions.checkArgument(callSignPattern.matcher(string).matches());
+        Preconditions.checkArgument(callSignPattern.matcher(string).matches() || string.isEmpty());
     }
 }

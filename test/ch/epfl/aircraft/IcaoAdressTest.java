@@ -22,5 +22,7 @@ class IcaoAdressTest {
     void IcaoAdressDoesNotThrowIllegalArgumentsException()
     {
         assertDoesNotThrow(() -> new IcaoAdress("4B1814"));
+        assertDoesNotThrow(() -> new IcaoAdress("999999"));
+        assertDoesNotThrow(() -> new IcaoAdress("0FABD8"));
     }
 }

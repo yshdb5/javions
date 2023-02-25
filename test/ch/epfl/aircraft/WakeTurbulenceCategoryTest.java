@@ -1,5 +1,6 @@
 package ch.epfl.aircraft;
 
+import ch.epfl.javions.aircraft.WakeTurbulenceCategory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,14 +8,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class WakeTurbulenceCategoryTest {
 
     @Test
-    void of() {
+    void WakeTurbulenceCategoryReturnsKnownCategory()
+    {
+        assertEquals(WakeTurbulenceCategory.LIGHT, WakeTurbulenceCategory.of("L"));
+        assertEquals(WakeTurbulenceCategory.MEDIUM, WakeTurbulenceCategory.of("M"));
+        assertEquals(WakeTurbulenceCategory.HEAVY, WakeTurbulenceCategory.of("H"));
     }
 
     @Test
-    void values() {
-    }
-
-    @Test
-    void valueOf() {
+    void WakeTurbulenceCategoryReturnsUnKnownCategory()
+    {
+        assertEquals(WakeTurbulenceCategory.UNKNOWN, WakeTurbulenceCategory.of(""));
+        assertEquals(WakeTurbulenceCategory.UNKNOWN, WakeTurbulenceCategory.of("V"));
     }
 }
+
+
+
+
+
+

@@ -25,5 +25,6 @@ class AircraftDescriptionTest {
         assertDoesNotThrow(() -> new AircraftDescription("-2-"));
         assertDoesNotThrow(() -> new AircraftDescription("L4T"));
         assertDoesNotThrow(() -> new AircraftDescription("R6E"));
+        assertDoesNotThrow(() -> new AircraftDescription(""));
     }
 }

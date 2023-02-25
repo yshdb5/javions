@@ -16,6 +16,7 @@ class AircraftTypeDesignatorTest {
         assertThrows(IllegalArgumentException.class, () -> new AircraftTypeDesignator("A"));
         assertThrows(IllegalArgumentException.class, () -> new AircraftTypeDesignator("2"));
         assertThrows(IllegalArgumentException.class, () -> new AircraftTypeDesignator("\\"));
+        assertThrows(IllegalArgumentException.class, () -> new AircraftTypeDesignator("aaaa"));
     }
 
     @Test
