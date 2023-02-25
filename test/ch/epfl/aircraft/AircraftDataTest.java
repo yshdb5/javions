@@ -16,7 +16,7 @@ class AircraftDataTest {
         assertThrows(NullPointerException.class, () -> new AircraftData(null, null, "AIRBUS A-380", null, null));
         assertThrows(NullPointerException.class, () -> new AircraftData(null, null, null, new AircraftDescription("L2J"), null));
         assertThrows(NullPointerException.class, () -> new AircraftData(null, null, null, null, WakeTurbulenceCategory.HEAVY));
-
+        assertThrows(NullPointerException.class, () -> new AircraftData(new AircraftRegistration("HB-JDC"), new AircraftTypeDesignator("A20N"), "AIRBUS A-380", new AircraftDescription("L2J"), null));
     }
 
     @Test

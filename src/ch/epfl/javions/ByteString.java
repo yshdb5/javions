@@ -74,7 +74,7 @@ public final class ByteString
             throw new IndexOutOfBoundsException();
         }
 
-        return bytes[index] & 0xff;
+        return Byte.toUnsignedInt(bytes[index]);
     }
 
     /**
@@ -102,7 +102,7 @@ public final class ByteString
 
         for (int i = (fromIndex + 1); i < toIndex; i++)
         {
-            mask = ((mask << 8) | (bytes[i] & 0xFF));
+            mask = ((mask << 8) | (Byte.toUnsignedInt(bytes[i])));
         }
 
         return mask;
