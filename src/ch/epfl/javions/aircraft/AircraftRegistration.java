@@ -1,5 +1,7 @@
 package ch.epfl.javions.aircraft;
 
+import ch.epfl.javions.Preconditions;
+
 import java.util.regex.Pattern;
 
 public record AircraftRegistration(String string)
@@ -8,9 +10,6 @@ public record AircraftRegistration(String string)
 
     public AircraftRegistration
     {
-        if (registrationPattern.matcher(string).matches())
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(registrationPattern.matcher(string).matches());
     }
 }

@@ -1,4 +1,4 @@
-package ch.epfl.test;
+package ch.epfl.javions;
 
 import ch.epfl.javions.Crc24;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,7 @@
 package ch.epfl.javions.adsb;
 
+import ch.epfl.javions.Preconditions;
+
 import java.util.regex.Pattern;
 
 public record CallSign(String string)
@@ -8,9 +10,6 @@ public record CallSign(String string)
 
     public CallSign
     {
-        if (callSignPattern.matcher(string).matches())
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(callSignPattern.matcher(string).matches());
     }
 }

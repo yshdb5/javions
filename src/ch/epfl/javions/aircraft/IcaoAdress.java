@@ -1,5 +1,7 @@
 package ch.epfl.javions.aircraft;
 
+import ch.epfl.javions.Preconditions;
+
 import java.util.regex.Pattern;
 
 public record IcaoAdress(String string)
@@ -8,10 +10,7 @@ public record IcaoAdress(String string)
 
     public IcaoAdress
     {
-        if (OACI_Pattern.matcher(string).matches())
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(OACI_Pattern.matcher(string).matches());
     }
 
 }

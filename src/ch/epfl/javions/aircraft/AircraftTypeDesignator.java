@@ -1,5 +1,7 @@
 package ch.epfl.javions.aircraft;
 
+import ch.epfl.javions.Preconditions;
+
 import java.util.regex.Pattern;
 
 public record AircraftTypeDesignator (String string)
@@ -8,9 +10,6 @@ public record AircraftTypeDesignator (String string)
 
     public AircraftTypeDesignator
     {
-        if (typePattern.matcher(string).matches() || string.isEmpty())
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(typePattern.matcher(string).matches() || string.isEmpty());
     }
 }
