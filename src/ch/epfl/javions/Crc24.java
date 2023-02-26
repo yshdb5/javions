@@ -2,10 +2,19 @@ package ch.epfl.javions;
 
 public final class Crc24
 {
+    /**
+     * constant
+     * contains the 24 bits of lower importance of the generator used to calculate the CRC24 of ADS-B messages
+     */
     public static final int GENERATOR = 0xFFF409;
     private static final int CRC_BITS = 24;
     private final byte [] table;
 
+    /**
+     * public constuctor of Crc24
+     * @param generator
+     *        the generator used to calculate a CRC24
+     */
     public Crc24(int generator)
     {
         table = buildTable(generator);
@@ -36,6 +45,10 @@ public final class Crc24
         return crc;
     }
 
+    /**
+     * @param bytes
+     * @return the CRC24 of the array given
+     */
     public int crc(byte[] bytes)
     {
         int crc = 0;
