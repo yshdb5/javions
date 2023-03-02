@@ -1,6 +1,7 @@
 package ch.epfl.javions.aircraft;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.Objects;
 import java.util.zip.ZipFile;
 
@@ -15,8 +16,10 @@ public final class AircraftDatabase {
         this.fileName = fileName;
     }
 
-    public AircraftData get(IcaoAddress address) throws IOException {
+    public AircraftData get(IcaoAddress address) throws IOException
+    {
         String dataBaseName = getClass().getResource(fileName).getFile();
+        dataBaseName = URLDecoder.decode(dataBaseName, UTF_8);
         String csvAddress = address.string().substring(4) + ".csv";
 
         String[] splittedData = new String[5];
@@ -24,7 +27,8 @@ public final class AircraftDatabase {
         try (ZipFile zipFile = new ZipFile(dataBaseName);
              InputStream stream = zipFile.getInputStream(zipFile.getEntry(csvAddress));
              Reader reader = new InputStreamReader(stream, UTF_8);
-             BufferedReader bufferedReader = new BufferedReader(reader)) {
+             BufferedReader bufferedReader = new BufferedReader(reader))
+        {
             String line = "";
 
             while ((line = bufferedReader.readLine()) != null)
@@ -35,7 +39,7 @@ public final class AircraftDatabase {
                 }
                 if (line.startsWith(address.string()))
                 {
-                    splittedData = line.split(",");
+                    splittedData = line.split(",", -1);
 
                     return new AircraftData(new AircraftRegistration(splittedData[1]), new AircraftTypeDesignator(splittedData[2]), splittedData[3],
                             new AircraftDescription(splittedData[4]), WakeTurbulenceCategory.of(splittedData[5]));
