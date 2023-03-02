@@ -1,5 +1,10 @@
 package ch.epfl.javions;
-
+/**
+ * final class Crc24.
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class Crc24
 {
     /**
