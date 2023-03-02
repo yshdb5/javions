@@ -5,7 +5,7 @@ import ch.epfl.javions.Preconditions;
 import java.util.regex.Pattern;
 
 /**
- * record AircraftRegistration : represents an aircraft designator
+ * record AircraftDesignator : represents an aircraft designator
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
