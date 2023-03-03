@@ -16,7 +16,6 @@ import java.util.Objects;
 public final class SamplesDecoder
 {
     private InputStream stream;
-
     private byte [] batchTab;
     private int batchSize;
 
@@ -39,9 +38,8 @@ public final class SamplesDecoder
 
         this.stream = stream;
 
-        batchTab = new byte[2*batchSize];
         this.batchSize = batchSize;
-
+        batchTab = new byte[2 * batchSize];
     }
 
     /**
@@ -58,8 +56,18 @@ public final class SamplesDecoder
     {
         Preconditions.checkArgument(batch.length == batchSize);
 
-        //stream.readNBytes(batch, 0, batchSize);
-        return 1;
+        int samplesCount = 0;
+
+        stream.readNBytes(batchTab, 0, batchSize);
+
+        for (int i = 0; i < batchTab.length; i++)
+        {
+            byte byte1 = batchTab[i];
+            byte byte2 = batchTab[i +  1];
+            short short1 = 0;
+        }
+
+        return samplesCount;
     }
 
 }

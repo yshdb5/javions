@@ -1,4 +1,4 @@
-package ch.epfl.javions;/*
+package ch.epfl.javions;
  /**
  * class Units : define the different units used.
  *

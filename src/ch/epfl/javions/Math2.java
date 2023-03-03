@@ -1,4 +1,4 @@
-package ch.epfl.javions;/*
+package ch.epfl.javions;
  /**
  * class Math2 : define computing functions.
  *
