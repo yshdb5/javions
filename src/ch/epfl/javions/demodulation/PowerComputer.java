@@ -12,18 +12,19 @@ public final class PowerComputer
 {
     private InputStream stream;
     private SamplesDecoder decoder;
-    private short [] batchTab;
+    private short [] samplesbatchTab;
     private int batchSize;
 
-    private byte [] lastEightTab =  new byte[8];
+    private short [] lastEightTab =  new short[8];
+    private int head = 0;
 
-    PowerComputer(InputStream stream, int batchSize)
+    public PowerComputer(InputStream stream, int batchSize)
     {
         Preconditions.checkArgument((batchSize % 8) == 0);
 
         this.stream = stream;
         this.batchSize = batchSize;
-        batchTab = new short [batchSize/2];
+        samplesbatchTab = new short [batchSize];
         decoder = new SamplesDecoder(stream, batchSize);
     }
 
@@ -31,13 +32,41 @@ public final class PowerComputer
     {
         Preconditions.checkArgument(batch.length == batchSize);
 
-        int samplesNumber = decoder.readBatch(batchTab);
+        int samplesNumber = decoder.readBatch(samplesbatchTab);
+        int count = 0;
 
-        for (int i = 0; i < batchSize; i++)
+        for (int i = 0; i < (samplesNumber - 1); i += 2)
         {
-            batch[i] = batchTab[i]*batchTab[i] + batchTab[i+1]*batchTab[i+1];
+            head = (head + 1) % 8;
+            lastEightTab[head] = samplesbatchTab[i];
+            head = (head + 1) % 8;
+            lastEightTab[head] = samplesbatchTab[i+1];
+
+            batch [i] = calculatedPower();
+            count++;
+        }
+        return count;
+    }
+
+    private int calculatedPower()
+    {
+        int evenSum = 0;
+        int oddSum = 0;
+
+        for (int i = 0; i < 8; i++)
+        {
+            int lastIndex = lastEightTab[(head - i + 8) % 8];
+
+            if (i % 2 == 0)
+            {
+                evenSum += lastIndex;
+            }
+            else
+            {
+                oddSum += lastIndex; //faire en sorte d'alterner les +-
+            }
         }
 
-        return 1;
+        return evenSum*evenSum + oddSum*oddSum;
     }
 }

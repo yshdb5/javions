@@ -37,15 +37,33 @@ class Crc24Test {
         assertEquals(c, crc24.crc(mOnly));
     }
     @Test
-    void crcWorkOnEmptyTab()
+    void crcWorkOnNullValue()
     {
+        Crc24 crc24 = new Crc24(Crc24.GENERATOR);
+        String mS = "00";
+        String cS = "00";
+        int c = Integer.parseInt(cS, 16); // == 0xEE2EC6
 
+        byte[] mAndC = HexFormat.of().parseHex(mS + cS);
+        assertEquals(0, crc24.crc(mAndC));
+
+        byte[] mOnly = HexFormat.of().parseHex(mS);
+        assertEquals(c, crc24.crc(mOnly));
     }
 
     @Test
-    void crcWorkOnTabWithSingleValue()
+    void crcWorkOnNullValue2()
     {
+        Crc24 crc24 = new Crc24(Crc24.GENERATOR);
+        String mS = "0000";
+        String cS = "0000";
+        int c = Integer.parseInt(cS, 16); // == 0xEE2EC6
 
+        byte[] mAndC = HexFormat.of().parseHex(mS + cS);
+        assertEquals(0, crc24.crc(mAndC));
+
+        byte[] mOnly = HexFormat.of().parseHex(mS);
+        assertEquals(c, crc24.crc(mOnly));
     }
 
 }

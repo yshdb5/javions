@@ -56,14 +56,15 @@ public final class SamplesDecoder
     {
         Preconditions.checkArgument(batch.length == batchSize);
 
-        int samplesCount = stream.readNBytes(batchTab, 0, batchSize)/(Short.BYTES);
+        int samplesCount = stream.readNBytes(batchTab, 0, batchSize*2)/(Short.BYTES);
 
-        for (int i = 0; i < samplesCount; i += 2)
+        for (int i = 0, j = 0; i < samplesCount*2; i += 2, j++)
         {
             byte byte1 = batchTab [i];
             byte byte2 = batchTab [i +  1];
-            short short1 = (short) (((byte2 << 8) | byte1) - Math.scalb(1, 11));
-            batch [i] = short1;
+
+            short short1 = (short) (((Byte.toUnsignedInt(byte2) << 8) | Byte.toUnsignedInt(byte1)) - Math.scalb(1, 11));
+            batch [j] = short1;
         }
 
         return samplesCount;
