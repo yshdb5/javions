@@ -39,13 +39,11 @@ public final class AircraftDatabase {
      */
     public AircraftData get(IcaoAddress address) throws IOException
     {
-        String dataBaseName = getClass().getResource(fileName).getFile();
-        dataBaseName = URLDecoder.decode(dataBaseName, UTF_8);
         String csvAddress = address.string().substring(4) + ".csv";
 
         String [] splittedData = new String[5];
 
-        try (ZipFile zipFile = new ZipFile(dataBaseName);
+        try (ZipFile zipFile = new ZipFile(fileName);
              InputStream stream = zipFile.getInputStream(zipFile.getEntry(csvAddress));
              Reader reader = new InputStreamReader(stream, UTF_8);
              BufferedReader bufferedReader = new BufferedReader(reader))
