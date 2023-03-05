@@ -28,10 +28,7 @@ public final class Math2
      */
     public static int clamp(int min, int v, int max)
     {
-        if (min > max)
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(min <= max);
 
         if (v < min)
         {

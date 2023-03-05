@@ -23,6 +23,6 @@ class SamplesDecoderTest {
 
         decoder.readBatch(shortTab);
 
-        System.out.println(Arrays.toString(shortTab));
+        System.out.println("Decoder Tab: " +Arrays.toString(shortTab));
     }
 }

@@ -40,10 +40,7 @@ public final class ByteString
      */
     public static ByteString ofHexadecimalString(String hexString)
     {
-        if ((hexString.length() % 2) != 0)
-        {
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument((hexString.length() % 2) == 0);
 
         byte[] bytes = hf.parseHex(hexString);
 
@@ -69,10 +66,7 @@ public final class ByteString
      */
     public int byteAt(int index)
     {
-        if (index < 0 || index > (bytes.length -1))
-        {
-            throw new IndexOutOfBoundsException();
-        }
+        Objects.checkIndex(index, bytes.length);
 
         return Byte.toUnsignedInt(bytes[index]);
     }
@@ -92,11 +86,8 @@ public final class ByteString
     public long bytesInRange(int fromIndex, int toIndex)
     {
         Objects.checkFromToIndex(fromIndex, toIndex, this.size());
+        Preconditions.checkArgument((toIndex-fromIndex) < Long.SIZE);
 
-        if (toIndex - fromIndex >= Long.SIZE)
-        {
-            throw new IllegalArgumentException();
-        }
 
         long mask = bytes[fromIndex];
 

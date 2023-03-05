@@ -18,12 +18,12 @@ class PowerComputerTest
     {
         FileInputStream stream = new FileInputStream("resources/samples.bin");
 
-        PowerComputer powerComputer =  new PowerComputer(stream, 16);
+        PowerComputer powerComputer =  new PowerComputer(stream, 1208);
 
-        int [] powerTab = new int[16];
+        int [] powerTab = new int[1208];
 
         powerComputer.readBatch(powerTab);
 
-        System.out.println(Arrays.toString(powerTab));
+        System.out.println("PowerTab: " + Arrays.toString(powerTab));
     }
 }
