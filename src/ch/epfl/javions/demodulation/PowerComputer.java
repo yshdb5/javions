@@ -14,7 +14,6 @@ public final class PowerComputer
     private SamplesDecoder decoder;
     private short [] samplesbatchTab;
     private int batchSize;
-
     private short [] lastEightTab =  new short[8];
     private int head = 0;
 
@@ -24,8 +23,8 @@ public final class PowerComputer
 
         this.stream = stream;
         this.batchSize = batchSize;
-        samplesbatchTab = new short [batchSize];
-        decoder = new SamplesDecoder(stream, batchSize);
+        samplesbatchTab = new short [2*batchSize];
+        decoder = new SamplesDecoder(stream, 2*batchSize);
     }
 
     public int readBatch(int[] batch) throws IOException
@@ -35,14 +34,14 @@ public final class PowerComputer
         int samplesNumber = decoder.readBatch(samplesbatchTab);
         int count = 0;
 
-        for (int i = 0; i < (samplesNumber - 1); i += 2)
+        for (int i = 0, j = 0; i < (samplesNumber - 1); i += 2, j++)
         {
             head = (head + 1) % 8;
             lastEightTab[head] = samplesbatchTab[i];
             head = (head + 1) % 8;
             lastEightTab[head] = samplesbatchTab[i+1];
 
-            batch [i] = calculatedPower();
+            batch [j] = calculatedPower();
             count++;
         }
         return count;
@@ -59,11 +58,25 @@ public final class PowerComputer
 
             if (i % 2 == 0)
             {
-                evenSum += lastIndex;
+                if (i % 4 == 0)
+                {
+                    evenSum -= lastIndex;
+                }
+                else
+                {
+                    evenSum += lastIndex;
+                }
             }
             else
             {
-                oddSum += lastIndex; //faire en sorte d'alterner les +-
+                if (i % 5 == 0 || i % 7 == 0)
+                {
+                    oddSum += lastIndex;
+                }
+                else
+                {
+                    oddSum -= lastIndex;
+                }
             }
         }
 
