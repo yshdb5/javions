@@ -29,7 +29,7 @@ public final class PowerComputer
 
     public int readBatch(int[] batch) throws IOException
     {
-        Preconditions.checkArgument(batch.length == batchSize);
+        Preconditions.checkArgument((batch.length == batchSize) && batchSize > 0);
 
         int samplesNumber = decoder.readBatch(samplesbatchTab);
         int count = 0;
@@ -69,7 +69,7 @@ public final class PowerComputer
             }
             else
             {
-                if (i % 5 == 0 || i % 7 == 0)
+                if (i % 4 == 1)
                 {
                     oddSum += lastIndex;
                 }
