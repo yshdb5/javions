@@ -25,4 +25,25 @@ class IcaoAdressTest {
         assertDoesNotThrow(() -> new IcaoAddress("999999"));
         assertDoesNotThrow(() -> new IcaoAddress("0FABD8"));
     }
+
+    @Test
+    void icaoAddressConstructorThrowsWithInvalidAddress() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new IcaoAddress("00000a");
+        });
+    }
+
+    @Test
+    void icaoAddressConstructorThrowsWithEmptyAddress() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new IcaoAddress("");
+        });
+    }
+
+    @Test
+    void icaoAddressConstructorAcceptsValidAddress() {
+        assertDoesNotThrow(() -> {
+            new IcaoAddress("ABCDEF");
+        });
+    }
 }

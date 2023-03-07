@@ -27,4 +27,25 @@ class AircraftDescriptionTest {
         assertDoesNotThrow(() -> new AircraftDescription("R6E"));
         assertDoesNotThrow(() -> new AircraftDescription(""));
     }
+
+    @Test
+    void aircraftDescriptionConstructorThrowsWithInvalidDescription() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AircraftDescription("abc");
+        });
+    }
+
+    @Test
+    void aircraftDescriptionConstructorAcceptsEmptyDescription() {
+        assertDoesNotThrow(() -> {
+            new AircraftDescription("");
+        });
+    }
+
+    @Test
+    void aircraftDescriptionConstructorAcceptsValidDescription() {
+        assertDoesNotThrow(() -> {
+            new AircraftDescription("A0E");
+        });
+    }
 }

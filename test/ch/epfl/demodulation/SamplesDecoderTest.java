@@ -4,7 +4,6 @@ import ch.epfl.javions.demodulation.SamplesDecoder;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -75,4 +74,16 @@ class SamplesDecoderTest
 
         assertEquals(expected, actual);
     }
+
+    @Test
+    void CheckSamplesDecoderReturnsWell() throws IOException {
+        FileInputStream stream = new FileInputStream("resources/samples.bin");
+        SamplesDecoder decoder = new SamplesDecoder(stream, 10);
+        short[] batch = new short[10];
+        short[] expected = {-3, 8, -9, -8, -5, -8, -12, -16, -23, -9};
+        decoder.readBatch(batch);
+        for( int i = 0; i < 10; i++)
+            assertEquals(expected[i], batch[i]);
+    }
+
 }

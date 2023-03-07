@@ -27,4 +27,25 @@ class CallSignTest {
         assertDoesNotThrow(() -> new CallSign("A20PPSPS"));
         assertDoesNotThrow(() -> new CallSign(""));
     }
+
+    @Test
+    void callSignConstructorThrowsWithInvalidCallSign() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new CallSign("callsign");
+        });
+    }
+
+    @Test
+    void callSignConstructorAcceptsEmptyCallSign() {
+        assertDoesNotThrow(() -> {
+            new CallSign("");
+        });
+    }
+
+    @Test
+    void callSignConstructorAcceptsValidCallSign() {
+        assertDoesNotThrow(() -> {
+            new CallSign("AFR39BR");
+        });
+    }
 }

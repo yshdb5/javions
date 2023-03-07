@@ -1,7 +1,6 @@
 package ch.epfl.demodulation;
 
 import ch.epfl.javions.demodulation.PowerComputer;
-import ch.epfl.javions.demodulation.SamplesDecoder;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
@@ -68,5 +67,21 @@ class PowerComputerTest
         int expected = 56;
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void test() throws IOException
+    {
+        FileInputStream stream = new FileInputStream("resources/samples.bin");
+        PowerComputer powerComputer = new PowerComputer(stream, 8);
+        int[] actualBatch = new int[8];
+        int actualCalculated = powerComputer.readBatch(actualBatch);
+        int[] expectedBatch = new int[] {73, 292, 65, 745, 98, 4226, 12244, 25722};
+        int expectedCalculated = 8;
+        assertEquals(expectedCalculated, actualCalculated);
+        assertArrayEquals(expectedBatch, actualBatch);
+        expectedBatch=new int[]{36818, 23825, 10730, 1657, 1285, 1280, 394, 521};
+        actualCalculated = powerComputer.readBatch(actualBatch);
+        assertArrayEquals(expectedBatch, actualBatch);
     }
 }

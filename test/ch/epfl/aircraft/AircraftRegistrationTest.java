@@ -23,4 +23,25 @@ class AircraftRegistrationTest {
         assertDoesNotThrow(() -> new AircraftRegistration("HB-JDC"));
         assertDoesNotThrow(() -> new AircraftRegistration("HB_.+-/?AAAAAAA"));
     }
+
+    @Test
+    void aircraftRegistrationConstructorThrowsWithInvalidRegistration() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AircraftRegistration("abc");
+        });
+    }
+
+    @Test
+    void aircraftRegistrationConstructorThrowsWithEmptyRegistration() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AircraftRegistration("");
+        });
+    }
+
+    @Test
+    void aircraftRegistrationConstructorAcceptsValidRegistration() {
+        assertDoesNotThrow(() -> {
+            new AircraftRegistration("F-HZUK");
+        });
+    }
 }

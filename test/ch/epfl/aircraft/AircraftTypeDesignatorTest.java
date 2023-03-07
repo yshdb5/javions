@@ -27,4 +27,25 @@ class AircraftTypeDesignatorTest {
         assertDoesNotThrow(() -> new AircraftTypeDesignator("A20"));
         assertDoesNotThrow(() -> new AircraftTypeDesignator(""));
     }
+
+    @Test
+    void aircraftTypeDesignatorConstructorThrowsWithInvalidTypeDesignator() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AircraftTypeDesignator("ABCDE");
+        });
+    }
+
+    @Test
+    void aircraftTypeDesignatorConstructorAcceptsEmptyTypeDesignator() {
+        assertDoesNotThrow(() -> {
+            new AircraftTypeDesignator("");
+        });
+    }
+
+    @Test
+    void aircraftTypeDesignatorConstructorAcceptsValidTypeDesignator() {
+        assertDoesNotThrow(() -> {
+            new AircraftTypeDesignator("BCS3");
+        });
+    }
 }
