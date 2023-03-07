@@ -11,6 +11,7 @@ import java.util.Objects;
 
 public final class PowerWindow
 {
+    private final static int BATCHSIZE = 1 << 16;
     private int windowSize;
     private int position;
     private int count;
@@ -26,17 +27,12 @@ public final class PowerWindow
         this.windowSize = windowSize;
         position = 0;
 
-        computer = new PowerComputer(stream, windowSize);
+        computer = new PowerComputer(stream, BATCHSIZE);
 
-        evenBatch = new int[windowSize];
-        oddBatch = new int[windowSize];
+        evenBatch = new int[BATCHSIZE];
+        oddBatch = new int[BATCHSIZE];
 
         count = computer.readBatch(evenBatch);
-
-        if (this.isFull())
-        {
-           count += computer.readBatch(oddBatch);
-        }
     }
 
     public int size()
@@ -51,29 +47,45 @@ public final class PowerWindow
 
     public boolean isFull()
     {
-        return (position + count) >= windowSize;
+        return count >= windowSize;
     }
 
     public int get(int i)
     {
         Objects.checkIndex(i, windowSize);
 
-        if (this.isFull())
+        if (((position % BATCHSIZE) + i) < BATCHSIZE)
         {
-            return 1;
+            return evenBatch [(position % BATCHSIZE) + i];
         }
         else
         {
-            return 1;
+            return oddBatch[(position % BATCHSIZE) + i];
         }
     }
 
     public void advance() throws IOException
     {
+        if ((position + windowSize - 1) == BATCHSIZE)
+        {
+            count += computer.readBatch(oddBatch);
+        }
+        else if (position % BATCHSIZE == 0)
+        {
+            int [] temp = evenBatch;
+            evenBatch = oddBatch;
+            oddBatch = temp;
+        }
+
         position++;
     }
     public void advanceBy(int offset) throws IOException
     {
-        position += offset;
+        Preconditions.checkArgument(offset >= 0);
+
+        for (int i = 0; i < offset; i++)
+        {
+            advance();
+        }
     }
 }
