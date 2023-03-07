@@ -13,6 +13,7 @@ public final class PowerWindow
 {
     private int windowSize;
     private int position;
+    private int count;
     private PowerComputer computer;
     private int [] evenBatch;
     private int [] oddBatch;
@@ -30,7 +31,12 @@ public final class PowerWindow
         evenBatch = new int[windowSize];
         oddBatch = new int[windowSize];
 
-        computer.readBatch(evenBatch);
+        count = computer.readBatch(evenBatch);
+
+        if (this.isFull())
+        {
+           count += computer.readBatch(oddBatch);
+        }
     }
 
     public int size()
@@ -45,14 +51,21 @@ public final class PowerWindow
 
     public boolean isFull()
     {
-        return false;
+        return (position + count) >= windowSize;
     }
 
     public int get(int i)
     {
         Objects.checkIndex(i, windowSize);
 
-        return 1;
+        if (this.isFull())
+        {
+            return 1;
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     public void advance() throws IOException
