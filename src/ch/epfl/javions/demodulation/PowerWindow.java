@@ -57,7 +57,7 @@ public final class PowerWindow
         }
         else
         {
-            return oddBatch[(position % BATCHSIZE) + i];
+            return oddBatch[(position % BATCHSIZE) + i - BATCHSIZE];
         }
     }
 
@@ -66,7 +66,7 @@ public final class PowerWindow
         position++;
         count--;
 
-        if ((position + windowSize - 1) == BATCHSIZE)
+        if ((position + windowSize) % BATCHSIZE == 0)
         {
             count += computer.readBatch(oddBatch);
         }

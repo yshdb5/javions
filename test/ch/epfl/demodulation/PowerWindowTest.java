@@ -84,6 +84,28 @@ class PowerWindowTest
         int actual = window.get(1);
         int expected = 745;
         assertEquals(expected, actual);
+
+        window.advanceBy(48);
+        actual = window.get(0);
+        expected = 160;
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void GetIWorksOnKnownValues2() throws IOException
+    {
+        FileInputStream stream = new FileInputStream("resources/samples.bin");
+        PowerWindow window = new PowerWindow(stream, 10);
+        int actual = window.get(0);
+        int expected = 73;
+        assertEquals(expected, actual);
+        window.advanceBy(2);
+        actual = window.get(0);
+        expected = 65;
+        assertEquals(expected, actual);
+        actual = window.get(9);
+        expected = 1657;
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -97,17 +119,54 @@ class PowerWindowTest
         assertDoesNotThrow(() -> window.get(0));
     }
 
-    @Test
-    void AdvanceWorksOnKnownValues() throws IOException
+    /*
+    @Test // Ne marche qu'avec un batchsize de 8 dans powerWindow
+    void TheTabsExchangesWorkOnKnownValues() throws IOException
     {
+        FileInputStream stream = new FileInputStream("resources/samples.bin");
+        PowerWindow window = new PowerWindow(stream, 5);
 
+        int actual = window.get(0);
+        int expected = 73;
+        assertEquals(expected, actual);
+
+        actual = window.get(4);
+        expected = 98;
+        assertEquals(expected, actual);
+
+        window.advanceBy(5);
+        actual = window.get(0);
+        expected = 4226;
+        assertEquals(expected, actual);
+
+        actual = window.get(4);
+        expected = 23825;
+        assertEquals(expected, actual);
+
+        window.advanceBy(5);
+        actual = window.get(0);
+        expected = 10730;
+        assertEquals(expected, actual);
+
+        actual = window.get(4);
+        expected = 394;
+        assertEquals(expected, actual);
+
+        window.advanceBy(40);
+        actual = window.get(0);
+        expected = 160;
+        assertEquals(expected, actual);
+
+        actual = (int) window.position();
+        expected = 50;
+        assertEquals(expected, actual);
+
+        actual = (int) window.position();
+        expected = 50;
+        assertEquals(expected, actual);
     }
 
-    @Test
-    void AdvanceByWorksOnKnownValues() throws IOException
-    {
-
-    }
+     */
 
     @Test
     void AdvanceByThrowsIllegalArgumentException() throws IOException
