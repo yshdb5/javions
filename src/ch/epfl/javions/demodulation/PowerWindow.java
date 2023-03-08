@@ -66,6 +66,9 @@ public final class PowerWindow
 
     public void advance() throws IOException
     {
+        position++;
+        count--;
+
         if ((position + windowSize - 1) == BATCHSIZE)
         {
             count += computer.readBatch(oddBatch);
@@ -76,8 +79,6 @@ public final class PowerWindow
             evenBatch = oddBatch;
             oddBatch = temp;
         }
-
-        position++;
     }
     public void advanceBy(int offset) throws IOException
     {

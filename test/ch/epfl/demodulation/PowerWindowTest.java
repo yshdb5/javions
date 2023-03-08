@@ -81,7 +81,7 @@ class PowerWindowTest
         FileInputStream stream = new FileInputStream("resources/samples.bin");
         PowerWindow window = new PowerWindow(stream, 1201);
         window.advanceBy(2);
-        int actual = window.get(2);
+        int actual = window.get(1);
         int expected = 745;
         assertEquals(expected, actual);
     }
@@ -99,11 +99,15 @@ class PowerWindowTest
 
     @Test
     void AdvanceWorksOnKnownValues() throws IOException
-    {}
+    {
+
+    }
 
     @Test
     void AdvanceByWorksOnKnownValues() throws IOException
-    {}
+    {
+
+    }
 
     @Test
     void AdvanceByThrowsIllegalArgumentException() throws IOException
