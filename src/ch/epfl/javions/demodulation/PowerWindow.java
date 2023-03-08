@@ -1,7 +1,4 @@
-package ch.epfl.javions.demodulation;/*
- *	Author:      Yshaï Dinée-Baumgarten
- *	Date:        03/03/23
- */
+package ch.epfl.javions.demodulation;
 
 import ch.epfl.javions.Preconditions;
 
