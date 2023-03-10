@@ -1,10 +1,14 @@
 package ch.epfl.demodulation;
 
 import ch.epfl.javions.demodulation.PowerComputer;
+import ch.epfl.javions.demodulation.SamplesDecoder;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,4 +88,21 @@ class PowerComputerTest
         actualCalculated = powerComputer.readBatch(actualBatch);
         assertArrayEquals(expectedBatch, actualBatch);
     }
+
+    @Test
+    void testValidPowerComputer() throws IOException {
+        String stream2 = getClass().getResource("/samples.bin").getFile();
+        stream2 = URLDecoder.decode(stream2 , StandardCharsets.UTF_8);
+        InputStream stream = new FileInputStream(stream2);
+        SamplesDecoder test = new SamplesDecoder(stream, 2402);
+        PowerComputer test2 = new PowerComputer(stream , 9608);
+
+        short [] batch = new short[2402];
+        int [] batch2 = new int[9608];
+        int a = test2.readBatch(batch2);
+        for (int i = 0; i < 10 ; ++i) {
+            System.out.println(batch2[i]);
+        }
+    }
+
 }

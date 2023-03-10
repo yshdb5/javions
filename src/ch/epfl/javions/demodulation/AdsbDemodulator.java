@@ -16,7 +16,9 @@ public final class AdsbDemodulator
 
     public RawMessage nextMessage() throws IOException
     {
-        //return new RawMessage(1, powerWindow)
-        return null;
+        long timeStamp = 0;
+
+
+        return new RawMessage(timeStamp, null);
     }
 }

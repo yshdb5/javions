@@ -5,7 +5,11 @@ import ch.epfl.javions.ByteString;
 import ch.epfl.javions.Crc24;
 import ch.epfl.javions.Preconditions;
 import ch.epfl.javions.aircraft.IcaoAddress;
+import ch.epfl.javions.demodulation.AdsbDemodulator;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HexFormat;
 
 public record RawMessage(long timeStampNs, ByteString bytes)
@@ -71,5 +75,20 @@ public record RawMessage(long timeStampNs, ByteString bytes)
     public  int typeCode()
     {
         return  Bits.extractUInt(this.payload(),52,5);
+    }
+
+    public final class PrintRawMessages
+    {
+        public static void main(String[] args) throws IOException
+        {
+            String f = "samples_20230304_1442.bin";
+            try (InputStream s = new FileInputStream(f))
+            {
+                AdsbDemodulator d = new AdsbDemodulator(s);
+                RawMessage m;
+                while ((m = d.nextMessage()) != null)
+                    System.out.println(m);
+            }
+        }
     }
 }

@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -176,6 +179,30 @@ class PowerWindowTest
 
         assertThrows(IllegalArgumentException.class, () -> window.advanceBy(-1));
         assertDoesNotThrow(() -> window.advanceBy(0));
+    }
+
+    @Test
+    void checkGet() throws IOException
+    {
+        String d = getClass().getResource("/samples.bin").getFile();
+        d = URLDecoder.decode(d, StandardCharsets.UTF_8);
+        InputStream file=new FileInputStream(d);
+        PowerWindow powerWindow = new PowerWindow(file, 2);
+        powerWindow.advanceBy(8);
+        assertEquals(23825, powerWindow.get(1));
+        file.close();
+    }
+
+    @Test
+    public void checkAnotherGet() throws IOException {
+        String stream2 = getClass().getResource("/samples.bin").getFile();
+        stream2 = URLDecoder.decode(stream2 , StandardCharsets.UTF_8);
+        InputStream stream = new FileInputStream(stream2);
+
+        PowerWindow powerWindow = new PowerWindow(stream, 5);
+        powerWindow.advanceBy(7);
+        assertEquals(1657,powerWindow.get(4));
+
     }
 
 
