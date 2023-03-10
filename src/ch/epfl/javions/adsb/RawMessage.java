@@ -17,7 +17,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
         Preconditions.checkArgument((timeStampNs >= 0) && (bytes.size() == LENGTH));
     }
 
-    static RawMessage of(long timeStampNs, byte[] bytes)
+    public static RawMessage of(long timeStampNs, byte[] bytes)
     {
         Crc24 crc24 = new Crc24(Crc24.GENERATOR);
 
@@ -31,7 +31,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
         }
     }
 
-    static int size(byte byte0)
+    public static int size(byte byte0)
     {
         int DF = Bits.extractUInt(byte0, 3, 5);
         if (DF == 17)
@@ -44,7 +44,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
         }
     }
 
-    static  int typeCode(long payload)
+    public static  int typeCode(long payload)
     {
         return Bits.extractUInt(payload,52,5);
     }
