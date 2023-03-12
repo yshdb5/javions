@@ -1,13 +1,19 @@
-package ch.epfl.javions.demodulation;/*
- *	Author:      Yshaï Dinée-Baumgarten
- *	Date:        03/03/23
- */
+package ch.epfl.javions.demodulation;
+
 
 import ch.epfl.javions.Preconditions;
+import ch.epfl.javions.demodulation.SamplesDecoder;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * final class PowerComputer : represents an object able to calculate the power samples of the signal
+ *                            from the signed samples produced by a sample decoder
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class PowerComputer
 {
     private InputStream stream;
@@ -17,6 +23,12 @@ public final class PowerComputer
     private short [] lastEightTab =  new short[8];
     private int head = 0;
 
+    /**
+     * PowerComputer's constructor
+     *                 creates the array that contains the samples
+     * @param stream
+     * @param batchSize
+     */
     public PowerComputer(InputStream stream, int batchSize)
     {
         Preconditions.checkArgument((batchSize % 8) == 0);
@@ -27,6 +39,14 @@ public final class PowerComputer
         decoder = new SamplesDecoder(stream, 2*batchSize);
     }
 
+    /**
+     * reads from the sample decoder the number of samples needed to calculate a batch
+     *                                           of power sample and then computes them
+     * @param batch
+     * @return the number of power samples placed in the array
+     * @throws IOException
+     *          in case of input/output error
+     */
     public int readBatch(int[] batch) throws IOException
     {
         Preconditions.checkArgument((batch.length == batchSize) && batchSize > 0);

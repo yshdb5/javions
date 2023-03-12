@@ -6,6 +6,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+/**
+ * final class PowerWindow : represents a window of fixed size over a sequence of power samples
+ *                           produced by a power computer
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public final class PowerWindow
 {
     private final static int BATCHSIZE = 1 << 16;
@@ -16,6 +24,14 @@ public final class PowerWindow
     private int [] evenBatch;
     private int [] oddBatch;
 
+    /**
+     * PowerWindow's constructor, returns a window of given size on the sequence of power samples
+     *                                   computed from the bytes providedby the given input stream
+     * @param stream
+     * @param windowSize
+     * @throws IOException
+     * @throws IllegalArgumentException if the window's size isnt between O (excluded) and 2 power 16 (included)
+     */
 
     public PowerWindow(InputStream stream, int windowSize) throws IOException
     {
@@ -32,21 +48,36 @@ public final class PowerWindow
         count = computer.readBatch(evenBatch);
     }
 
+    /**
+     * @return the window's size
+     */
     public int size()
     {
         return windowSize;
     }
 
+    /**
+     * @return the current position of the window relative to the beginning of the power value stream
+     */
     public long position()
     {
         return position;
     }
 
+    /**
+     * @return true if and only if the window contains as many samples as its size
+     */
     public boolean isFull()
     {
         return count >= windowSize;
     }
 
+    /**
+     * @param i
+     *       the index
+     * @return the power sample at the given index (i) of the window
+     * @throws IndexOutOfBoundsException if i isnt between 0 included and the window's size excluded
+     */
     public int get(int i)
     {
         Objects.checkIndex(i, windowSize);
@@ -61,6 +92,10 @@ public final class PowerWindow
         }
     }
 
+    /**
+     * advances the window of a sample
+     * @throws IOException
+     */
     public void advance() throws IOException
     {
         position++;
@@ -77,6 +112,14 @@ public final class PowerWindow
             oddBatch = temp;
         }
     }
+
+    /**
+     * advances the window by the given number of samples
+     * @param offset
+     *        the given number of samples
+     * @throws IOException
+     * @throws IllegalArgumentException if offset isnt >=0
+     */
     public void advanceBy(int offset) throws IOException
     {
         Preconditions.checkArgument(offset >= 0);
