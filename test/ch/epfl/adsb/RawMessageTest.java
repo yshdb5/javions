@@ -1,5 +1,6 @@
 package ch.epfl.adsb;
 
+import ch.epfl.javions.Bits;
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.RawMessage;
 import org.junit.jupiter.api.Test;
@@ -21,5 +22,24 @@ class RawMessageTest
         assertThrows(IllegalArgumentException.class, ()-> new RawMessage(timeStamp2, byteString1));
         assertThrows(IllegalArgumentException.class, ()-> new RawMessage(timeStamp1, byteString2));
         assertDoesNotThrow(()-> new RawMessage(timeStamp2, byteString2));
+    }
+
+    @Test
+    void SizeWorksOnKnownValues()
+    {
+        byte byte0 = (byte) Byte.toUnsignedInt((byte) 0b10001000);
+        int actual = RawMessage.size(byte0);
+        int expected =  17;
+        assertEquals(expected, actual);
+
+        byte byte1 = 0b01010100;
+        actual = RawMessage.size(byte1);
+        expected = 0;
+        assertEquals(expected, actual);
+
+        byte byte2 = 0b00000000;
+        actual = RawMessage.size(byte2);
+        assertEquals(expected, actual);
+
     }
 }
