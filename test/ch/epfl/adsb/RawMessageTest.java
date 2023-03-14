@@ -3,6 +3,7 @@ package ch.epfl.adsb;
 import ch.epfl.javions.Bits;
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.RawMessage;
+import ch.epfl.javions.aircraft.IcaoAddress;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,9 +28,9 @@ class RawMessageTest
     @Test
     void SizeWorksOnKnownValues()
     {
-        byte byte0 = (byte) Byte.toUnsignedInt((byte) 0b10001000);
+        byte byte0 = (byte) 0b010001000;
         int actual = RawMessage.size(byte0);
-        int expected =  17;
+        int expected = RawMessage.LENGTH;
         assertEquals(expected, actual);
 
         byte byte1 = 0b01010100;
@@ -40,6 +41,39 @@ class RawMessageTest
         byte byte2 = 0b00000000;
         actual = RawMessage.size(byte2);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void TypeCodeWorksOnKnwonValues()
+    {
+        int expected = RawMessage.typeCode(1);
+        int actual = 0;
+    }
+
+    @Test
+    void TypeCode2WorksOnKnwonValues()
+    {
+
 
     }
+
+    @Test
+    void DownLinkFormatWorksOnKnwonValues()
+    {
+
+    }
+
+    @Test
+    void IcaoAddressWorksOnKnownValues()
+    {
+
+    }
+
+    @Test
+    void PayloadWorksOnKnwonValues()
+    {
+
+    }
+
+
 }
