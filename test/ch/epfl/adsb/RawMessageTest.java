@@ -1,15 +1,19 @@
 package ch.epfl.adsb;
 
-import ch.epfl.javions.Bits;
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.IcaoAddress;
 import org.junit.jupiter.api.Test;
 
+import java.util.HexFormat;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RawMessageTest
 {
+    private final static HexFormat hf = HexFormat.of();
+    private final static byte [] tab = hf.parseHex("8D4B17E5F8210002004BB8B1F1AC");
+    private final static ByteString bytes = new ByteString(tab);
     @Test
     void RawMessageThrowsIllegalArgumentException()
     {
@@ -44,35 +48,48 @@ class RawMessageTest
     }
 
     @Test
-    void TypeCodeWorksOnKnwonValues()
+    void TypeCodeWorksOnKnownValues()
     {
-        int expected = RawMessage.typeCode(1);
-        int actual = 0;
+        RawMessage message = new RawMessage(8096200, bytes);
+        int expected = 0b00011111;
+        int actual = RawMessage.typeCode(bytes.bytesInRange(4, 11));
+        assertEquals(expected, actual);
+
+        actual = message.typeCode();
+        assertEquals(expected, actual);
     }
 
     @Test
-    void TypeCode2WorksOnKnwonValues()
+    void DownLinkFormatWorksOnKnownValues()
     {
+        RawMessage message = new RawMessage(8096200, bytes);
 
+        int expected = 0b10001;
+        int actual = message.downLinkFormat();
 
-    }
-
-    @Test
-    void DownLinkFormatWorksOnKnwonValues()
-    {
-
+        assertEquals(expected, actual);
     }
 
     @Test
     void IcaoAddressWorksOnKnownValues()
     {
+        RawMessage message = new RawMessage(8096200, bytes);
 
+        IcaoAddress expected = new IcaoAddress("4B17E5");
+        IcaoAddress actual = message.icaoAddress();
+
+        assertEquals(expected, actual);
     }
 
     @Test
-    void PayloadWorksOnKnwonValues()
+    void PayloadWorksOnKnownValues()
     {
+        RawMessage message = new RawMessage(8096200, bytes);
 
+        long actual = message.payload();
+        long expected = 0xF8210002004BB8L;
+
+        assertEquals(expected, actual);
     }
 
 

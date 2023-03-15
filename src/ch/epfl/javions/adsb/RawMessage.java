@@ -101,9 +101,9 @@ public record RawMessage(long timeStampNs, ByteString bytes)
      */
     public IcaoAddress icaoAddress()
     {
-        long adress = this.bytes.bytesInRange(1, 3);
+        long adress = this.bytes.bytesInRange(1, 4);
 
-        return new IcaoAddress(hf.toHexDigits(adress));
+        return new IcaoAddress(hf.toHexDigits(adress, 6));
     }
 
     /**
@@ -111,7 +111,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
      */
     public long payload()
     {
-        return this.bytes.bytesInRange(4, 10);
+        return this.bytes.bytesInRange(4, 11);
     }
 
     /**
