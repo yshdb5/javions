@@ -89,7 +89,7 @@ public final class ByteString
         Preconditions.checkArgument((toIndex-fromIndex) < Long.SIZE);
 
 
-        long mask = bytes[fromIndex];
+        long mask = Byte.toUnsignedInt(bytes[fromIndex]);
 
         for (int i = (fromIndex + 1); i < toIndex; i++)
         {

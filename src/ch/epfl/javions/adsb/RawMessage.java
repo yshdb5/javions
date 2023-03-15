@@ -83,7 +83,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
 
     public static  int typeCode(long payload)
     {
-        return Bits.extractUInt(payload,52,5);
+        return Bits.extractUInt(payload,51,5);
     }
 
     /**
