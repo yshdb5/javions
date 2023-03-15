@@ -2,6 +2,7 @@ package ch.epfl.javions.adsb;
 
 import ch.epfl.javions.Bits;
 import ch.epfl.javions.Preconditions;
+import ch.epfl.javions.Units;
 import ch.epfl.javions.aircraft.IcaoAddress;
 
 import java.util.Objects;
@@ -36,11 +37,13 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
 
         if (Q == 1)
         {
+            int part1 = Bits.extractUInt(ALT, 5, 7);
+            int part2 = Bits.extractUInt(ALT, 0, 4);
+            ALT = (part1 << 4) | part2;
 
+            double ALT_METER = Units.convertFrom(-1000 + ALT*25, Units.Length.FOOT) ;
         }
 
-
-
-        return new AirbornePositionMessage(timeStamp, icaoAddress, 1, 1, 1, 1);
+        return new AirbornePositionMessage(timeStamp, icaoAddress,1 , FORMAT, 1, 1);
     }
 }
