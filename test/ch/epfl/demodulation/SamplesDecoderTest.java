@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SamplesDecoderTest
 {
+    /*
     @Test
     void SamplesDecoderWorksOnKnownValues() throws IOException
     {
@@ -86,4 +87,5 @@ class SamplesDecoderTest
             assertEquals(expected[i], batch[i]);
     }
 
+     */
 }

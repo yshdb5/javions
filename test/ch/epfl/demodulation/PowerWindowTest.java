@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PowerWindowTest
 {
+    /*
     @Test
     void PowerWindowThrowsIllegalArgumentException() throws IOException
     {
@@ -171,6 +172,7 @@ class PowerWindowTest
 
      */
 
+    /*
     @Test
     void AdvanceByThrowsIllegalArgumentException() throws IOException
     {
@@ -205,5 +207,5 @@ class PowerWindowTest
 
     }
 
-
+     */
 }

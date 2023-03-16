@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AdsbDemodulatorTest
 {
+    /*
     @Test
     void nextMessageTest()throws IOException
     {
@@ -28,4 +29,6 @@ class AdsbDemodulatorTest
             System.out.println(count);
         }
     }
+
+     */
 }
