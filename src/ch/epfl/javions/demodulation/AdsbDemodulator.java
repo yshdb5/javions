@@ -15,6 +15,16 @@ import java.io.InputStream;
 public final class AdsbDemodulator
 {
     private PowerWindow powerWindow;
+    private static final int WINDOWSIZE = 1200;
+    private static final int INDEXPICS2 = 10;
+    private static final int INDEXPICS3 = 35;
+    private static final int INDEXPICS4 = 45;
+    private static final int INDEXVALLEYS1 = 5;
+    private static final int INDEXVALLEYS2 = 15;
+    private static final int INDEXVALLEYS3 = 20;
+    private static final int INDEXVALLEYS4 = 25;
+    private static final int INDEXVALLEYS5 = 30;
+    private static final int INDEXVALLEYS6 = 40;
 
     /**
      * returns a demodulator obtaining the bytes containing the samples of the stream passed in argument
@@ -24,7 +34,7 @@ public final class AdsbDemodulator
      */
     public AdsbDemodulator(InputStream samplesStream) throws IOException
     {
-        powerWindow = new PowerWindow(samplesStream, 1200);
+        powerWindow = new PowerWindow(samplesStream, WINDOWSIZE);
     }
 
     /**
@@ -93,14 +103,14 @@ public final class AdsbDemodulator
 
     private int sumPics(int i)
     {
-        int sumPics = powerWindow.get(i) + powerWindow.get(10 + i) + powerWindow.get(35 + i) + powerWindow.get(45 + i);
+        int sumPics = powerWindow.get(i) + powerWindow.get(INDEXPICS2 + i) + powerWindow.get(INDEXPICS3 + i) + powerWindow.get(INDEXPICS4 + i);
 
         return sumPics;
     }
 
     private int sumValley()
     {
-        int sumValley = powerWindow.get(5) + powerWindow.get(15) + powerWindow.get(20) + powerWindow.get(25) + powerWindow.get(30) + powerWindow.get(40);
+        int sumValley = powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3) + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
 
         return sumValley;
     }

@@ -50,19 +50,28 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
         for (int i : tab)
         {
-            if (!((i >= 1 && i <= 26) || (i >= 48 && i <= 57) || (i == 32)))
+            if ((i >= 1 && i <= 26))
             {
-                return null;
+                callstring += (char) (i + 64);
+            }
+            else if ((i >= 48 && i <= 57) || (i == 32))
+            {
+                callstring += (char) i;
             }
             else
             {
-                callstring += i;
+                return null;
             }
+        }
+
+        while (callstring.endsWith(" "))
+        {
+            callstring = callstring.substring(0, (callstring.length() -1));
         }
 
         long timeStamps = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        int category = (byte) ((14 - typeCode) << 4) | CA;
+        int category = Byte.toUnsignedInt((byte) (((14 - typeCode) << 4) | CA));
 
         CallSign callSign = new CallSign(callstring);
 

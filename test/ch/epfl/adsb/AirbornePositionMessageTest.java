@@ -3,6 +3,7 @@ package ch.epfl.adsb;
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.AirbornePositionMessage;
 import ch.epfl.javions.adsb.RawMessage;
+import ch.epfl.javions.aircraft.IcaoAddress;
 import org.junit.jupiter.api.Test;
 
 import java.util.HexFormat;
@@ -20,6 +21,19 @@ class AirbornePositionMessageTest
     @Test
     void ofWorksOnKnownValues()
     {
-        System.out.println(AirbornePositionMessage.of(message));
+        AirbornePositionMessage PositionMessage = AirbornePositionMessage.of(message);
+        int expectedTimstamp = 75898000;
+        IcaoAddress expectedICAO = new IcaoAddress("495299");
+        double expectedAltitude = 10546.08;
+        double expectedParity = 0;
+        double expectedX = 0.6867904663085938;
+        double expectedY = 0.7254638671875;
+
+        assertEquals(expectedTimstamp, PositionMessage.timeStampNs());
+        assertEquals(expectedICAO, PositionMessage.icaoAddress());
+        assertEquals(expectedAltitude, PositionMessage.altitude());
+        assertEquals(expectedParity, PositionMessage.parity());
+        assertEquals(expectedX, PositionMessage.x());
+        assertEquals(expectedY, PositionMessage.y());
     }
 }

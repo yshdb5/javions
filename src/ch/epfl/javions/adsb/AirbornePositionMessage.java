@@ -32,8 +32,8 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         double ALT_METER;
         int ALT = Bits.extractUInt(rawMessage.payload(), 36, 12);
         int FORMAT = Bits.extractUInt(rawMessage.payload(), 34, 1);
-        int LAT_CPR = Bits.extractUInt(rawMessage.payload(), 17, 17);
-        int LON_CPR = Bits.extractUInt(rawMessage.payload(), 0, 17);
+        double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17)*Math.scalb(1d, -17);
+        double longitude = Bits.extractUInt(rawMessage.payload(), 0, 17)*Math.scalb(1d, -17);
 
         int Q = Bits.extractUInt(ALT, 4, 1);
 
@@ -71,7 +71,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
             ALT_METER = Units.convertFrom(-1300 + part1*100 + part2*500, Units.Length.FOOT);
         }
 
-        return new AirbornePositionMessage(timeStamp, icaoAddress, ALT_METER , FORMAT, 1, 1);
+        return new AirbornePositionMessage(timeStamp, icaoAddress, ALT_METER , FORMAT, longitude, latitude);
     }
 
     private static int disentangling(int ALT)
