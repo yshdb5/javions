@@ -1,6 +1,7 @@
 package ch.epfl.javions.adsb;
 
 import ch.epfl.javions.Bits;
+import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.Preconditions;
 import ch.epfl.javions.Units;
 import ch.epfl.javions.aircraft.IcaoAddress;
