@@ -27,6 +27,7 @@ public record RawMessage(long timeStampNs, ByteString bytes)
      */
     public static final int LENGTH = 14;
     private final static HexFormat hf = HexFormat.of().withUpperCase();
+    private final static Crc24 crc24 = new Crc24(Crc24.GENERATOR);
 
     /**
      * Rawmessage compact constructor
@@ -47,8 +48,6 @@ public record RawMessage(long timeStampNs, ByteString bytes)
      */
     public static RawMessage of(long timeStampNs, byte[] bytes)
     {
-        Crc24 crc24 = new Crc24(Crc24.GENERATOR);
-
         if(crc24.crc(bytes) != 0)
         {
             return null;
