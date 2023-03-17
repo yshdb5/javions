@@ -11,8 +11,8 @@ public class CprDecoder
 {
     private static final int Z0 = 60;
     private static final int Z1 = 59;
-    private static final double DELTA0 = ((double) 1)/Z0;
-    private static final double DELTA1 = ((double) 1)/Z1;
+    private static final double DELTA0 = ( 1.0)/Z0;
+    private static final double DELTA1 = ( 1.0)/Z1;
     private CprDecoder(){}
 
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent)
@@ -25,6 +25,7 @@ public class CprDecoder
         y1 = y1*Math.scalb(1, -17);
 
         zonePhi = (int) Math.rint(y0*Z1 - y1*Z0);
+
 
         if (zonePhi < 0)
         {
@@ -52,7 +53,8 @@ public class CprDecoder
         latitude0_T32 = (int) Math.rint(Units.convert(latitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
         latitude1_T32 = (int) Math.rint(Units.convert(latitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
 
-        A = 1-((1-Math.cos(Math.PI*2*DELTA0))/(Math.cos(latitude0_T32)*Math.cos(latitude0_T32)));
+        double Angle_Rad = Math.cos(Units.convert(latitude0_TURN,Units.Angle.TURN,Units.Angle.RADIAN)) * Math.cos(Units.convert(latitude0_TURN,Units.Angle.TURN,Units.Angle.RADIAN));
+        A = 1 - ((1-Math.cos(Math.PI*2*DELTA0)) / (Angle_Rad));
         if (A > 1)
         {
             nombreZones0 = 1;
@@ -60,7 +62,7 @@ public class CprDecoder
         else
         {
             A = Math.acos(A);
-            nombreZones0 = (int) Math.floor((Math.PI*2)/A);
+            nombreZones0 = (int) Math.floor((Math.PI*2.0)/A);
         }
 
         nombreZones1 = nombreZones0 -1;

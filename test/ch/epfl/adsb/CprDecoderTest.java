@@ -16,10 +16,11 @@ class CprDecoderTest
     @Test
     void decodePositionWorks()
     {
-        double x0 = Math.scalb(111600d, -17);
-        double y0 = Math.scalb(94445d, -17);
-        double x1 = Math.scalb(108865d, -17);
-        double y1 = Math.scalb(77558d, -17);
+        double x0 = 111600;
+        double y0 = 94445;
+        double x1 = 108865;
+        double y1 = 77558;
+
         GeoPos pos = CprDecoder.decodePosition(x0, y0, x1, y1, 0);
 
         int expectedLongitude = 89192898;
