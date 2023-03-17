@@ -8,8 +8,36 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 
 import java.util.Objects;
 
+/**
+ * record AirbornePositionMessage : represents an ADS-B flight position message
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress, double altitude, int parity, double x, double y) implements Message
 {
+
+    /**
+     * @param timeStampNs
+     *        the time stamp of the message, in nanoseconds
+     * @param icaoAddress
+     *        the ICAO address of the sender of the message
+     * @param altitude
+     *        the altitude at which the aircraft was at the time the message was sent, in meters
+     * @param parity
+     *        the parity of the message (0 if it is even, 1 if it is odd)
+     * @param x
+     *        the local and normalized longitude (between 0 and 1) at which the
+     *        aircraft was located when the message was sent,
+     * @param y
+     *        the local and normalized latitude (between 0 and 1) at which
+     *        the aircraft was located when the message was sent
+     *
+     * @throws NullPointerException if icaoAddress is null
+     * @throws IllegalArgumentException if timeStamp is strictly less than 0, or parity is different from 0 or 1,
+     *                                  or x or y are not between 0 (included) and 1 (excluded).
+     */
     public AirbornePositionMessage
     {
         Objects.requireNonNull(icaoAddress);
@@ -25,6 +53,11 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         return icaoAddress;
     }
 
+    /**
+     * @param rawMessage
+     * @return the flight positioning message corresponding to the given raw message
+     *         or null if the altitude it contains is invalid
+     */
     public static AirbornePositionMessage of(RawMessage rawMessage)
     {
         long timeStamp = rawMessage.timeStampNs();

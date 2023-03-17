@@ -1,6 +1,10 @@
-package ch.epfl.javions.adsb;/*
- *	Author:      Yshaï Dinée-Baumgarten
- *	Date:        13/03/23
+package ch.epfl.javions.adsb;
+
+/**
+ * class CprDecoder : contains methods to extract a subset of the 64 bits of a long type value
+ * represents a CPR position decoder
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
  */
 
 import ch.epfl.javions.GeoPos;
@@ -15,6 +19,25 @@ public class CprDecoder
     private static final double DELTA1 = ( 1.0)/Z1;
     private CprDecoder(){}
 
+    /**
+     *
+     * @param x0
+     *        global longitude of an even message
+     * @param y0
+     *        global latitude of an even message
+     * @param x1
+     *        global longitude of an odd message
+     * @param y1
+     *        global latitude of an even message
+     * @param mostRecent
+     *        the most recent positions (0 or 1)
+     * @throws IllegalArgumentException
+     *        if mostRecent is not 0 or 1
+     * @return the geographical position corresponding to the given normalized local positions
+     *         or null if the latitude of the decoded position is not valid (i.e. within ±90°)
+     *
+
+     */
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent)
     {
         Preconditions.checkArgument((mostRecent == 1) || (mostRecent == 0));
