@@ -35,4 +35,25 @@ class AircraftIdentificationMessageTest
         assertEquals(expectedCallSign, identificationMessage.callSign());
 
     }
+
+    private final static byte [] tab1 = hf.parseHex("8F01024C233530F3CF6C60A19669");
+    private final static ByteString bytes1 = new ByteString(tab1);
+    private final static long timeStamp1 = 2240535600L;
+    private static final RawMessage message1 = new RawMessage(timeStamp1, bytes1);
+
+    @Test
+    void ofWorksOnKnownValues2()
+    {
+        AircraftIdentificationMessage identificationMessage = AircraftIdentificationMessage.of(message1);
+        long expectedTimstamp = 2240535600L;
+        IcaoAddress expectedICAO = new IcaoAddress("01024C");
+        int expectedCategory = 163;
+        CallSign expectedCallSign = new CallSign("MSC3361");
+
+        assertEquals(expectedTimstamp, identificationMessage.timeStampNs());
+        assertEquals(expectedICAO, identificationMessage.icaoAddress());
+        assertEquals(expectedCategory, identificationMessage.category());
+        assertEquals(expectedCallSign, identificationMessage.callSign());
+
+    }
 }
