@@ -103,16 +103,12 @@ public final class AdsbDemodulator
 
     private int sumPics(int i)
     {
-        int sumPics = powerWindow.get(i) + powerWindow.get(INDEXPICS2 + i) + powerWindow.get(INDEXPICS3 + i) + powerWindow.get(INDEXPICS4 + i);
-
-        return sumPics;
+        return powerWindow.get(i) + powerWindow.get(INDEXPICS2 + i) + powerWindow.get(INDEXPICS3 + i) + powerWindow.get(INDEXPICS4 + i);
     }
 
     private int sumValley()
     {
-        int sumValley = powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3) + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
-
-        return sumValley;
+        return powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3) + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
     }
 
     private byte bitI(int i)

@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PowerWindowTest
 {
-    /*
     @Test
     void PowerWindowThrowsIllegalArgumentException() throws IOException
     {
@@ -126,56 +125,6 @@ class PowerWindowTest
         assertDoesNotThrow(() -> window.get(0));
     }
 
-    /*
-    @Test // Ne marche qu'avec un batchsize de 8 dans powerWindow
-    void TheTabsExchangesWorkOnKnownValues() throws IOException
-    {
-        FileInputStream stream = new FileInputStream("resources/samples.bin");
-        PowerWindow window = new PowerWindow(stream, 5);
-
-        int actual = window.get(0);
-        int expected = 73;
-        assertEquals(expected, actual);
-
-        actual = window.get(4);
-        expected = 98;
-        assertEquals(expected, actual);
-
-        window.advanceBy(5);
-        actual = window.get(0);
-        expected = 4226;
-        assertEquals(expected, actual);
-
-        actual = window.get(4);
-        expected = 23825;
-        assertEquals(expected, actual);
-
-        window.advanceBy(5);
-        actual = window.get(0);
-        expected = 10730;
-        assertEquals(expected, actual);
-
-        actual = window.get(4);
-        expected = 394;
-        assertEquals(expected, actual);
-
-        window.advanceBy(40);
-        actual = window.get(0);
-        expected = 160;
-        assertEquals(expected, actual);
-
-        actual = (int) window.position();
-        expected = 50;
-        assertEquals(expected, actual);
-
-        actual = (int) window.position();
-        expected = 50;
-        assertEquals(expected, actual);
-    }
-
-     */
-
-    /*
     @Test
     void AdvanceByThrowsIllegalArgumentException() throws IOException
     {
@@ -209,8 +158,6 @@ class PowerWindowTest
         assertEquals(1657,powerWindow.get(4));
 
     }
-
-     */
 
     private static final int BATCH_SIZE = 1 << 16;
     private static final int BATCH_SIZE_BYTES = bytesForPowerSamples(BATCH_SIZE);

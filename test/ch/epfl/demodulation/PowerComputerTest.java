@@ -17,20 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PowerComputerTest
 {
-    /*
-    @Test
-    void PowerComputerOnKnownValues() throws IOException
-    {
-        FileInputStream stream = new FileInputStream("resources/samples.bin");
-        PowerComputer powerComputer =  new PowerComputer(stream, 1208);
-
-        int [] powerTab = new int[1208];
-
-        powerComputer.readBatch(powerTab);
-
-        System.out.println("PowerTab: " + Arrays.toString(powerTab));
-    }
-
     @Test
     void PowerComputerThrowsIllegalArgumentException() throws IOException
     {
@@ -91,24 +77,6 @@ class PowerComputerTest
         actualCalculated = powerComputer.readBatch(actualBatch);
         assertArrayEquals(expectedBatch, actualBatch);
     }
-
-    @Test
-    void testValidPowerComputer() throws IOException {
-        String stream2 = getClass().getResource("/samples.bin").getFile();
-        stream2 = URLDecoder.decode(stream2 , StandardCharsets.UTF_8);
-        InputStream stream = new FileInputStream(stream2);
-        SamplesDecoder test = new SamplesDecoder(stream, 2402);
-        PowerComputer test2 = new PowerComputer(stream , 9608);
-
-        short [] batch = new short[2402];
-        int [] batch2 = new int[9608];
-        int a = test2.readBatch(batch2);
-        for (int i = 0; i < 10 ; ++i) {
-            System.out.println(batch2[i]);
-        }
-    }
-
-     */
 
     //<editor-fold desc="Test data">
     // The given samples.bin file, base64-encoded
