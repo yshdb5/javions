@@ -92,14 +92,15 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
             {
                 return null;
             }
-            else if (part1 == 7)
+            if (part1 == 7)
             {
                 part1 = 5;
             }
-            else if (part2 % 2 == 1)
+            if (part2 % 2 == 1)
             {
                part1 = 6 - part1;
             }
+
 
             ALT_METER = Units.convertFrom(-1300 + part1*100 + part2*500, Units.Length.FOOT);
         }

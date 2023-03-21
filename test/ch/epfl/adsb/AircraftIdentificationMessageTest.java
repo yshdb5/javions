@@ -6,8 +6,12 @@ import ch.epfl.javions.adsb.AircraftIdentificationMessage;
 import ch.epfl.javions.adsb.CallSign;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.IcaoAddress;
+import ch.epfl.javions.demodulation.AdsbDemodulator;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HexFormat;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,5 +59,25 @@ class AircraftIdentificationMessageTest
         assertEquals(expectedCategory, identificationMessage.category());
         assertEquals(expectedCallSign, identificationMessage.callSign());
 
+    }
+
+    @Test
+    void PrintAircraftIdentificationMessage() throws IOException
+    {
+
+
+        String f = "resources/samples_20230304_1442.bin";
+        try (InputStream s = new FileInputStream(f)) {
+
+            AdsbDemodulator d = new AdsbDemodulator(s);
+            RawMessage m;
+            while ((m = d.nextMessage()) != null)
+            {
+                if ((m.typeCode() >= 1 && m.typeCode() <= 4))
+                {
+                    System.out.println(AircraftIdentificationMessage.of(m));
+                }
+            }
+        }
     }
 }

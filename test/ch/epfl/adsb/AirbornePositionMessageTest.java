@@ -217,19 +217,22 @@ class AirbornePositionMessageTest
 
 
     @Test
-    void ExempleDuProfAirbornePositionMessage() throws IOException {
+    void PrintAirbornePositionMessage() throws IOException
+    {
 
 
         String f = "resources/samples_20230304_1442.bin";
         try (InputStream s = new FileInputStream(f)) {
 
-
             AdsbDemodulator d = new AdsbDemodulator(s);
             RawMessage m;
-            while ((m = d.nextMessage()) != null) {
-                System.out.println(AirbornePositionMessage.of(m));
+            while ((m = d.nextMessage()) != null)
+            {
+                if ((m.typeCode() >= 9 && m.typeCode() <= 18) || (m.typeCode() >= 20 && m.typeCode() <= 22))
+                {
+                    System.out.println(AirbornePositionMessage.of(m));
+                }
             }
         }
     }
-
 }
