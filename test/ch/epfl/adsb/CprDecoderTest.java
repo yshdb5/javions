@@ -1,9 +1,7 @@
 package ch.epfl.adsb;
 
-import ch.epfl.javions.ByteString;
 import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.adsb.CprDecoder;
-import ch.epfl.javions.adsb.RawMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.HexFormat;
@@ -16,10 +14,10 @@ class CprDecoderTest
     @Test
     void decodePositionWorks()
     {
-        double x0 = 111600;
-        double y0 = 94445;
-        double x1 = 108865;
-        double y1 = 77558;
+        double x0 = 111600*Math.scalb(1, -17);
+        double y0 = 94445*Math.scalb(1, -17);
+        double x1 = 108865*Math.scalb(1, -17);
+        double y1 = 77558*Math.scalb(1, -17);
 
         GeoPos pos = CprDecoder.decodePosition(x0, y0, x1, y1, 0);
 

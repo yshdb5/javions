@@ -44,9 +44,6 @@ public class CprDecoder
         double latitude0_TURN, latitude1_TURN, longitude0_TURN, longitude1_TURN, A, deltaLambda0, deltaLambda1;
         int latitude0_T32, latitude1_T32, longitude0_T32, longitude1_T32, zonePhi, zonePhi0, zonePhi1, zoneLambda, zoneLambda0, zoneLambda1,  nombreZones0, nombreZones1;
 
-        y0 = y0*Math.scalb(1, -17); // a modifier
-        y1 = y1*Math.scalb(1, -17);
-
         zonePhi = (int) Math.rint(y0*Z1 - y1*Z0);
 
 
@@ -89,9 +86,6 @@ public class CprDecoder
         }
 
         nombreZones1 = nombreZones0 -1;
-
-        x0 = x0*Math.scalb(1, -17);
-        x1 = x1*Math.scalb(1, -17);
 
         zoneLambda = (int) Math.rint(x0*nombreZones1 - x1*nombreZones0);
 

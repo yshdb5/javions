@@ -4,8 +4,12 @@ import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.AirbornePositionMessage;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.IcaoAddress;
+import ch.epfl.javions.demodulation.AdsbDemodulator;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HexFormat;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -210,4 +214,22 @@ class AirbornePositionMessageTest
             new AirbornePositionMessage(System.nanoTime(), icaoAddress, 1000.0, 0, 0.5, 1.5);
         });
     }
+
+
+    @Test
+    void ExempleDuProfAirbornePositionMessage() throws IOException {
+
+
+        String f = "resources/samples_20230304_1442.bin";
+        try (InputStream s = new FileInputStream(f)) {
+
+
+            AdsbDemodulator d = new AdsbDemodulator(s);
+            RawMessage m;
+            while ((m = d.nextMessage()) != null) {
+                System.out.println(AirbornePositionMessage.of(m));
+            }
+        }
+    }
+
 }
