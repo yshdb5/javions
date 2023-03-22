@@ -3,16 +3,29 @@ package ch.epfl.javions.adsb;/*
  *	Date:        21/03/23
  */
 
-import ch.epfl.javions.adsb.Message;
-import ch.epfl.javions.adsb.RawMessage;
-import ch.epfl.javions.aircraft.IcaoAddress;
-
 public class MessageParser
 {
     private MessageParser(){};
 
     public static Message parse(RawMessage rawMessage)
     {
-        return null;
+        int typeCode =  rawMessage.typeCode();
+
+        if (typeCode >= 1 && typeCode <= 4)
+        {
+            return AircraftIdentificationMessage.of(rawMessage);
+        }
+        else if ((typeCode >= 9 && typeCode <= 18) || (typeCode >= 20 && typeCode <= 22))
+        {
+            return AirbornePositionMessage.of(rawMessage);
+        }
+        else if (typeCode == 19)
+        {
+            return AirborneVelocityMessage.of(rawMessage);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

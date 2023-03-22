@@ -7,7 +7,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 
 import java.util.Objects;
 
-public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress, double speed, double trackOrHeading)
+public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress, double speed, double trackOrHeading) implements Message
 {
     public AirborneVelocityMessage
     {
