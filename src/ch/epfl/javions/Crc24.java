@@ -14,6 +14,7 @@ public final class Crc24
     public static final int GENERATOR = 0xFFF409;
     private static final int CRC_BITS = 24;
     private final int [] table;
+    private static final int TABLE_SIZE = 256;
 
     /**
      * public constuctor of Crc24
@@ -75,9 +76,9 @@ public final class Crc24
 
     private static int [] buildTable(int generator)
     {
-        int [] table = new int[256];
+        int [] table = new int[TABLE_SIZE];
 
-        for (int i = 0; i < 256; i++)
+        for (int i = 0; i < TABLE_SIZE; i++)
         {
             byte [] tab = {(byte) i};
             table[i] =  crc_bitwise(generator, tab);

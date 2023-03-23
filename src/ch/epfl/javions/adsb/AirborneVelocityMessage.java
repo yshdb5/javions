@@ -41,19 +41,24 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             if (directionNS == 0 && directionEW == 0)
             {
-                speedAngle_RADIAN = Math.atan2(speedNS, speedEW);
+                speedAngle_RADIAN = Math.atan2(speedEW, speedNS);
             }
             else if (directionNS == 1 && directionEW == 0)
             {
-                speedAngle_RADIAN = -Math.atan2(-speedNS, speedEW) + Math.PI;
+                speedAngle_RADIAN = Math.atan2(speedEW, -speedNS);
             }
             else if (directionNS == 0 && directionEW == 1)
             {
-                speedAngle_RADIAN = Math.atan2(speedNS, -speedEW);
+                speedAngle_RADIAN = Math.atan2(-speedEW, speedNS);
             }
             else
             {
-                speedAngle_RADIAN = -Math.atan2(-speedNS, -speedEW) + Math.PI;
+                speedAngle_RADIAN = Math.atan2(-speedEW, -speedNS);
+            }
+
+            if (speedAngle_RADIAN < 0)
+            {
+                speedAngle_RADIAN += 2*Math.PI;
             }
 
             if (ST == 1)

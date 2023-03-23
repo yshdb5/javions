@@ -10,7 +10,6 @@ public class WebMercator
 {
     private WebMercator(){}
 
-
     /**
      * static method that calculates x (after the zoom) thanks to the formula given
      * @param zoomLevel

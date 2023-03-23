@@ -26,6 +26,7 @@ public final class AdsbDemodulator
     private static final int INDEXVALLEYS5 = 30;
     private static final int INDEXVALLEYS6 = 40;
 
+
     /**
      * returns a demodulator obtaining the bytes containing the samples of the stream passed in argument
      * @param samplesStream
@@ -75,7 +76,7 @@ public final class AdsbDemodulator
 
                 if (maybeMessage != null)
                 {
-                    powerWindow.advanceBy(1200);
+                    powerWindow.advanceBy(WINDOWSIZE);
                     return maybeMessage;
                 }
                 else
