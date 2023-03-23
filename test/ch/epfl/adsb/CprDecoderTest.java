@@ -30,4 +30,12 @@ class CprDecoderTest
         assertEquals(expectedLongitude, actualLongitude);
         assertEquals(expectedLatitude, actualLatitude);
     }
+
+    @Test
+    void decodePositionWorks2()
+    {
+        GeoPos actualPosition = CprDecoder.decodePosition(0.62,0.42,0.6200000000000000001,0.4200000000000000001,0);
+
+        assertEquals("(-2.3186440486460924°, 2.5199999939650297°)", actualPosition.toString());
+    }
 }

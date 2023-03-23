@@ -43,12 +43,11 @@ public class AircraftState implements AircraftStateSetter
     @Override
     public void setVelocity(double velocity)
     {
-        System.out.println("vélocité : " + velocity);
     }
 
     @Override
     public void setTrackOrHeading(double trackOrHeading)
     {
-        System.out.println("Track or heading : " + trackOrHeading);
+        System.out.println("Track ou heading : " + trackOrHeading);
     }
 }
