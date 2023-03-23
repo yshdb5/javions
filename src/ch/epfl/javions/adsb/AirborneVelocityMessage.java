@@ -41,28 +41,28 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             if (directionNS == 0 && directionEW == 0)
             {
-                speedAngle_RADIAN = -(Math.atan2(-speedNS, -speedEW) - Math.PI);
+                speedAngle_RADIAN = Math.atan2(speedNS, speedEW);
             }
             else if (directionNS == 1 && directionEW == 0)
             {
-                speedAngle_RADIAN = Math.atan2(speedNS, -speedEW);
+                speedAngle_RADIAN = -Math.atan2(-speedNS, speedEW) + Math.PI;
             }
             else if (directionNS == 0 && directionEW == 1)
             {
-                speedAngle_RADIAN = -(Math.atan2(-speedNS, speedEW) - Math.PI);
+                speedAngle_RADIAN = Math.atan2(speedNS, -speedEW);
             }
             else
             {
-                speedAngle_RADIAN = Math.atan2(speedNS, speedEW);
+                speedAngle_RADIAN = -Math.atan2(-speedNS, -speedEW) + Math.PI;
             }
 
             if (ST == 1)
             {
-                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot((speedNS), (speedEW)), Units.Speed.KNOT);
+                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot(speedNS, speedEW), Units.Speed.KNOT);
             }
             else
             {
-                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot((speedNS), (speedEW))*4, Units.Speed.KNOT);
+                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot(speedNS, speedEW)*4, Units.Speed.KNOT);
             }
             return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNorm_METER_PER_SECOND, speedAngle_RADIAN);
         }
@@ -77,7 +77,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
             }
             else
             {
-                speedAngle_RADIAN = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10)*Math.scalb(1, -10), Units.Angle.TURN);
+                speedAngle_RADIAN = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10)*Math.scalb(1d, -10), Units.Angle.TURN);
 
                 if (ST == 3)
                 {

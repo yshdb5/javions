@@ -64,8 +64,6 @@ class AircraftIdentificationMessageTest
     @Test
     void PrintAircraftIdentificationMessage() throws IOException
     {
-
-
         String f = "resources/samples_20230304_1442.bin";
         try (InputStream s = new FileInputStream(f)) {
 
