@@ -58,26 +58,13 @@ public class CprDecoder
             zonePhi1 = zonePhi;
         }
 
-        latitude0_TURN = DELTA0*(zonePhi0 + y0);
-        latitude1_TURN = DELTA1*(zonePhi1 + y1);
+        latitude0_TURN = recenterPosition(DELTA0*(zonePhi0 + y0));
+        latitude1_TURN = recenterPosition(DELTA1*(zonePhi1 + y1));
 
-        if (latitude0_TURN >= 0.5)
-        {
-            latitude0_TURN -= 1;
-        }
-        if (latitude1_TURN >= 0.5)
-        {
-            latitude1_TURN -= 1;
-        }
+        latitude0_T32 = convertTurnToT32(latitude0_TURN);
+        latitude1_T32 = convertTurnToT32(latitude1_TURN);
 
-        latitude0_T32 = (int) Math.rint(Units.convert(latitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
-        latitude1_T32 = (int) Math.rint(Units.convert(latitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
-
-        if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0_T32))
-        {
-            return null;
-        }
-        if ((mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1_T32))
+        if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0_T32) || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1_T32))
         {
             return null;
         }
@@ -111,20 +98,11 @@ public class CprDecoder
         deltaLambda0 = ((double) 1) / nombreZones00;
         deltaLambda1 = ((double) 1) / nombreZones1;
 
-        longitude0_TURN = deltaLambda0*(zoneLambda0 + x0);
-        longitude1_TURN = deltaLambda1*(zoneLambda1 + x1);
+        longitude0_TURN = recenterPosition(deltaLambda0*(zoneLambda0 + x0));
+        longitude1_TURN = recenterPosition(deltaLambda1*(zoneLambda1 + x1));
 
-        if (longitude0_TURN >= 0.5)
-        {
-            longitude0_TURN -= 1;
-        }
-        if (longitude1_TURN >= 0.5)
-        {
-            longitude1_TURN -= 1;
-        }
-
-        longitude0_T32 = (int) Math.rint(Units.convert(longitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
-        longitude1_T32 = (int) Math.rint(Units.convert(longitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
+        longitude0_T32 = convertTurnToT32(longitude0_TURN);
+        longitude1_T32 = convertTurnToT32(longitude1_TURN);
 
         if (mostRecent == 0)
         {
@@ -152,5 +130,22 @@ public class CprDecoder
         {
             return (int) Math.floor((Math.PI*2.0)/Math.acos(A));
         }
+    }
+
+    private static double recenterPosition (double latitudeOrLongitude_TURN)
+    {
+        if (latitudeOrLongitude_TURN >= 0.5)
+        {
+            return latitudeOrLongitude_TURN - 1;
+        }
+        else
+        {
+            return latitudeOrLongitude_TURN;
+        }
+    }
+
+    private static int convertTurnToT32 (double latitudeOrLongitude_TURN)
+    {
+        return (int) Math.rint(Units.convert(latitudeOrLongitude_TURN, Units.Angle.TURN, Units.Angle.T32));
     }
 }
