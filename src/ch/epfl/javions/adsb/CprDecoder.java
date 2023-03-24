@@ -128,8 +128,6 @@ public class CprDecoder
         longitude0_T32 = (int) Math.rint(Units.convert(longitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
         longitude1_T32 = (int) Math.rint(Units.convert(longitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
 
-
-
         if (mostRecent == 0)
         {
             return new GeoPos(longitude0_T32, latitude0_T32);
