@@ -65,11 +65,6 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     {
         int typeCode = rawMessage.typeCode();
 
-        if (!(typeCode >= 1 && typeCode <= 4))
-        {
-            return null;
-        }
-
         int CA = Bits.extractUInt(rawMessage.payload(), 48, 3);
 
         int [] tab = getTab(rawMessage.payload());
