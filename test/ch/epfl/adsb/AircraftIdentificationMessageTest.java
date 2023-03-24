@@ -64,6 +64,7 @@ class AircraftIdentificationMessageTest
     @Test
     void PrintAircraftIdentificationMessage() throws IOException
     {
+        int count = 0;
         String f = "resources/samples_20230304_1442.bin";
         try (InputStream s = new FileInputStream(f)) {
 
@@ -74,8 +75,10 @@ class AircraftIdentificationMessageTest
                 if ((m.typeCode() >= 1 && m.typeCode() <= 4))
                 {
                     System.out.println(AircraftIdentificationMessage.of(m));
+                    count++;
                 }
             }
         }
+        System.out.println(count);
     }
 }

@@ -41,11 +41,11 @@ public class CprDecoder
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent)
     {
         Preconditions.checkArgument((mostRecent == 1) || (mostRecent == 0));
+
         double latitude0_TURN, latitude1_TURN, longitude0_TURN, longitude1_TURN, A, deltaLambda0, deltaLambda1;
         int latitude0_T32, latitude1_T32, longitude0_T32, longitude1_T32, zonePhi, zonePhi0, zonePhi1, zoneLambda, zoneLambda0, zoneLambda1,  nombreZones0, nombreZones1;
 
         zonePhi = (int) Math.rint(y0*Z1 - y1*Z0);
-
 
         if (zonePhi < 0)
         {
@@ -73,8 +73,18 @@ public class CprDecoder
         latitude0_T32 = (int) Math.rint(Units.convert(latitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
         latitude1_T32 = (int) Math.rint(Units.convert(latitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
 
-        double Angle_Rad = Math.cos(Units.convert(latitude0_TURN,Units.Angle.TURN,Units.Angle.RADIAN)) * Math.cos(Units.convert(latitude0_TURN,Units.Angle.TURN,Units.Angle.RADIAN));
+        if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0_T32))
+        {
+            return null;
+        }
+        if ((mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1_T32))
+        {
+            return null;
+        }
+
+        double Angle_Rad = Math.cos(Units.convertFrom(latitude0_TURN,Units.Angle.TURN)) * Math.cos(Units.convertFrom(latitude0_TURN,Units.Angle.TURN));
         A = 1 - ((1-Math.cos(Math.PI*2*DELTA0)) / (Angle_Rad));
+
         if (A > 1)
         {
             nombreZones0 = 1;
@@ -117,6 +127,8 @@ public class CprDecoder
 
         longitude0_T32 = (int) Math.rint(Units.convert(longitude0_TURN, Units.Angle.TURN, Units.Angle.T32));
         longitude1_T32 = (int) Math.rint(Units.convert(longitude1_TURN, Units.Angle.TURN, Units.Angle.T32));
+
+
 
         if (mostRecent == 0)
         {

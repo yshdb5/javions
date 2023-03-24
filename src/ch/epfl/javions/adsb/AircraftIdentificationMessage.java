@@ -71,16 +71,9 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         }
 
         int CA = Bits.extractUInt(rawMessage.payload(), 48, 3);
-        int C1 = Bits.extractUInt(rawMessage.payload(), 42, 6);
-        int C2 = Bits.extractUInt(rawMessage.payload(), 36, 6);
-        int C3 = Bits.extractUInt(rawMessage.payload(), 30, 6);
-        int C4 = Bits.extractUInt(rawMessage.payload(), 24, 6);
-        int C5 = Bits.extractUInt(rawMessage.payload(), 18, 6);
-        int C6 = Bits.extractUInt(rawMessage.payload(), 12, 6);
-        int C7 = Bits.extractUInt(rawMessage.payload(), 6, 6);
-        int C8 = Bits.extractUInt(rawMessage.payload(), 0, 6);
 
-        int [] tab = {C1, C2, C3, C4, C5, C6, C7, C8};
+        int [] tab = getTab(rawMessage.payload());
+
         String callstring = "";
 
         for (int i : tab)
@@ -111,5 +104,19 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         CallSign callSign = new CallSign(callstring);
 
         return new AircraftIdentificationMessage(timeStamps, icaoAddress, category, callSign);
+    }
+
+    private static int [] getTab (long payload)
+    {
+        int C1 = Bits.extractUInt(payload, 42, 6);
+        int C2 = Bits.extractUInt(payload, 36, 6);
+        int C3 = Bits.extractUInt(payload, 30, 6);
+        int C4 = Bits.extractUInt(payload, 24, 6);
+        int C5 = Bits.extractUInt(payload, 18, 6);
+        int C6 = Bits.extractUInt(payload, 12, 6);
+        int C7 = Bits.extractUInt(payload, 6, 6);
+        int C8 = Bits.extractUInt(payload, 0, 6);
+
+        return new int [] {C1, C2, C3, C4, C5, C6, C7, C8};
     }
 }

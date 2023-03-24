@@ -34,6 +34,33 @@ class AirbornePositionMessageTest
     private final static long timeStamp3 = 138560100;
     private static final RawMessage message3 = new RawMessage(timeStamp3, bytes3);
 
+    private final static byte [] tab4 = hf.parseHex("8D39203559B225F07550ADBE328F");
+    private final static ByteString bytes4 = new ByteString(tab4);
+    private final static long timeStamp4 = 138560100;
+    private static final RawMessage message4 = new RawMessage(timeStamp4, bytes4);
+
+    private final static byte [] tab5 = hf.parseHex("8DAE02C85864A5F5DD4975A1A3F5");
+    private final static ByteString bytes5 = new ByteString(tab5);
+    private final static long timeStamp5 = 138560100;
+    private static final RawMessage message5 = new RawMessage(timeStamp5, bytes5);
+
+    @Test
+    void ofWorksOnKnownValues0()
+    {
+        AirbornePositionMessage PositionMessage = AirbornePositionMessage.of(message4);
+        double expectedAltitude = 3474.7200000000003;
+
+        assertEquals(expectedAltitude, PositionMessage.altitude());
+    }
+
+    @Test
+    void ofWorksOnKnownValues00()
+    {
+        AirbornePositionMessage PositionMessage = AirbornePositionMessage.of(message5);
+        double expectedAltitude = 7315.200000000001;
+
+        assertEquals(expectedAltitude, PositionMessage.altitude());
+    }
     @Test
     void ofWorksOnKnownValues1()
     {
@@ -219,8 +246,7 @@ class AirbornePositionMessageTest
     @Test
     void PrintAirbornePositionMessage() throws IOException
     {
-
-
+        int count = 0;
         String f = "resources/samples_20230304_1442.bin";
         try (InputStream s = new FileInputStream(f)) {
 
@@ -231,8 +257,10 @@ class AirbornePositionMessageTest
                 if ((m.typeCode() >= 9 && m.typeCode() <= 18) || (m.typeCode() >= 20 && m.typeCode() <= 22))
                 {
                     System.out.println(AirbornePositionMessage.of(m));
+                    count++;
                 }
             }
         }
+        System.out.println(count);
     }
 }
