@@ -10,16 +10,15 @@ import java.util.regex.Pattern;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-public record AircraftRegistration(String string)
-{
+public record AircraftRegistration(String string) {
     private static Pattern registrationPattern = Pattern.compile("[A-Z0-9 .?/_+-]+");
 
     /**
      * compact constuctor : valids the string given in argument, checks if it is an Aircraft registration
+     *
      * @throws IllegalArgumentException
      */
-    public AircraftRegistration
-    {
+    public AircraftRegistration {
         Preconditions.checkArgument(registrationPattern.matcher(string).matches());
     }
 }

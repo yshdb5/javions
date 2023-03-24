@@ -9,9 +9,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-public interface Message
-
-{
+public interface Message {
     /**
      * @return the timestamp of the message, in nanoseconds
      */

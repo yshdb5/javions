@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_6 {
-    private SignatureChecks_6() {}
+    private SignatureChecks_6() {
+    }
 
     void checkAirborneVelocityMessage() throws Exception {
         v01 = new ch.epfl.javions.adsb.AirborneVelocityMessage(v02, v03, v04, v04);

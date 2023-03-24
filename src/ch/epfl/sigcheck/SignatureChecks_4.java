@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_4 {
-    private SignatureChecks_4() {}
+    private SignatureChecks_4() {
+    }
 
     void checkAdsbDemodulator() throws Exception {
         v01 = new ch.epfl.javions.demodulation.AdsbDemodulator(v02);

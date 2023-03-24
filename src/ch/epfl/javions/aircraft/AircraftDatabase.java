@@ -19,9 +19,9 @@ public final class AircraftDatabase {
 
     /**
      * the constructor : checks that its argument is not null and stores it in an attribute of the class
+     *
      * @param fileName
-     * @throws NullPointerException
-     *         if the file is null
+     * @throws NullPointerException if the file is null
      */
     public AircraftDatabase(String fileName) {
         Objects.requireNonNull(fileName);
@@ -30,40 +30,32 @@ public final class AircraftDatabase {
     }
 
     /**
-     * @param address
-     *       the ICAO address
+     * @param address the ICAO address
      * @return the data of the aircraft whose ICAO address is the one given
-     * @throws IOException
-     *        in case of input/output error
+     * @throws IOException in case of input/output error
      */
-    public AircraftData get(IcaoAddress address) throws IOException
-    {
+    public AircraftData get(IcaoAddress address) throws IOException {
         String csvAddress = address.string().substring(4) + ".csv";
 
-        String [] splittedData = new String[5];
+        String[] splittedData = new String[5];
 
         try (ZipFile zipFile = new ZipFile(fileName);
              InputStream stream = zipFile.getInputStream(zipFile.getEntry(csvAddress));
              Reader reader = new InputStreamReader(stream, UTF_8);
-             BufferedReader bufferedReader = new BufferedReader(reader))
-        {
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
             String line = "";
 
-            while ((line = bufferedReader.readLine()) != null)
-            {
-                if (line.compareTo(address.string()) < 0)
-                {
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.compareTo(address.string()) < 0) {
                     continue;
                 }
-                if (line.startsWith(address.string()))
-                {
+                if (line.startsWith(address.string())) {
                     splittedData = line.split(",", -1);
 
                     return new AircraftData(new AircraftRegistration(splittedData[1]), new AircraftTypeDesignator(splittedData[2]), splittedData[3],
                             new AircraftDescription(splittedData[4]), WakeTurbulenceCategory.of(splittedData[5]));
                 }
-                if (line.compareTo(address.string()) > 0)
-                {
+                if (line.compareTo(address.string()) > 0) {
                     return null;
                 }
             }

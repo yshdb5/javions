@@ -14,23 +14,17 @@ import java.util.Objects;
  */
 
 
-public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAddress, int category, CallSign callSign) implements Message
-{
+public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAddress, int category,
+                                            CallSign callSign) implements Message {
     /**
-     *
-     * @param timeStampNs
-     *        the time stamp of the message, in nanoseconds
-     * @param icaoAddress
-     *        the ICAO address of the sender of the message
-     * @param category
-     *        the category of aircraft of the shipper
-     * @param callSign
-     *        the sender's call sign
+     * @param timeStampNs the time stamp of the message, in nanoseconds
+     * @param icaoAddress the ICAO address of the sender of the message
+     * @param category    the category of aircraft of the shipper
+     * @param callSign    the sender's call sign
      * @throws NullPointerException if icaoAddress or callSign are nul
      * @throws NullPointerException if timeStampNs is strictly less than 0.
      */
-    public AircraftIdentificationMessage
-    {
+    public AircraftIdentificationMessage {
         Objects.requireNonNull(icaoAddress);
         Objects.requireNonNull(callSign);
         Preconditions.checkArgument(timeStampNs >= 0);
@@ -38,21 +32,21 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
     /**
      * redefinition of timeStamps
+     *
      * @return
      */
     @Override
-    public long timeStampNs()
-    {
+    public long timeStampNs() {
         return timeStampNs;
     }
 
     /**
      * redefinition of icaoAdress
+     *
      * @return
      */
     @Override
-    public IcaoAddress icaoAddress()
-    {
+    public IcaoAddress icaoAddress() {
         return icaoAddress;
     }
 
@@ -61,35 +55,27 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
      * @return the identification message corresponding to the given raw message,
      * or null if at least one of the characters of the code it contains is invalid
      */
-    public static AircraftIdentificationMessage of(RawMessage rawMessage)
-    {
+    public static AircraftIdentificationMessage of(RawMessage rawMessage) {
         int typeCode = rawMessage.typeCode();
 
         int CA = Bits.extractUInt(rawMessage.payload(), 48, 3);
 
-        int [] tab = getTab(rawMessage.payload());
+        int[] tab = getTab(rawMessage.payload());
 
         String callstring = "";
 
-        for (int i : tab)
-        {
-            if (i >= 1 && i <= 26)
-            {
+        for (int i : tab) {
+            if (i >= 1 && i <= 26) {
                 callstring += (char) (i + 64);
-            }
-            else if ((i >= 48 && i <= 57) || (i == 32))
-            {
+            } else if ((i >= 48 && i <= 57) || (i == 32)) {
                 callstring += (char) i;
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
 
-        while (callstring.endsWith(" "))
-        {
-            callstring = callstring.substring(0, (callstring.length() -1));
+        while (callstring.endsWith(" ")) {
+            callstring = callstring.substring(0, (callstring.length() - 1));
         }
 
         long timeStamps = rawMessage.timeStampNs();
@@ -101,8 +87,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         return new AircraftIdentificationMessage(timeStamps, icaoAddress, category, callSign);
     }
 
-    private static int [] getTab (long payload)
-    {
+    private static int[] getTab(long payload) {
         int C1 = Bits.extractUInt(payload, 42, 6);
         int C2 = Bits.extractUInt(payload, 36, 6);
         int C3 = Bits.extractUInt(payload, 30, 6);
@@ -112,6 +97,6 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         int C7 = Bits.extractUInt(payload, 6, 6);
         int C8 = Bits.extractUInt(payload, 0, 6);
 
-        return new int [] {C1, C2, C3, C4, C5, C6, C7, C8};
+        return new int[]{C1, C2, C3, C4, C5, C6, C7, C8};
     }
 }

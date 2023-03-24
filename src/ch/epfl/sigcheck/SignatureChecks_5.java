@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_5 {
-    private SignatureChecks_5() {}
+    private SignatureChecks_5() {
+    }
 
     void checkCprDecoder() throws Exception {
         v03 = ch.epfl.javions.adsb.CprDecoder.decodePosition(v01, v01, v01, v01, v02);

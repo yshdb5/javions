@@ -14,34 +14,31 @@ import java.util.Objects;
  * @author Gabriel Taieb (360560)
  */
 
-public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress, double altitude, int parity, double x, double y) implements Message
-{
+public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress, double altitude, int parity, double x,
+                                      double y) implements Message {
 
     /**
-     * @param timeStampNs
-     *        the time stamp of the message, in nanoseconds
-     * @param icaoAddress
-     *        the ICAO address of the sender of the message
-     * @param altitude
-     *        the altitude at which the aircraft was at the time the message was sent, in meters
-     * @param parity
-     *        the parity of the message (0 if it is even, 1 if it is odd)
-     * @param x
-     *        the local and normalized longitude (between 0 and 1) at which the
-     *        aircraft was located when the message was sent,
-     * @param y
-     *        the local and normalized latitude (between 0 and 1) at which
-     *        the aircraft was located when the message was sent
-     *
-     * @throws NullPointerException if icaoAddress is null
+     * @param timeStampNs the time stamp of the message, in nanoseconds
+     * @param icaoAddress the ICAO address of the sender of the message
+     * @param altitude    the altitude at which the aircraft was at the time the message was sent, in meters
+     * @param parity      the parity of the message (0 if it is even, 1 if it is odd)
+     * @param x           the local and normalized longitude (between 0 and 1) at which the
+     *                    aircraft was located when the message was sent,
+     * @param y           the local and normalized latitude (between 0 and 1) at which
+     *                    the aircraft was located when the message was sent
+     * @throws NullPointerException     if icaoAddress is null
      * @throws IllegalArgumentException if timeStamp is strictly less than 0, or parity is different from 0 or 1,
      *                                  or x or y are not between 0 (included) and 1 (excluded).
      */
-    public AirbornePositionMessage
-    {
+    public AirbornePositionMessage {
         Objects.requireNonNull(icaoAddress);
-        Preconditions.checkArgument((timeStampNs >= 0) && ((parity == 0) || (parity == 1)) && ((x >= 0) && (x < 1)) && ((y >= 0) && (y < 1)));
+        Preconditions.checkArgument(
+                (timeStampNs >= 0)
+                        && ((parity == 0) || (parity == 1))
+                        && ((x >= 0) && (x < 1))
+                        && ((y >= 0) && (y < 1)));
     }
+
     @Override
     public long timeStampNs() {
         return timeStampNs;
@@ -55,30 +52,26 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     /**
      * @param rawMessage
      * @return the flight positioning message corresponding to the given raw message
-     *         or null if the altitude it contains is invalid
+     * or null if the altitude it contains is invalid
      */
-    public static AirbornePositionMessage of(RawMessage rawMessage)
-    {
+    public static AirbornePositionMessage of(RawMessage rawMessage) {
         long timeStamp = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
         double ALT_METER;
         int ALT = Bits.extractUInt(rawMessage.payload(), 36, 12);
         int FORMAT = Bits.extractUInt(rawMessage.payload(), 34, 1);
-        double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17)*Math.scalb(1d, -17);
-        double longitude = Bits.extractUInt(rawMessage.payload(), 0, 17)*Math.scalb(1d, -17);
+        double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17) * Math.scalb(1d, -17);
+        double longitude = Bits.extractUInt(rawMessage.payload(), 0, 17) * Math.scalb(1d, -17);
 
         int Q = Bits.extractUInt(ALT, 4, 1);
 
-        if (Q == 1)
-        {
+        if (Q == 1) {
             int part1 = Bits.extractUInt(ALT, 5, 7);
             int part2 = Bits.extractUInt(ALT, 0, 4);
             ALT = (part1 << 4) | part2;
 
-            ALT_METER = Units.convertFrom(-1000 + ALT*25, Units.Length.FOOT);
-        }
-        else
-        {
+            ALT_METER = Units.convertFrom(-1000 + ALT * 25, Units.Length.FOOT);
+        } else {
             int disentangledAlt = disentangling(ALT);
 
             int part1 = Bits.extractUInt(disentangledAlt, 0, 3);
@@ -87,28 +80,24 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
             part1 = grayCodeValueOf(part1, 3);
             part2 = grayCodeValueOf(part2, 9);
 
-            if (part1 == 0 || part1 == 5 || part1 == 6)
-            {
+            if (part1 == 0 || part1 == 5 || part1 == 6) {
                 return null;
             }
-            if (part1 == 7)
-            {
+            if (part1 == 7) {
                 part1 = 5;
             }
-            if (part2 % 2 == 1)
-            {
-               part1 = 6 - part1;
+            if (part2 % 2 == 1) {
+                part1 = 6 - part1;
             }
 
 
-            ALT_METER = Units.convertFrom(-1300 + part1*100 + part2*500, Units.Length.FOOT);
+            ALT_METER = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
         }
 
-        return new AirbornePositionMessage(timeStamp, icaoAddress, ALT_METER , FORMAT, longitude, latitude);
+        return new AirbornePositionMessage(timeStamp, icaoAddress, ALT_METER, FORMAT, longitude, latitude);
     }
 
-    private static int disentangling(int ALT)
-    {
+    private static int disentangling(int ALT) {
         int D1 = Bits.extractUInt(ALT, 4, 1);
         int D2 = Bits.extractUInt(ALT, 2, 1);
         int D4 = Bits.extractUInt(ALT, 0, 1);
@@ -125,12 +114,10 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         return ((((((((((((D1 << 11) | D2 << 10) | D4 << 9) | A1 << 8) | A2 << 7) | A4 << 6) | B1 << 5) | B2 << 4) | B4 << 3) | C1 << 2) | C2 << 1) | C4);
     }
 
-    private static int grayCodeValueOf(int value, int length)
-    {
+    private static int grayCodeValueOf(int value, int length) {
         int grayCodeValue = 0;
 
-        for (int i = 0; i < length; i++)
-        {
+        for (int i = 0; i < length; i++) {
             grayCodeValue = grayCodeValue ^ (value >> i);
         }
 

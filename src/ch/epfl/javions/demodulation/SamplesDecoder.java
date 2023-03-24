@@ -1,7 +1,7 @@
 package ch.epfl.javions.demodulation;
 /**
  * final class SampleDecoder: represents an object capable of transforming the bytes coming from
- *                            AirSpy into signed 12-bit samples .
+ * AirSpy into signed 12-bit samples .
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -13,10 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-public final class SamplesDecoder
-{
+public final class SamplesDecoder {
     private InputStream stream;
-    private byte [] batchTab;
+    private byte[] batchTab;
     private int batchSize;
 
     /**
@@ -31,8 +30,7 @@ public final class SamplesDecoder
      *          if the stream is null
      */
 
-    public SamplesDecoder(InputStream stream, int batchSize)
-    {
+    public SamplesDecoder(InputStream stream, int batchSize) {
         Preconditions.checkArgument(batchSize > 0);
         Objects.requireNonNull(stream);
 
@@ -52,19 +50,17 @@ public final class SamplesDecoder
      * @throws IllegalArgumentException
      *         if the size of the array passed in argument is not equal to the batch size
      */
-    public int readBatch (short [] batch) throws IOException
-    {
+    public int readBatch(short[] batch) throws IOException {
         Preconditions.checkArgument(batch.length == batchSize);
 
-        int samplesCount = stream.readNBytes(batchTab, 0, batchSize*2)/(Short.BYTES);
+        int samplesCount = stream.readNBytes(batchTab, 0, batchSize * 2) / (Short.BYTES);
 
-        for (int i = 0, j = 0; i < samplesCount*2; i += 2, j++)
-        {
-            byte byte1 = batchTab [i];
-            byte byte2 = batchTab [i +  1];
+        for (int i = 0, j = 0; i < samplesCount * 2; i += 2, j++) {
+            byte byte1 = batchTab[i];
+            byte byte2 = batchTab[i + 1];
 
             short short1 = (short) (((Byte.toUnsignedInt(byte2) << 8) | Byte.toUnsignedInt(byte1)) - Math.scalb(1, 11));
-            batch [j] = short1;
+            batch[j] = short1;
         }
 
         return samplesCount;

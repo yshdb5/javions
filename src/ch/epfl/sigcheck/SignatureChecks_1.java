@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_1 {
-    private SignatureChecks_1() {}
+    private SignatureChecks_1() {
+    }
 
     void checkPreconditions() throws Exception {
         ch.epfl.javions.Preconditions.checkArgument(v01);

@@ -6,7 +6,8 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_2 {
-    private SignatureChecks_2() {}
+    private SignatureChecks_2() {
+    }
 
     void checkCrc24() throws Exception {
         v01 = new ch.epfl.javions.Crc24(v02);
