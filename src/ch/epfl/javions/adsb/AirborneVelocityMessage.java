@@ -7,8 +7,28 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 
 import java.util.Objects;
 
+/**
+ * record AirborneVelocityMessage : represents a speed message in flight of the type
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress, double speed, double trackOrHeading) implements Message
 {
+    /**
+     * AirborneVelocityMessage's constructor
+     * @param timeStampNs
+     *        the time stamp of the message, in nanoseconds
+     * @param icaoAddress
+     *        the ICAO address of the sender of the message
+     * @param speed
+     *        the speed of the aircraft, in m/s
+     * @param trackOrHeading
+     *        the direction of movement of the aircraft, in radians
+     * @throws NullPointerException if icaoAddress is null
+     * @throws IllegalArgumentException if timeStampNs, speed or trackOrHeading are strictly negative
+     */
     public AirborneVelocityMessage
     {
         Objects.requireNonNull(icaoAddress);
@@ -16,6 +36,11 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     }
 
 
+    /**
+     * @param rawMessage
+     * the airspeed message corresponding to the given raw message,or null if the
+     *             subtype is invalid, or if the speed or direction of travel cannot be determined.
+     */
     public static AirborneVelocityMessage of(RawMessage rawMessage)
     {
         int ST = Bits.extractUInt(rawMessage.payload(), 48, 3);

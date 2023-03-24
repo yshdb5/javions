@@ -1,13 +1,17 @@
 package ch.epfl.javions.adsb;
-/*
- *	Author:      Yshaï Dinée-Baumgarten
- *	Date:        21/03/23
- */
+
 
 import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.Units;
 
 import java.util.Objects;
+
+/**
+ * class AircraftStateAccumulator : represents an object accumulating ADS-B messages from a single aircraft
+ *                                  to determine its status over time
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 
 public class AircraftStateAccumulator <T extends AircraftStateSetter>
 {
@@ -15,6 +19,13 @@ public class AircraftStateAccumulator <T extends AircraftStateSetter>
     private AirbornePositionMessage lastEvenMessage;
     private AirbornePositionMessage lastOddMessage;
 
+    /**
+     * AircradtStateAccumumator's constructor
+     * returns an aircraft state accumulator associated with the given modifiable state
+     * @param stateSetter
+     *        a modifiable state
+     * @throws NullPointerException if the modifiable state is null
+     */
     public AircraftStateAccumulator(T stateSetter)
     {
         this.stateSetter = stateSetter;
@@ -23,11 +34,19 @@ public class AircraftStateAccumulator <T extends AircraftStateSetter>
         Objects.requireNonNull(stateSetter);
     }
 
+    /**
+
+     * @return the modifiable state of the aircraft passed to its constructor
+     */
     public T stateSetter()
     {
         return stateSetter;
     }
 
+    /**
+     * updates the modifiable state according to the given message
+     * @param message
+     */
     public void update(Message message)
     {
         switch (message)
