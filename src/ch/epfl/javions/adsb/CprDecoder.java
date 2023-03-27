@@ -84,8 +84,14 @@ public class CprDecoder {
         deltaLambda0 = ((double) 1) / nombreZones00;
         deltaLambda1 = ((double) 1) / nombreZones1;
 
-        longitude0_TURN = recenterPosition(deltaLambda0 * (zoneLambda0 + x0));
-        longitude1_TURN = recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
+        if (nombreZones00 == 1) // à vérifier
+        {
+            longitude0_TURN = recenterPosition(x0);
+            longitude1_TURN = recenterPosition(x1);
+        } else {
+            longitude0_TURN = recenterPosition(deltaLambda0 * (zoneLambda0 + x0));
+            longitude1_TURN = recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
+        }
 
         longitude0_T32 = convertTurnToT32(longitude0_TURN);
         longitude1_T32 = convertTurnToT32(longitude1_TURN);
@@ -103,7 +109,7 @@ public class CprDecoder {
     }
 
     private static int nombreZoneOf(double A) {
-        if (A > 1) {
+        if (Math.abs(A) > 1) {
             return 1;
         } else {
             return (int) Math.floor((Math.PI * 2.0) / Math.acos(A));

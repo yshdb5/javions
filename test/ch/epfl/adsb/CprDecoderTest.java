@@ -61,13 +61,6 @@ class CprDecoderTest
 
         assertNull(actualPosition);
     }
-
-    @Test
-    public void test112()
-    {
-        GeoPos pos = CprDecoder.decodePosition(0.747222900390625,0.7342300415039062, 0.6243515014648438, 0.4921417236328125,0);
-        System.out.println(pos);
-    }
     @Test
     public void testEd()
     {
