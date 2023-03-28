@@ -96,21 +96,16 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         return new AirbornePositionMessage(timeStamp, icaoAddress, altitude_METER, parity, longitude, latitude);
     }
 
-    private static int disentangling(int ALT) {
-        int D1 = Bits.extractUInt(ALT, 4, 1);
-        int D2 = Bits.extractUInt(ALT, 2, 1);
-        int D4 = Bits.extractUInt(ALT, 0, 1);
-        int A1 = Bits.extractUInt(ALT, 10, 1);
-        int A2 = Bits.extractUInt(ALT, 8, 1);
-        int A4 = Bits.extractUInt(ALT, 6, 1);
-        int B1 = Bits.extractUInt(ALT, 5, 1);
-        int B2 = Bits.extractUInt(ALT, 3, 1);
-        int B4 = Bits.extractUInt(ALT, 1, 1);
-        int C1 = Bits.extractUInt(ALT, 11, 1);
-        int C2 = Bits.extractUInt(ALT, 9, 1);
-        int C4 = Bits.extractUInt(ALT, 7, 1);
+    private static int disentangling(int altitude) {
 
-        return ((((((((((((D1 << 11) | D2 << 10) | D4 << 9) | A1 << 8) | A2 << 7) | A4 << 6) | B1 << 5) | B2 << 4) | B4 << 3) | C1 << 2) | C2 << 1) | C4);
+        int[] bitPositions = {4, 2, 0, 10, 8, 6, 5, 3, 1, 11, 9, 7};
+        int result = 0;
+
+        for (int i = 0; i < 12; i++) {
+            result |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11-i);
+        }
+
+        return result;
     }
 
     private static int grayCodeValueOf(int value, int length) {
