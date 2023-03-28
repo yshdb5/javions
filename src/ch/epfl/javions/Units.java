@@ -38,7 +38,7 @@ public final class Units {
     }
 
     /**
-     * class Length : lenght units
+     * class Length : length units
      *
      * @author Yshai  (356356)
      * @author Gabriel Taieb (360560)
@@ -80,7 +80,7 @@ public final class Units {
 
         /**
          * attributes (constants) defining the units of speed
-         * defined by using the classes Lenght and Time
+         * defined by using the classes Length and Time
          */
         public static final double KNOT = Length.NAUTICAL_MILE / Time.HOUR;
         public static final double KILOMETER_PER_HOUR = Length.KILOMETER / Time.HOUR;

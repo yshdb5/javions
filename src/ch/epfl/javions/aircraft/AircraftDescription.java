@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
  * @author Gabriel Taieb (360560)
  */
 public record AircraftDescription(String string) {
-    private static Pattern descriptionPattern = Pattern.compile("[ABDGHLPRSTV-][0123468][EJPT-]");
+    private static final Pattern descriptionPattern = Pattern.compile("[ABDGHLPRSTV-][0123468][EJPT-]");
 
     /**
-     * compact constuctor : valids the string given in argument, checks if it corresponds to an aicraft description pattern
+     * compact constructor : valids the string given in argument, checks if it corresponds to an aircraft description pattern
      * the string can be empty
      *
-     * @throws new IllegalArgumentException
+     * @throws IllegalArgumentException
      */
 
     public AircraftDescription {

@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
  * @author Gabriel Taieb (360560)
  */
 public record AircraftTypeDesignator(String string) {
-    private static Pattern typePattern = Pattern.compile("[A-Z0-9]{2,4}");
+    private static final Pattern typePattern = Pattern.compile("[A-Z0-9]{2,4}");
 
     /**
-     * compact constuctor : valids the string given in argument, checks if it corresponds to an aircraft designator pattern
+     * compact constructor : valids the string given in argument, checks if it corresponds to an aircraft designator pattern
      * the string can be empty
      *
-     * @throws new IllegalArgumentException
+     * @throws IllegalArgumentException
      */
     public AircraftTypeDesignator {
         Preconditions.checkArgument(typePattern.matcher(string).matches() || string.isEmpty());

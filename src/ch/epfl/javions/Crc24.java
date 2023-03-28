@@ -17,7 +17,7 @@ public final class Crc24 {
     private static final int TABLE_SIZE = 256;
 
     /**
-     * public constuctor of Crc24
+     * public constructor of Crc24
      *
      * @param generator the generator used to calculate a CRC24
      */

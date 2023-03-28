@@ -19,7 +19,7 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
     private AirbornePositionMessage lastOddMessage;
 
     /**
-     * AircradtStateAccumumator's constructor
+     * AircraftStateAccumulator's constructor
      * returns an aircraft state accumulator associated with the given modifiable state
      *
      * @param stateSetter a modifiable state
@@ -60,7 +60,7 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
                         stateSetter.setPosition(position);
                     }
                     lastEvenMessage = apm;
-                } else if (apm.parity() == 1) {
+                } else {
                     if ((lastEvenMessage != null) && validInterval(apm, lastEvenMessage)) {
                         position = CprDecoder.decodePosition(lastEvenMessage.x(), lastEvenMessage.y(), apm.x(), apm.y(), apm.parity());
                         stateSetter.setPosition(position);

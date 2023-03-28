@@ -7,7 +7,7 @@ import java.util.zip.ZipFile;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * final class AircraftDatabase : represents the mictronics database of aircraft.
+ * final class AircraftDatabase : represents the database of aircraft.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -15,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public final class AircraftDatabase {
-    private String fileName;
+    private final String fileName;
 
     /**
      * the constructor : checks that its argument is not null and stores it in an attribute of the class
@@ -37,7 +37,7 @@ public final class AircraftDatabase {
     public AircraftData get(IcaoAddress address) throws IOException {
         String csvAddress = address.string().substring(4) + ".csv";
 
-        String[] splittedData = new String[5];
+        String[] splitData;
 
         try (ZipFile zipFile = new ZipFile(fileName);
              InputStream stream = zipFile.getInputStream(zipFile.getEntry(csvAddress));
@@ -50,10 +50,10 @@ public final class AircraftDatabase {
                     continue;
                 }
                 if (line.startsWith(address.string())) {
-                    splittedData = line.split(",", -1);
+                    splitData = line.split(",", -1);
 
-                    return new AircraftData(new AircraftRegistration(splittedData[1]), new AircraftTypeDesignator(splittedData[2]), splittedData[3],
-                            new AircraftDescription(splittedData[4]), WakeTurbulenceCategory.of(splittedData[5]));
+                    return new AircraftData(new AircraftRegistration(splitData[1]), new AircraftTypeDesignator(splitData[2]), splitData[3],
+                            new AircraftDescription(splitData[4]), WakeTurbulenceCategory.of(splitData[5]));
                 }
                 if (line.compareTo(address.string()) > 0) {
                     return null;

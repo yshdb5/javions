@@ -57,22 +57,22 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     public static AirbornePositionMessage of(RawMessage rawMessage) {
         long timeStamp = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        double ALT_METER;
-        int ALT = Bits.extractUInt(rawMessage.payload(), 36, 12);
-        int FORMAT = Bits.extractUInt(rawMessage.payload(), 34, 1);
+        double altitude_METER;
+        int altitude = Bits.extractUInt(rawMessage.payload(), 36, 12);
+        int parity = Bits.extractUInt(rawMessage.payload(), 34, 1);
         double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17) * Math.scalb(1d, -17);
         double longitude = Bits.extractUInt(rawMessage.payload(), 0, 17) * Math.scalb(1d, -17);
 
-        int Q = Bits.extractUInt(ALT, 4, 1);
+        int Q = Bits.extractUInt(altitude, 4, 1);
 
         if (Q == 1) {
-            int part1 = Bits.extractUInt(ALT, 5, 7);
-            int part2 = Bits.extractUInt(ALT, 0, 4);
-            ALT = (part1 << 4) | part2;
+            int part1 = Bits.extractUInt(altitude, 5, 7);
+            int part2 = Bits.extractUInt(altitude, 0, 4);
+            altitude = (part1 << 4) | part2;
 
-            ALT_METER = Units.convertFrom(-1000 + ALT * 25, Units.Length.FOOT);
+            altitude_METER = Units.convertFrom(-1000 + altitude * 25, Units.Length.FOOT);
         } else {
-            int disentangledAlt = disentangling(ALT);
+            int disentangledAlt = disentangling(altitude);
 
             int part1 = Bits.extractUInt(disentangledAlt, 0, 3);
             int part2 = Bits.extractUInt(disentangledAlt, 3, 9);
@@ -90,11 +90,10 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
                 part1 = 6 - part1;
             }
 
-
-            ALT_METER = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
+            altitude_METER = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
         }
 
-        return new AirbornePositionMessage(timeStamp, icaoAddress, ALT_METER, FORMAT, longitude, latitude);
+        return new AirbornePositionMessage(timeStamp, icaoAddress, altitude_METER, parity, longitude, latitude);
     }
 
     private static int disentangling(int ALT) {

@@ -41,7 +41,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     }
 
     /**
-     * redefinition of icaoAdress
+     * redefinition of icaoAddress
      *
      * @return
      */
@@ -58,7 +58,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     public static AircraftIdentificationMessage of(RawMessage rawMessage) {
         int typeCode = rawMessage.typeCode();
 
-        int CA = Bits.extractUInt(rawMessage.payload(), 48, 3);
+        int categoryByte = Bits.extractUInt(rawMessage.payload(), 48, 3);
 
         int[] tab = getTab(rawMessage.payload());
 
@@ -80,7 +80,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
         long timeStamps = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        int category = Byte.toUnsignedInt((byte) (((14 - typeCode) << 4) | CA));
+        int category = Byte.toUnsignedInt((byte) (((14 - typeCode) << 4) | categoryByte));
 
         CallSign callSign = new CallSign(callstring);
 

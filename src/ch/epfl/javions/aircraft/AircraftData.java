@@ -3,7 +3,7 @@ package ch.epfl.javions.aircraft;
 import java.util.Objects;
 
 /**
- * record AircraftData : collects fix datas of an aircraft
+ * record AircraftData : collects fix data of an aircraft
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

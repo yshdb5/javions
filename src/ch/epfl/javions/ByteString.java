@@ -1,4 +1,10 @@
 package ch.epfl.javions;
+
+
+import java.util.Arrays;
+import java.util.HexFormat;
+import java.util.Objects;
+
 /**
  * class ByteString: represents a sequence of byte.
  * immutable class
@@ -8,12 +14,8 @@ package ch.epfl.javions;
  * @author Gabriel Taieb (360560)
  */
 
-import java.util.Arrays;
-import java.util.HexFormat;
-import java.util.Objects;
-
 public final class ByteString {
-    private byte[] bytes;
+    private final byte[] bytes;
     private final static HexFormat hf = HexFormat.of().withUpperCase();
 
     /**
@@ -34,7 +36,7 @@ public final class ByteString {
      * @param hexString the hexadecimal representation of the string
      * @return the byte string of which the string passed as argument is the hexadecimal representation
      * @throws IllegalArgumentException
-     * @throws NumberFormatException    if the sequence given is not an even size or if it contains a non hexadecimal number
+     * @throws NumberFormatException    if the sequence given is not an even size or if it contains a non-hexadecimal number
      */
     public static ByteString ofHexadecimalString(String hexString) {
         Preconditions.checkArgument((hexString.length() % 2) == 0);
@@ -69,7 +71,7 @@ public final class ByteString {
      * @param toIndex   the index where we want to end
      * @return the bytes between fromIndex and toIndex-1 as a long value (the low byte value is at toIndex - 1)
      * @throws IndexOutOfBoundsException if the range between fromIndex and toIndex isn't between 0 and the size of the string.
-     * @throws IllegalArgumentException  if the difference between toIndex and fromIndex isn't strictely
+     * @throws IllegalArgumentException  if the difference between toIndex and fromIndex isn't strictly
      *                                   lower to the number of byte in a long type value
      */
     public long bytesInRange(int fromIndex, int toIndex) {
@@ -91,7 +93,7 @@ public final class ByteString {
      * redefinition of equals
      *
      * @param obj the object we want to test
-     * @return true iff the value given is also an istance of ByteString and his bytes are the same as the receptor ones
+     * @return true iff the value given is also an instance of ByteString and his bytes are the same as the receptor ones
      */
     @Override
     public boolean equals(Object obj) {
@@ -99,7 +101,7 @@ public final class ByteString {
     }
 
     /**
-     * hasChcode method of Arrays
+     * hashcode method of Arrays
      *
      * @return apply the hashCode method to the Array containing the bytes.
      */

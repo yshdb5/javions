@@ -34,9 +34,9 @@ public class CprDecoder {
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent) {
         Preconditions.checkArgument((mostRecent == 1) || (mostRecent == 0));
 
-        double latitude0_TURN, latitude1_TURN, longitude0_TURN, longitude1_TURN, A0, A1, deltaLambda0, deltaLambda1;
+        double latitude0_TURN, latitude1_TURN, longitude0_TURN, longitude1_TURN, a0, a1, deltaLambda0, deltaLambda1;
         int latitude0_T32, latitude1_T32, longitude0_T32, longitude1_T32, zonePhi, zonePhi0, zonePhi1, zoneLambda,
-                zoneLambda0, zoneLambda1, nombreZones00, nombreZones01, nombreZones1;
+                zoneLambda0, zoneLambda1, zoneNumber00, zoneNumber01, zoneNumber1;
 
         zonePhi = (int) Math.rint(y0 * Z1 - y1 * Z0);
 
@@ -59,32 +59,32 @@ public class CprDecoder {
             return null;
         }
 
-        A0 = aOf(latitude0_TURN);
-        A1 = aOf(latitude1_TURN);
+        a0 = aOf(latitude0_TURN);
+        a1 = aOf(latitude1_TURN);
 
-        nombreZones00 = nombreZoneOf(A0);
-        nombreZones01 = nombreZoneOf(A1);
+        zoneNumber00 = zoneNumberOf(a0);
+        zoneNumber01 = zoneNumberOf(a1);
 
-        if (nombreZones00 != nombreZones01) {
+        if (zoneNumber00 != zoneNumber01) {
             return null;
         }
 
-        nombreZones1 = nombreZones00 - 1;
+        zoneNumber1 = zoneNumber00 - 1;
 
-        zoneLambda = (int) Math.rint(x0 * nombreZones1 - x1 * nombreZones00);
+        zoneLambda = (int) Math.rint(x0 * zoneNumber1 - x1 * zoneNumber00);
 
         if (zoneLambda < 0) {
-            zoneLambda0 = zoneLambda + nombreZones00;
-            zoneLambda1 = zoneLambda + nombreZones1;
+            zoneLambda0 = zoneLambda + zoneNumber00;
+            zoneLambda1 = zoneLambda + zoneNumber1;
         } else {
             zoneLambda0 = zoneLambda;
             zoneLambda1 = zoneLambda;
         }
 
-        deltaLambda0 = ((double) 1) / nombreZones00;
-        deltaLambda1 = ((double) 1) / nombreZones1;
+        deltaLambda0 = ((double) 1) / zoneNumber00;
+        deltaLambda1 = ((double) 1) / zoneNumber1;
 
-        if (nombreZones00 == 1) // à vérifier
+        if (zoneNumber00 == 1)
         {
             longitude0_TURN = recenterPosition(x0);
             longitude1_TURN = recenterPosition(x1);
@@ -108,7 +108,7 @@ public class CprDecoder {
         return 1 - ((1 - Math.cos(Math.PI * 2 * DELTA0)) / (angle_rad));
     }
 
-    private static int nombreZoneOf(double A) {
+    private static int zoneNumberOf(double A) {
         if (Math.abs(A) > 1) {
             return 1;
         } else {

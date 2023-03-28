@@ -1,13 +1,13 @@
 package ch.epfl.javions;
+
+import java.util.Objects;
+
 /**
  * class Bits : contains methods to extract a subset of the 64 bits of a long type value
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
-
-import java.util.Objects;
 
 public class Bits {
     private Bits() {
