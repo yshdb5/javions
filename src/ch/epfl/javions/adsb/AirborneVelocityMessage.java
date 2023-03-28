@@ -42,8 +42,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
         if ((subType < 1) || (subType > 4)) {
             return null;
         }
-        double trackOrHeading_RADIAN;
-        double speedNorm_METER_PER_SECOND;
+        double track0rHeadingRadian;
+        double speedNormMeterPerSecond;
 
         if ((subType == 1) || (subType == 2)) {
             int directionEW = Bits.extractUInt(rawMessage.payload(), 42, 1);
@@ -56,39 +56,39 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
             }
 
             if (directionNS == 0 && directionEW == 0) {
-                trackOrHeading_RADIAN = Math.atan2(speedEW, speedNS);
+                track0rHeadingRadian = Math.atan2(speedEW, speedNS);
             } else if (directionNS == 1 && directionEW == 0) {
-                trackOrHeading_RADIAN = Math.atan2(speedEW, -speedNS);
+                track0rHeadingRadian = Math.atan2(speedEW, -speedNS);
             } else if (directionNS == 0 && directionEW == 1) {
-                trackOrHeading_RADIAN = Math.atan2(-speedEW, speedNS);
+                track0rHeadingRadian = Math.atan2(-speedEW, speedNS);
             } else {
-                trackOrHeading_RADIAN = Math.atan2(-speedEW, -speedNS);
+                track0rHeadingRadian = Math.atan2(-speedEW, -speedNS);
             }
 
-            if (trackOrHeading_RADIAN < 0) {
-                trackOrHeading_RADIAN += 2 * Math.PI;
+            if (track0rHeadingRadian < 0) {
+                track0rHeadingRadian += 2 * Math.PI;
             }
 
             if (subType == 1) {
-                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot(speedNS, speedEW), Units.Speed.KNOT);
+                speedNormMeterPerSecond = Units.convertFrom(Math.hypot(speedNS, speedEW), Units.Speed.KNOT);
             } else {
-                speedNorm_METER_PER_SECOND = Units.convertFrom(Math.hypot(speedNS, speedEW) * 4, Units.Speed.KNOT);
+                speedNormMeterPerSecond = Units.convertFrom(Math.hypot(speedNS, speedEW) * 4, Units.Speed.KNOT);
             }
-            return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNorm_METER_PER_SECOND, trackOrHeading_RADIAN);
+            return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
         } else {
             int capAvailability = Bits.extractUInt(rawMessage.payload(), 42, 1);
 
             if (capAvailability == 0) {
                 return null;
             } else {
-                trackOrHeading_RADIAN = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * Math.scalb(1d, -10), Units.Angle.TURN);
+                track0rHeadingRadian = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * Math.scalb(1d, -10), Units.Angle.TURN);
 
                 if (subType == 3) {
-                    speedNorm_METER_PER_SECOND = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10), Units.Speed.KNOT);
+                    speedNormMeterPerSecond = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10), Units.Speed.KNOT);
                 } else {
-                    speedNorm_METER_PER_SECOND = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * 4, Units.Speed.KNOT);
+                    speedNormMeterPerSecond = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * 4, Units.Speed.KNOT);
                 }
-                return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNorm_METER_PER_SECOND, trackOrHeading_RADIAN);
+                return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
             }
         }
     }

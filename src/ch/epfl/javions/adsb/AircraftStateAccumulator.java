@@ -77,6 +77,6 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
     }
 
     private boolean validInterval(Message mess0, Message mess1) {
-        return mess0.timeStampNs() - mess1.timeStampNs() <= Math.pow(10, 10);
+        return (mess0.timeStampNs() - mess1.timeStampNs()) <= Math.pow(10, 10);
     }
 }

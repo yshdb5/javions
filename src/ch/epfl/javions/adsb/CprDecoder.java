@@ -34,8 +34,8 @@ public class CprDecoder {
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent) {
         Preconditions.checkArgument((mostRecent == 1) || (mostRecent == 0));
 
-        double latitude0_TURN, latitude1_TURN, longitude0_TURN, longitude1_TURN, a0, a1, deltaLambda0, deltaLambda1;
-        int latitude0_T32, latitude1_T32, longitude0_T32, longitude1_T32, zonePhi, zonePhi0, zonePhi1, zoneLambda,
+        double latitude0Turn, latitude1Turn, longitude0Turn, longitude1Turn, a0, a1, deltaLambda0, deltaLambda1;
+        int latitude0T32, latitude1T32, longitude0T32, longitude1T32, zonePhi, zonePhi0, zonePhi1, zoneLambda,
                 zoneLambda0, zoneLambda1, zoneNumber00, zoneNumber01, zoneNumber1;
 
         zonePhi = (int) Math.rint(y0 * Z1 - y1 * Z0);
@@ -48,19 +48,19 @@ public class CprDecoder {
             zonePhi1 = zonePhi;
         }
 
-        latitude0_TURN = recenterPosition(DELTA0 * (zonePhi0 + y0));
-        latitude1_TURN = recenterPosition(DELTA1 * (zonePhi1 + y1));
+        latitude0Turn = recenterPosition(DELTA0 * (zonePhi0 + y0));
+        latitude1Turn = recenterPosition(DELTA1 * (zonePhi1 + y1));
 
-        latitude0_T32 = convertTurnToT32(latitude0_TURN);
-        latitude1_T32 = convertTurnToT32(latitude1_TURN);
+        latitude0T32 = convertTurnToT32(latitude0Turn);
+        latitude1T32 = convertTurnToT32(latitude1Turn);
 
-        if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0_T32)
-                || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1_T32)) {
+        if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0T32)
+                || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1T32)) {
             return null;
         }
 
-        a0 = aOf(latitude0_TURN);
-        a1 = aOf(latitude1_TURN);
+        a0 = aOf(latitude0Turn);
+        a1 = aOf(latitude1Turn);
 
         zoneNumber00 = zoneNumberOf(a0);
         zoneNumber01 = zoneNumberOf(a1);
@@ -85,20 +85,20 @@ public class CprDecoder {
         deltaLambda1 = ((double) 1) / zoneNumber1;
 
         if (zoneNumber00 == 1) {
-            longitude0_TURN = recenterPosition(x0);
-            longitude1_TURN = recenterPosition(x1);
+            longitude0Turn = recenterPosition(x0);
+            longitude1Turn = recenterPosition(x1);
         } else {
-            longitude0_TURN = recenterPosition(deltaLambda0 * (zoneLambda0 + x0));
-            longitude1_TURN = recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
+            longitude0Turn = recenterPosition(deltaLambda0 * (zoneLambda0 + x0));
+            longitude1Turn = recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
         }
 
-        longitude0_T32 = convertTurnToT32(longitude0_TURN);
-        longitude1_T32 = convertTurnToT32(longitude1_TURN);
+        longitude0T32 = convertTurnToT32(longitude0Turn);
+        longitude1T32 = convertTurnToT32(longitude1Turn);
 
         if (mostRecent == 0) {
-            return new GeoPos(longitude0_T32, latitude0_T32);
+            return new GeoPos(longitude0T32, latitude0T32);
         } else {
-            return new GeoPos(longitude1_T32, latitude1_T32);
+            return new GeoPos(longitude1T32, latitude1T32);
         }
     }
 

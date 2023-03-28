@@ -57,7 +57,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     public static AirbornePositionMessage of(RawMessage rawMessage) {
         long timeStamp = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        double altitude_METER;
+        double altitudeMeter;
         int altitude = Bits.extractUInt(rawMessage.payload(), 36, 12);
         int parity = Bits.extractUInt(rawMessage.payload(), 34, 1);
         double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17) * Math.scalb(1d, -17);
@@ -70,7 +70,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
             int part2 = Bits.extractUInt(altitude, 0, 4);
             altitude = (part1 << 4) | part2;
 
-            altitude_METER = Units.convertFrom(-1000 + altitude * 25, Units.Length.FOOT);
+            altitudeMeter = Units.convertFrom(-1000 + altitude * 25, Units.Length.FOOT);
         } else {
             int disentangledAlt = disentangling(altitude);
 
@@ -90,22 +90,22 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
                 part1 = 6 - part1;
             }
 
-            altitude_METER = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
+            altitudeMeter = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
         }
 
-        return new AirbornePositionMessage(timeStamp, icaoAddress, altitude_METER, parity, longitude, latitude);
+        return new AirbornePositionMessage(timeStamp, icaoAddress, altitudeMeter, parity, longitude, latitude);
     }
 
     private static int disentangling(int altitude) {
 
         int[] bitPositions = {4, 2, 0, 10, 8, 6, 5, 3, 1, 11, 9, 7};
-        int result = 0;
+        int disentangledAlt = 0;
 
         for (int i = 0; i < 12; i++) {
-            result |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11 - i);
+            disentangledAlt |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11 - i);
         }
 
-        return result;
+        return disentangledAlt;
     }
 
     private static int grayCodeValueOf(int value, int length) {
