@@ -102,7 +102,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         int result = 0;
 
         for (int i = 0; i < 12; i++) {
-            result |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11-i);
+            result |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11 - i);
         }
 
         return result;

@@ -84,8 +84,7 @@ public class CprDecoder {
         deltaLambda0 = ((double) 1) / zoneNumber00;
         deltaLambda1 = ((double) 1) / zoneNumber1;
 
-        if (zoneNumber00 == 1)
-        {
+        if (zoneNumber00 == 1) {
             longitude0_TURN = recenterPosition(x0);
             longitude1_TURN = recenterPosition(x1);
         } else {

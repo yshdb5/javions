@@ -14,7 +14,7 @@ import java.util.Objects;
  */
 
 public class AircraftStateAccumulator<T extends AircraftStateSetter> {
-    private T stateSetter;
+    private final T stateSetter;
     private AirbornePositionMessage lastEvenMessage;
     private AirbornePositionMessage lastOddMessage;
 
