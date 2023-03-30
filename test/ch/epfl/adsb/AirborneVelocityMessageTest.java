@@ -26,14 +26,14 @@ class AirborneVelocityMessageTest
     {
         AirborneVelocityMessage message1 = AirborneVelocityMessage.of(message);
 
-        double velocity = 0;
-        double track = 0;
+        //double velocity = ?;
+        //double track = ?;
         //assertEquals(velocity, message1.speed());
         //assertEquals(track, message1.trackOrHeading());
 
     }
 
-    private final static byte [] tab2 = hf.parseHex("8D485020994409940838175B284F");
+    private final static byte [] tab2 = hf.parseHex("8DA05F219B06B6AF189400CBC33F");
     private final static ByteString bytes2 = new ByteString(tab2);
     private final static long timeStamp2 = 75898000;
     private static final RawMessage message2 = new RawMessage(timeStamp2, bytes2);
@@ -41,12 +41,12 @@ class AirborneVelocityMessageTest
     @Test
     void AirborneVelocityMessageWorksOnGivenValues2()
     {
-        AirborneVelocityMessage message2 = AirborneVelocityMessage.of(message);
+        AirborneVelocityMessage message = AirborneVelocityMessage.of(message2);
 
-        double velocity = 0;
-        double track = 0;
-        //assertEquals(velocity, message2.speed());
-        //assertEquals(track, message2.trackOrHeading());
+        double velocity = 192.91666666666669;
+        double track = 4.25833066717054;
+        assertEquals(velocity, message.speed());
+        assertEquals(track, message.trackOrHeading());
 
     }
     @Test
