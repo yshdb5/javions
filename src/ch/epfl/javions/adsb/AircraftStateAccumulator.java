@@ -44,7 +44,9 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
      *
      * @param message
      */
-    public void update(Message message) {
+    public void update(Message message)
+    {
+        stateSetter.setLastMessageTimeStampNs(message.timeStampNs());
         switch (message) {
             case AircraftIdentificationMessage aim -> {
                 stateSetter.setCallSign(aim.callSign());

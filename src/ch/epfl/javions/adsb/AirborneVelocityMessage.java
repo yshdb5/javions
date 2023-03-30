@@ -83,10 +83,14 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
             } else {
                 track0rHeadingRadian = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * Math.scalb(1d, -10), Units.Angle.TURN);
 
+                double temporarySpeed = (Bits.extractUInt(rawMessage.payload(), 21, 10) - 1);
+
+                if (temporarySpeed == -1) return null;
+
                 if (subType == 3) {
-                    speedNormMeterPerSecond = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10), Units.Speed.KNOT);
+                    speedNormMeterPerSecond = Units.convertFrom(temporarySpeed, Units.Speed.KNOT);
                 } else {
-                    speedNormMeterPerSecond = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * 4, Units.Speed.KNOT);
+                    speedNormMeterPerSecond = Units.convertFrom(temporarySpeed * 4, Units.Speed.KNOT);
                 }
                 return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
             }

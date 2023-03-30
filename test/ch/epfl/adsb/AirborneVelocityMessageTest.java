@@ -16,32 +16,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AirborneVelocityMessageTest
 {
-    private final static HexFormat hf = HexFormat.of();
-    private final static byte [] tab1 = hf.parseHex("8D485020994409940838175B284F");
-    private final static ByteString bytes1 = new ByteString(tab1);
-    private final static long timeStamp1 = 75898000;
-    private static final RawMessage message = new RawMessage(timeStamp1, bytes1);
     @Test
     void AirborneVelocityMessageWorksOnGivenValues()
     {
-        AirborneVelocityMessage message1 = AirborneVelocityMessage.of(message);
+        RawMessage rm = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994409940838175B284F"));
+        AirborneVelocityMessage message1 = AirborneVelocityMessage.of(rm);
 
-        //double velocity = ?;
-        //double track = ?;
-        //assertEquals(velocity, message1.speed());
-        //assertEquals(track, message1.trackOrHeading());
-
+        double velocity = 81.90013721178154;
+        double track = 3.1918647255875205;
+        assertEquals(velocity, message1.speed());
+        assertEquals(track, message1.trackOrHeading());
     }
-
-    private final static byte [] tab2 = hf.parseHex("8DA05F219B06B6AF189400CBC33F");
-    private final static ByteString bytes2 = new ByteString(tab2);
-    private final static long timeStamp2 = 75898000;
-    private static final RawMessage message2 = new RawMessage(timeStamp2, bytes2);
 
     @Test
     void AirborneVelocityMessageWorksOnGivenValues2()
     {
-        AirborneVelocityMessage message = AirborneVelocityMessage.of(message2);
+        RawMessage rm = new RawMessage(0, ByteString.ofHexadecimalString("8DA05F219B06B6AF189400CBC33F"));
+        AirborneVelocityMessage message = AirborneVelocityMessage.of(rm);
 
         double velocity = 192.91666666666669;
         double track = 4.25833066717054;
@@ -49,6 +40,33 @@ class AirborneVelocityMessageTest
         assertEquals(track, message.trackOrHeading());
 
     }
+
+    @Test
+    void AirborneVelocityMessageWorksOnGivenValues3()
+    {
+        RawMessage rm = new RawMessage(0, ByteString.ofHexadecimalString("8DA05F219C06B6AF189400CBC33F"));
+        AirborneVelocityMessage message = AirborneVelocityMessage.of(rm);
+
+        double velocity = 4*192.91666666666669;
+        double track = 4.25833066717054;
+        assertEquals(velocity, message.speed());
+        assertEquals(track, message.trackOrHeading());
+
+    }
+
+    @Test
+    void AirborneVelocityMessageWorksOnGivenValues4()
+    {
+        RawMessage rm = new RawMessage(0, ByteString.ofHexadecimalString("8D4B1A00EA0DC89E8F7C0857D5F5"));
+        AirborneVelocityMessage message = AirborneVelocityMessage.of(rm);
+
+        double velocity = 1061.4503686262444;
+        double track = 4.221861463749146;
+        assertEquals(velocity, message.speed());
+        assertEquals(track, message.trackOrHeading());
+
+    }
+
     @Test
     void PrintAirborneVelocityMessage() throws IOException
     {
@@ -76,18 +94,14 @@ class AirborneVelocityMessageTest
     velocity: 217.1759987875795
     track or heading: 5.707008696317668
 
-
     velocity: 227.75426436901594
     track or heading: 4.1068443167797195
-
 
     velocity: 161.15254486753832
     track or heading: 3.9337627224977503
 
-
     velocity: 228.01904908511267
     track or heading: 5.311655187675027
-
 
     velocity: 114.64264880353804
     track or heading: 5.335246702497837
