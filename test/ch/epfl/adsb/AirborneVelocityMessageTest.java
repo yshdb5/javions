@@ -17,6 +17,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class AirborneVelocityMessageTest
 {
     @Test
+    void AirborneVelocityMessageReturnsNullWithInvalidMessages()
+    {
+        RawMessage rm1 = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994409800838175B284F"));
+        RawMessage rm2 = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994400140838175B284F"));
+        RawMessage rm3 = new RawMessage(0, ByteString.ofHexadecimalString("8D4850209C4609800838175B284F"));
+        RawMessage rm4 = new RawMessage(0, ByteString.ofHexadecimalString("8D4850209C4409940838175B284F"));
+
+        assertNull(AirborneVelocityMessage.of(rm1));
+        assertNull(AirborneVelocityMessage.of(rm2));
+        assertNull(AirborneVelocityMessage.of(rm3));
+        assertNull(AirborneVelocityMessage.of(rm4));
+    }
+    @Test
     void AirborneVelocityMessageWorksOnGivenValues()
     {
         RawMessage rm = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994409940838175B284F"));

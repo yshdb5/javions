@@ -76,7 +76,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
             }
             return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
         } else {
-            int capAvailability = Bits.extractUInt(rawMessage.payload(), 42, 1);
+            int capAvailability = Bits.extractUInt(rawMessage.payload(), 41, 1);
 
             if (capAvailability == 0) {
                 return null;
