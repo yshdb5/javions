@@ -54,11 +54,11 @@ public final class Crc24 {
         int crc = 0;
 
         for (byte o : bytes) {
-            crc = ((crc << 8) | Byte.toUnsignedInt(o)) ^ table[Bits.extractUInt(crc, (CRC_BITS - 8), 8)];
+            crc = ((crc << Byte.SIZE) | Byte.toUnsignedInt(o)) ^ table[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
         }
 
         for (int i = 0; i < 3; i++) {
-            crc = (crc << 8) ^ table[Bits.extractUInt(crc, (CRC_BITS - 8), 8)];
+            crc = (crc << Byte.SIZE) ^ table[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
         }
 
         crc = Bits.extractUInt(crc, 0, CRC_BITS);

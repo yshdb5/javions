@@ -14,9 +14,10 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public final class SamplesDecoder {
-    private InputStream stream;
-    private byte[] batchTab;
-    private int batchSize;
+    private final static double RECENTER_VALUE = Math.scalb(1, 11);
+    private final InputStream stream;
+    private final byte[] batchTab;
+    private final int batchSize;
 
     /**
      * returns a sample decoder using the given input stream to get the bytes from
@@ -56,7 +57,7 @@ public final class SamplesDecoder {
             byte byte1 = batchTab[i];
             byte byte2 = batchTab[i + 1];
 
-            short short1 = (short) (((Byte.toUnsignedInt(byte2) << 8) | Byte.toUnsignedInt(byte1)) - Math.scalb(1, 11));
+            short short1 = (short) (((Byte.toUnsignedInt(byte2) << Byte.SIZE) | Byte.toUnsignedInt(byte1)) - RECENTER_VALUE);
             batch[j] = short1;
         }
 

@@ -15,22 +15,22 @@ import java.util.Objects;
  */
 
 public final class PowerWindow {
-    private final static int BATCHSIZE = 1 << 16;
-    private int windowSize;
+    private final static int BATCH_SIZE = 1 << 16;
+    private final int windowSize;
     private int position;
     private int count;
-    private PowerComputer computer;
+    private final PowerComputer computer;
     private int[] evenBatch;
     private int[] oddBatch;
 
     /**
      * PowerWindow's constructor, returns a window of given size on the sequence of power samples
-     * computed from the bytes providedby the given input stream
+     * computed from the bytes provided by the given input stream
      *
      * @param stream
      * @param windowSize
      * @throws IOException
-     * @throws IllegalArgumentException if the window's size isnt between O (excluded) and 2 power 16 (included)
+     * @throws IllegalArgumentException if the window's size isn't between O (excluded) and 2 power 16 (included)
      */
 
     public PowerWindow(InputStream stream, int windowSize) throws IOException {
@@ -39,10 +39,10 @@ public final class PowerWindow {
         this.windowSize = windowSize;
         position = 0;
 
-        computer = new PowerComputer(stream, BATCHSIZE);
+        computer = new PowerComputer(stream, BATCH_SIZE);
 
-        evenBatch = new int[BATCHSIZE];
-        oddBatch = new int[BATCHSIZE];
+        evenBatch = new int[BATCH_SIZE];
+        oddBatch = new int[BATCH_SIZE];
 
         count = computer.readBatch(evenBatch);
     }
@@ -71,15 +71,15 @@ public final class PowerWindow {
     /**
      * @param i the index
      * @return the power sample at the given index (i) of the window
-     * @throws IndexOutOfBoundsException if i isnt between 0 included and the window's size excluded
+     * @throws IndexOutOfBoundsException if "i" isn't between 0 included and the window's size excluded
      */
     public int get(int i) {
         Objects.checkIndex(i, windowSize);
 
-        if (((position % BATCHSIZE) + i) < BATCHSIZE) {
-            return evenBatch[(position % BATCHSIZE) + i];
+        if (((position % BATCH_SIZE) + i) < BATCH_SIZE) {
+            return evenBatch[(position % BATCH_SIZE) + i];
         } else {
-            return oddBatch[(position % BATCHSIZE) + i - BATCHSIZE];
+            return oddBatch[(position % BATCH_SIZE) + i - BATCH_SIZE];
         }
     }
 
@@ -92,9 +92,9 @@ public final class PowerWindow {
         position++;
         count--;
 
-        if ((position + windowSize) % BATCHSIZE == 0) {
+        if ((position + windowSize) % BATCH_SIZE == 0) {
             count += computer.readBatch(oddBatch);
-        } else if (position % BATCHSIZE == 0) {
+        } else if (position % BATCH_SIZE == 0) {
             int[] temp = evenBatch;
             evenBatch = oddBatch;
             oddBatch = temp;
@@ -106,7 +106,7 @@ public final class PowerWindow {
      *
      * @param offset the given number of samples
      * @throws IOException
-     * @throws IllegalArgumentException if offset isnt >=0
+     * @throws IllegalArgumentException if offset isn't >=0
      */
     public void advanceBy(int offset) throws IOException {
         Preconditions.checkArgument(offset >= 0);

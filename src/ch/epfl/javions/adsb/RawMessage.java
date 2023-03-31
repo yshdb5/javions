@@ -23,11 +23,21 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * LENGTH : constant of value 14
      */
     public static final int LENGTH = 14;
+    private static final int PAYLOAD_START = 4;
+    private static final int PAYLOAD_LENGTH = 10;
+    private static final int EXPECTED_DF = 17;
+    private static final int DF_START = 3;
+    private static final int DF_LENGTH = 5;
+    private static final int TYPECODE_START = 51;
+    private static final int TYPECODE_LENGTH = 5;
+    private static final int ICAO_START = 1;
+    private static final int ICAO_LENGTH = 4;
+    private static final int ICAO_SIZE = 6;
     private final static HexFormat hf = HexFormat.of().withUpperCase();
     private final static Crc24 crc24 = new Crc24(Crc24.GENERATOR);
 
     /**
-     * Rawmessage compact constructor
+     * RawMessage compact constructor
      *
      * @param timeStampNs
      * @param bytes
@@ -57,7 +67,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      */
     public static int size(byte byte0) {
         int DF = Bits.extractUInt(byte0, 3, 5);
-        if (DF == 17) {
+        if (DF == EXPECTED_DF) {
             return LENGTH;
         } else {
             return 0;
@@ -70,7 +80,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      */
 
     public static int typeCode(long payload) {
-        return Bits.extractUInt(payload, 51, 5);
+        return Bits.extractUInt(payload, TYPECODE_START, TYPECODE_LENGTH);
     }
 
     /**
@@ -79,23 +89,23 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     public int downLinkFormat() {
         byte byte0 = (byte) this.bytes.byteAt(0);
 
-        return Bits.extractUInt(byte0, 3, 5);
+        return Bits.extractUInt(byte0, DF_START, DF_LENGTH);
     }
 
     /**
      * @return the ICAO address of the sender of the message
      */
     public IcaoAddress icaoAddress() {
-        long address = this.bytes.bytesInRange(1, 4);
+        long address = this.bytes.bytesInRange(ICAO_START, ICAO_LENGTH);
 
-        return new IcaoAddress(hf.toHexDigits(address, 6));
+        return new IcaoAddress(hf.toHexDigits(address, ICAO_SIZE));
     }
 
     /**
      * @return the ME attribute of the message
      */
     public long payload() {
-        return this.bytes.bytesInRange(4, 11);
+        return this.bytes.bytesInRange(PAYLOAD_START, PAYLOAD_LENGTH + 1);
     }
 
     /**

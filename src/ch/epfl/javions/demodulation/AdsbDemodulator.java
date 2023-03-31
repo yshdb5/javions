@@ -13,7 +13,7 @@ import java.io.InputStream;
  * @author Gabriel Taieb (360560)
  */
 public final class AdsbDemodulator {
-    private PowerWindow powerWindow;
+    private final PowerWindow powerWindow;
     private static final int WINDOWSIZE = 1200;
     private static final int INDEXPICS2 = 10;
     private static final int INDEXPICS3 = 35;
@@ -24,6 +24,9 @@ public final class AdsbDemodulator {
     private static final int INDEXVALLEYS4 = 25;
     private static final int INDEXVALLEYS5 = 30;
     private static final int INDEXVALLEYS6 = 40;
+    private static final int EXPECTED_DF = 17;
+    private static final int PREAMBLE_SIZE = 80;
+    private static final int PERIOD = 5;
 
 
     /**
@@ -44,16 +47,16 @@ public final class AdsbDemodulator {
      */
     public RawMessage nextMessage() throws IOException {
         int pics0 = 0;
-        int picsPlus1 = 0;
-        int picsMoins1 = 0;
+        int picsPlus1;
+        int picsMinus1;
 
         while (powerWindow.isFull()) {
-            picsMoins1 = pics0;
+            picsMinus1 = pics0;
             pics0 = sumPics(0);
             picsPlus1 = sumPics(1);
 
-            if (isPreamble(picsMoins1, pics0, picsPlus1)) {
-                byte[] message = new byte[14];
+            if (isPreamble(picsMinus1, pics0, picsPlus1)) {
+                byte[] message = new byte[RawMessage.LENGTH];
 
                 message[0] = byteI(0);
 
@@ -62,7 +65,7 @@ public final class AdsbDemodulator {
                     continue;
                 }
 
-                for (int i = 1; i < 14; i++) {
+                for (int i = 1; i < RawMessage.LENGTH; i++) {
                     message[i] = byteI(i);
                 }
 
@@ -83,9 +86,9 @@ public final class AdsbDemodulator {
         return null;
     }
 
-    private boolean isPreamble(int picsMoins1, int pics0, int picsPlus1) {
+    private boolean isPreamble(int picsMinus1, int pics0, int picsPlus1) {
         boolean condition1 = pics0 >= 2 * sumValley();
-        boolean condition2 = picsMoins1 < pics0;
+        boolean condition2 = picsMinus1 < pics0;
         boolean condition3 = pics0 > picsPlus1;
 
         return condition1 && condition2 && condition3;
@@ -100,7 +103,7 @@ public final class AdsbDemodulator {
     }
 
     private byte bitI(int i) {
-        if (powerWindow.get(80 + 10 * i) < powerWindow.get(85 + 10 * i)) {
+        if (powerWindow.get(PREAMBLE_SIZE + (2*PERIOD) * i) < powerWindow.get((PREAMBLE_SIZE+PERIOD) + (2*PERIOD) * i)) {
             return 0;
         } else {
             return 1;
@@ -109,7 +112,7 @@ public final class AdsbDemodulator {
 
     private byte byteI(int j) {
         byte b = 0;
-        for (int i = j * 8, h = 0; i < j * 8 + 8; i++, h++) {
+        for (int i = j * Byte.SIZE, h = 0; i < j * Byte.SIZE + Byte.SIZE; i++, h++) {
             b = (byte) (b | (bitI(i) << (7 - h)));
         }
 
@@ -118,6 +121,6 @@ public final class AdsbDemodulator {
 
     private boolean dfIsOk(byte byte0) {
         int DF = Bits.extractUInt(byte0, 3, 5);
-        return DF == 17;
+        return DF == EXPECTED_DF;
     }
 }

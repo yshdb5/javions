@@ -43,7 +43,7 @@ public final class AircraftDatabase {
              InputStream stream = zipFile.getInputStream(zipFile.getEntry(csvAddress));
              Reader reader = new InputStreamReader(stream, UTF_8);
              BufferedReader bufferedReader = new BufferedReader(reader)) {
-            String line = "";
+            String line;
 
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.compareTo(address.string()) < 0) {

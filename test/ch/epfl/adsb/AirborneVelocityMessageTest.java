@@ -2,7 +2,6 @@ package ch.epfl.adsb;
 
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.adsb.*;
-import ch.epfl.javions.aircraft.IcaoAddress;
 import ch.epfl.javions.demodulation.AdsbDemodulator;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,7 @@ class AirborneVelocityMessageTest
         RawMessage rm1 = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994409800838175B284F"));
         RawMessage rm2 = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994400140838175B284F"));
         RawMessage rm3 = new RawMessage(0, ByteString.ofHexadecimalString("8D4850209C4609800838175B284F"));
-        RawMessage rm4 = new RawMessage(0, ByteString.ofHexadecimalString("8D4850209C4409940838175B284F"));
+        RawMessage rm4 = new RawMessage(0, ByteString.ofHexadecimalString("8bfffffffffffffffbffffffffff"));
 
         assertNull(AirborneVelocityMessage.of(rm1));
         assertNull(AirborneVelocityMessage.of(rm2));
@@ -86,6 +85,42 @@ class AirborneVelocityMessageTest
         AirborneVelocityMessage avm = AirborneVelocityMessage.of(test);
         assertEquals(192.91666666666669 , avm.speed());
         assertEquals(4.25833066717054 , avm.trackOrHeading());
+    }
+
+    @Test
+    void testSpeed(){
+        RawMessage rawmessage1 = new RawMessage(0, ByteString.ofHexadecimalString("8DA05F219C06B6AF189400CBC33F"));
+        AirborneVelocityMessage message1 =  AirborneVelocityMessage.of(rawmessage1);
+
+        assertEquals(771.6666666666667, message1.speed());
+        assertEquals(4.25833066717054, message1.trackOrHeading());
+    }
+
+    @Test
+    void testSpeed2(){
+        RawMessage rawmessage1 = new RawMessage(0, ByteString.ofHexadecimalString("8D485020994409940838175B284F"));
+        AirborneVelocityMessage message1 =  AirborneVelocityMessage.of(rawmessage1);
+
+        assertEquals(81.90013721178154, message1.speed());
+        assertEquals(3.1918647255875205, message1.trackOrHeading());
+    }
+
+    @Test
+    void testSpeed3(){
+        RawMessage rawmessage1 = new RawMessage(0, ByteString.ofHexadecimalString("8DA05F219B06B6AF189400CBC33F"));
+        AirborneVelocityMessage message1 =  AirborneVelocityMessage.of(rawmessage1);
+
+        assertEquals(192.91666666666669, message1.speed());
+        assertEquals(4.25833066717054, message1.trackOrHeading());
+    }
+
+    @Test
+    void testSpeed4(){
+        RawMessage rawmessage1 = new RawMessage(0, ByteString.ofHexadecimalString("8D4B1A00EA0DC89E8F7C0857D5F5"));
+        AirborneVelocityMessage message1 =  AirborneVelocityMessage.of(rawmessage1);
+        System.out.println(message1);
+        assertEquals(1061.4503686262444, message1.speed());
+        assertEquals(4.221861463749146, message1.trackOrHeading());
     }
 
     @Test

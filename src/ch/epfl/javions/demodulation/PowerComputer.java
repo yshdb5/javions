@@ -15,11 +15,11 @@ import java.io.InputStream;
  * @author Gabriel Taieb (360560)
  */
 public final class PowerComputer {
-    private InputStream stream;
-    private SamplesDecoder decoder;
-    private short[] samplesbatchTab;
-    private int batchSize;
-    private short[] lastEightTab = new short[8];
+    private static final int VALUES_IN_SAMPLE = 8;
+    private final SamplesDecoder decoder;
+    private final short[] samplesbatchTab;
+    private final int batchSize;
+    private final short[] lastEightTab = new short[VALUES_IN_SAMPLE];
     private int head = 0;
 
     /**
@@ -30,9 +30,8 @@ public final class PowerComputer {
      * @param batchSize
      */
     public PowerComputer(InputStream stream, int batchSize) {
-        Preconditions.checkArgument((batchSize % 8) == 0);
+        Preconditions.checkArgument((batchSize % VALUES_IN_SAMPLE) == 0);
 
-        this.stream = stream;
         this.batchSize = batchSize;
         samplesbatchTab = new short[2 * batchSize];
         decoder = new SamplesDecoder(stream, 2 * batchSize);
@@ -53,9 +52,9 @@ public final class PowerComputer {
         int count = 0;
 
         for (int i = 0, j = 0; i < (samplesNumber - 1); i += 2, j++) {
-            head = (head + 1) % 8;
+            head = (head + 1) % VALUES_IN_SAMPLE;
             lastEightTab[head] = samplesbatchTab[i];
-            head = (head + 1) % 8;
+            head = (head + 1) % VALUES_IN_SAMPLE;
             lastEightTab[head] = samplesbatchTab[i + 1];
 
             batch[j] = calculatedPower();
@@ -68,8 +67,8 @@ public final class PowerComputer {
         int evenSum = 0;
         int oddSum = 0;
 
-        for (int i = 0; i < 8; i++) {
-            int lastIndex = lastEightTab[(head - i + 8) % 8];
+        for (int i = 0; i < VALUES_IN_SAMPLE; i++) {
+            int lastIndex = lastEightTab[(head - i + VALUES_IN_SAMPLE) % VALUES_IN_SAMPLE];
 
             if (i % 2 == 0) {
                 if (i % 4 == 0) {

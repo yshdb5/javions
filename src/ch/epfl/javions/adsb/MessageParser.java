@@ -9,6 +9,13 @@ package ch.epfl.javions.adsb;
  */
 
 public class MessageParser {
+    private final static int IDENTIFICATION_BOUND1 = 1;
+    private final static int IDENTIFICATION_BOUND2 = 4;
+    private final static int POSITION_BOUND1 = 9;
+    private final static int POSITION_BOUND2 = 18;
+    private final static int POSITION_BOUND3 = 20;
+    private final static int POSITION_BOUND4 = 22;
+    private final static int VELOCITY_TYPECODE = 19;
     private MessageParser() {
     }
 
@@ -20,11 +27,11 @@ public class MessageParser {
     public static Message parse(RawMessage rawMessage) {
         int typeCode = rawMessage.typeCode();
 
-        if (typeCode >= 1 && typeCode <= 4) {
+        if (typeCode >= IDENTIFICATION_BOUND1 && typeCode <= IDENTIFICATION_BOUND2) {
             return AircraftIdentificationMessage.of(rawMessage);
-        } else if ((typeCode >= 9 && typeCode <= 18) || (typeCode >= 20 && typeCode <= 22)) {
+        } else if ((typeCode >= POSITION_BOUND1 && typeCode <= POSITION_BOUND2) || (typeCode >= POSITION_BOUND3 && typeCode <= POSITION_BOUND4)) {
             return AirbornePositionMessage.of(rawMessage);
-        } else if (typeCode == 19) {
+        } else if (typeCode == VELOCITY_TYPECODE) {
             return AirborneVelocityMessage.of(rawMessage);
         } else {
             return null;
