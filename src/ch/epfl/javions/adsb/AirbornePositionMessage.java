@@ -49,16 +49,6 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
                         && ((y >= 0) && (y < 1)));
     }
 
-    @Override
-    public long timeStampNs() {
-        return timeStampNs;
-    }
-
-    @Override
-    public IcaoAddress icaoAddress() {
-        return icaoAddress;
-    }
-
     /**
      * @param rawMessage
      * @return the flight positioning message corresponding to the given raw message
@@ -126,5 +116,15 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         }
 
         return grayCodeValue;
+    }
+
+    @Override
+    public long timeStampNs() {
+        return timeStampNs;
+    }
+
+    @Override
+    public IcaoAddress icaoAddress() {
+        return icaoAddress;
     }
 }

@@ -13,7 +13,6 @@ import java.io.InputStream;
  * @author Gabriel Taieb (360560)
  */
 public final class AdsbDemodulator {
-    private final PowerWindow powerWindow;
     private static final int WINDOWSIZE = 1200;
     private static final int INDEXPICS2 = 10;
     private static final int INDEXPICS3 = 35;
@@ -27,6 +26,7 @@ public final class AdsbDemodulator {
     private static final int EXPECTED_DF = 17;
     private static final int PREAMBLE_SIZE = 80;
     private static final int PERIOD = 5;
+    private final PowerWindow powerWindow;
 
 
     /**

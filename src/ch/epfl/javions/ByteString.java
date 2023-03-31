@@ -15,8 +15,8 @@ import java.util.Objects;
  */
 
 public final class ByteString {
-    private final byte[] bytes;
     private final static HexFormat hf = HexFormat.of().withUpperCase();
+    private final byte[] bytes;
 
     /**
      * Constructor of ByteString, returns a string of bytes whose content is the one

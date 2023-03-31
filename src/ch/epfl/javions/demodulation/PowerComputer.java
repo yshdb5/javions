@@ -2,7 +2,6 @@ package ch.epfl.javions.demodulation;
 
 
 import ch.epfl.javions.Preconditions;
-import ch.epfl.javions.demodulation.SamplesDecoder;
 
 import java.io.IOException;
 import java.io.InputStream;

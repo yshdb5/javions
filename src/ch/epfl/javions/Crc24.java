@@ -13,8 +13,8 @@ public final class Crc24 {
      */
     public static final int GENERATOR = 0xFFF409;
     private static final int CRC_BITS = 24;
-    private final int[] table;
     private static final int TABLE_SIZE = 256;
+    private final int[] table;
 
     /**
      * public constructor of Crc24
@@ -46,6 +46,17 @@ public final class Crc24 {
         return crc;
     }
 
+    private static int[] buildTable(int generator) {
+        int[] table = new int[TABLE_SIZE];
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            byte[] tab = {(byte) i};
+            table[i] = crc_bitwise(generator, tab);
+        }
+
+        return table;
+    }
+
     /**
      * @param bytes
      * @return the CRC24 of the array given
@@ -64,16 +75,5 @@ public final class Crc24 {
         crc = Bits.extractUInt(crc, 0, CRC_BITS);
 
         return crc;
-    }
-
-    private static int[] buildTable(int generator) {
-        int[] table = new int[TABLE_SIZE];
-
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            byte[] tab = {(byte) i};
-            table[i] = crc_bitwise(generator, tab);
-        }
-
-        return table;
     }
 }
