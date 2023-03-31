@@ -34,11 +34,9 @@ public class CprDecoder {
     public static GeoPos decodePosition(double x0, double y0, double x1, double y1, int mostRecent) {
         Preconditions.checkArgument((mostRecent == 1) || (mostRecent == 0));
 
-        double latitude0Turn, latitude1Turn, longitude0Turn, longitude1Turn, a0, a1, deltaLambda0, deltaLambda1;
-        int latitude0T32, latitude1T32, longitude0T32, longitude1T32, zonePhi, zonePhi0, zonePhi1, zoneLambda,
-                zoneLambda0, zoneLambda1, zoneNumber00, zoneNumber01, zoneNumber1;
-
-        zonePhi = (int) Math.rint(y0 * Z1 - y1 * Z0);
+        int zonePhi = (int) Math.rint(y0 * Z1 - y1 * Z0);
+        int zonePhi0;
+        int zonePhi1;
 
         if (zonePhi < 0) {
             zonePhi0 = zonePhi + Z0;
@@ -48,30 +46,32 @@ public class CprDecoder {
             zonePhi1 = zonePhi;
         }
 
-        latitude0Turn = recenterPosition(DELTA0 * (zonePhi0 + y0));
-        latitude1Turn = recenterPosition(DELTA1 * (zonePhi1 + y1));
+        double latitude0Turn = recenterPosition(DELTA0 * (zonePhi0 + y0));
+        double latitude1Turn = recenterPosition(DELTA1 * (zonePhi1 + y1));
 
-        latitude0T32 = convertTurnToT32(latitude0Turn);
-        latitude1T32 = convertTurnToT32(latitude1Turn);
+        int latitude0T32 = convertTurnToT32(latitude0Turn);
+        int latitude1T32 = convertTurnToT32(latitude1Turn);
 
         if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0T32)
                 || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1T32)) {
             return null;
         }
 
-        a0 = aOf(latitude0Turn);
-        a1 = aOf(latitude1Turn);
+        double a0 = aOf(latitude0Turn);
+        double a1 = aOf(latitude1Turn);
 
-        zoneNumber00 = zoneNumberOf(a0);
-        zoneNumber01 = zoneNumberOf(a1);
+        int zoneNumber00 = zoneNumberOf(a0);
+        int zoneNumber01 = zoneNumberOf(a1);
 
         if (zoneNumber00 != zoneNumber01) {
             return null;
         }
 
-        zoneNumber1 = zoneNumber00 - 1;
+        int zoneNumber1 = zoneNumber00 - 1;
 
-        zoneLambda = (int) Math.rint(x0 * zoneNumber1 - x1 * zoneNumber00);
+        int zoneLambda = (int) Math.rint(x0 * zoneNumber1 - x1 * zoneNumber00);
+        int zoneLambda0;
+        int zoneLambda1;
 
         if (zoneLambda < 0) {
             zoneLambda0 = zoneLambda + zoneNumber00;
@@ -81,8 +81,11 @@ public class CprDecoder {
             zoneLambda1 = zoneLambda;
         }
 
-        deltaLambda0 = ((double) 1) / zoneNumber00;
-        deltaLambda1 = ((double) 1) / zoneNumber1;
+        double deltaLambda0 = ((double) 1) / zoneNumber00;
+        double deltaLambda1 = ((double) 1) / zoneNumber1;
+
+        double longitude0Turn;
+        double longitude1Turn;
 
         if (zoneNumber00 == 1) {
             longitude0Turn = recenterPosition(x0);
@@ -92,8 +95,8 @@ public class CprDecoder {
             longitude1Turn = recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
         }
 
-        longitude0T32 = convertTurnToT32(longitude0Turn);
-        longitude1T32 = convertTurnToT32(longitude1Turn);
+        int longitude0T32 = convertTurnToT32(longitude0Turn);
+        int longitude1T32 = convertTurnToT32(longitude1Turn);
 
         if (mostRecent == 0) {
             return new GeoPos(longitude0T32, latitude0T32);
