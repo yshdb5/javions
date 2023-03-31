@@ -16,6 +16,7 @@ public class MessageParser {
     private final static int POSITION_BOUND3 = 20;
     private final static int POSITION_BOUND4 = 22;
     private final static int VELOCITY_TYPECODE = 19;
+
     private MessageParser() {
     }
 

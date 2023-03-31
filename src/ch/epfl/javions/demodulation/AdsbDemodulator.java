@@ -103,7 +103,7 @@ public final class AdsbDemodulator {
     }
 
     private byte bitI(int i) {
-        if (powerWindow.get(PREAMBLE_SIZE + (2*PERIOD) * i) < powerWindow.get((PREAMBLE_SIZE+PERIOD) + (2*PERIOD) * i)) {
+        if (powerWindow.get(PREAMBLE_SIZE + (2 * PERIOD) * i) < powerWindow.get((PREAMBLE_SIZE + PERIOD) + (2 * PERIOD) * i)) {
             return 0;
         } else {
             return 1;
