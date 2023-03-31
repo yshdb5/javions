@@ -16,6 +16,23 @@ import java.util.Objects;
 
 public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress, double speed,
                                       double trackOrHeading) implements Message {
+    private final static int SUBTYPE_START = 48;
+    private final static int SUBTYPE_LENGTH = 3;
+    private final static int SUBPAYLOAD_START = 21;
+    private final static int SUBPAYLOAD_LENGTH = 22;
+    private final static int NS_SPEED_START = 0;
+    private final static int EW_SPEED_START = 11;
+    private final static int SPEEDS_LENGTH = 10;
+    private final static int EW_DIR_START = 21;
+    private final static int NS_DIR_START = 10;
+    private final static int DIR_LENGTH = 1;
+    private final static int HS_START = EW_DIR_START;
+    private final static int HS_LENGTH = DIR_LENGTH;
+    private final static int TRACK_START = EW_SPEED_START;
+    private final static int TRACK_LENGTH = SPEEDS_LENGTH;
+    private final static int AIRSPEED_START = NS_SPEED_START;
+
+
     /**
      * AirborneVelocityMessage's constructor
      *
@@ -37,7 +54,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
      *                   subtype is invalid, or if the speed or direction of travel cannot be determined.
      */
     public static AirborneVelocityMessage of(RawMessage rawMessage) {
-        int subType = Bits.extractUInt(rawMessage.payload(), 48, 3);
+        int subType = Bits.extractUInt(rawMessage.payload(), SUBTYPE_START, SUBTYPE_LENGTH);
+        int subPayload = Bits.extractUInt(rawMessage.payload(), SUBPAYLOAD_START, SUBPAYLOAD_LENGTH);
 
         if ((subType < 1) || (subType > 4)) {
             return null;
@@ -46,10 +64,10 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
         double speedNormMeterPerSecond;
 
         if ((subType == 1) || (subType == 2)) {
-            int directionEW = Bits.extractUInt(rawMessage.payload(), 42, 1);
-            int speedEW = Bits.extractUInt(rawMessage.payload(), 32, 10) - 1;
-            int directionNS = Bits.extractUInt(rawMessage.payload(), 31, 1);
-            int speedNS = Bits.extractUInt(rawMessage.payload(), 21, 10) - 1;
+            int directionEW = Bits.extractUInt(subPayload, EW_DIR_START, DIR_LENGTH);
+            int speedEW = Bits.extractUInt(subPayload, EW_SPEED_START, SPEEDS_LENGTH) - 1;
+            int directionNS = Bits.extractUInt(subPayload, NS_DIR_START, DIR_LENGTH);
+            int speedNS = Bits.extractUInt(subPayload, NS_SPEED_START, SPEEDS_LENGTH) - 1;
 
             if ((speedEW == -1) || (speedNS == -1)) {
                 return null;
@@ -76,14 +94,14 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
             }
             return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
         } else {
-            int capAvailability = Bits.extractUInt(rawMessage.payload(), 42, 1);
+            int capAvailability = Bits.extractUInt(subPayload, HS_START, HS_LENGTH);
 
             if (capAvailability == 0) {
                 return null;
             } else {
-                track0rHeadingRadian = Units.convertFrom(Bits.extractUInt(rawMessage.payload(), 32, 10) * Math.scalb(1d, -10), Units.Angle.TURN);
+                track0rHeadingRadian = Units.convertFrom(Bits.extractUInt(subPayload, TRACK_START, TRACK_LENGTH) * Math.scalb(1d, -10), Units.Angle.TURN);
 
-                double temporarySpeed = (Bits.extractUInt(rawMessage.payload(), 21, 10) - 1);
+                double temporarySpeed = (Bits.extractUInt(subPayload, AIRSPEED_START, SPEEDS_LENGTH) - 1);
 
                 if (temporarySpeed == -1) return null;
 

@@ -43,26 +43,6 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     }
 
     /**
-     * redefinition of timeStamps
-     *
-     * @return
-     */
-    @Override
-    public long timeStampNs() {
-        return timeStampNs;
-    }
-
-    /**
-     * redefinition of icaoAddress
-     *
-     * @return
-     */
-    @Override
-    public IcaoAddress icaoAddress() {
-        return icaoAddress;
-    }
-
-    /**
      * @param rawMessage
      * @return the identification message corresponding to the given raw message,
      * or null if at least one of the characters of the code it contains is invalid
@@ -105,5 +85,25 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
             bitStart -= CHARS_SIZE;
         }
         return callString.toString();
+    }
+
+    /**
+     * redefinition of timeStamps
+     *
+     * @return
+     */
+    @Override
+    public long timeStampNs() {
+        return timeStampNs;
+    }
+
+    /**
+     * redefinition of icaoAddress
+     *
+     * @return
+     */
+    @Override
+    public IcaoAddress icaoAddress() {
+        return icaoAddress;
     }
 }

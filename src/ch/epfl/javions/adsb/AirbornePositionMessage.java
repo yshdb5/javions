@@ -16,6 +16,16 @@ import java.util.Objects;
 
 public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress, double altitude, int parity, double x,
                                       double y) implements Message {
+    private final static int ALT_START = 36;
+    private final static int ALT_LENGTH = 12;
+    private final static int PARITY_START = 34;
+    private final static int PARITY_LENGTH = 1;
+    private final static int LON_CPR_START = 0;
+    private final static int LAT_CPR_START = 17;
+    private final static int LAT_LON_LENGTH = LAT_CPR_START;
+    private final static int Q_START = 4;
+    private final static int Q_LENGTH = PARITY_LENGTH;
+
 
     /**
      * @param timeStampNs the time stamp of the message, in nanoseconds
@@ -58,12 +68,12 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         long timeStamp = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
         double altitudeMeter;
-        int altitude = Bits.extractUInt(rawMessage.payload(), 36, 12);
-        int parity = Bits.extractUInt(rawMessage.payload(), 34, 1);
-        double latitude = Bits.extractUInt(rawMessage.payload(), 17, 17) * Math.scalb(1d, -17);
-        double longitude = Bits.extractUInt(rawMessage.payload(), 0, 17) * Math.scalb(1d, -17);
+        int altitude = Bits.extractUInt(rawMessage.payload(), ALT_START, ALT_LENGTH);
+        int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, PARITY_LENGTH);
+        double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
+        double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
 
-        int Q = Bits.extractUInt(altitude, 4, 1);
+        int Q = Bits.extractUInt(altitude, Q_START, Q_LENGTH);
 
         if (Q == 1) {
             int part1 = Bits.extractUInt(altitude, 5, 7);
