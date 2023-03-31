@@ -1,16 +1,14 @@
 package ch.epfl.adsb;
 
 import ch.epfl.javions.ByteString;
-import ch.epfl.javions.adsb.AirborneVelocityMessage;
-import ch.epfl.javions.adsb.AircraftIdentificationMessage;
-import ch.epfl.javions.adsb.RawMessage;
+import ch.epfl.javions.adsb.*;
+import ch.epfl.javions.aircraft.IcaoAddress;
 import ch.epfl.javions.demodulation.AdsbDemodulator;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HexFormat;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,7 +75,17 @@ class AirborneVelocityMessageTest
         double track = 4.221861463749146;
         assertEquals(velocity, message.speed());
         assertEquals(track, message.trackOrHeading());
+    }
 
+    @Test
+    void SousType3Or4Works(){
+        String message = "8DA05F219B06B6AF189400CBC33F";
+        ByteString byteString = ByteString.ofHexadecimalString(message);
+        long timestamps = 0;
+        RawMessage test = new RawMessage(timestamps, byteString);
+        AirborneVelocityMessage avm = AirborneVelocityMessage.of(test);
+        assertEquals(192.91666666666669 , avm.speed());
+        assertEquals(4.25833066717054 , avm.trackOrHeading());
     }
 
     @Test
@@ -100,23 +108,4 @@ class AirborneVelocityMessageTest
         }
         System.out.println(count);
     }
-
-    /*
-    Données des 5 premiers messages:
-
-    velocity: 217.1759987875795
-    track or heading: 5.707008696317668
-
-    velocity: 227.75426436901594
-    track or heading: 4.1068443167797195
-
-    velocity: 161.15254486753832
-    track or heading: 3.9337627224977503
-
-    velocity: 228.01904908511267
-    track or heading: 5.311655187675027
-
-    velocity: 114.64264880353804
-    track or heading: 5.335246702497837
-     */
 }

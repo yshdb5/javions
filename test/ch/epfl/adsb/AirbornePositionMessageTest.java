@@ -245,30 +245,6 @@ class AirbornePositionMessageTest
         });
     }
 
-    /*
-    @Test
-    void PrintAirbornePositionMessage() throws IOException
-    {
-        int count = 0;
-        String f = "resources/samples_20230304_1442.bin";
-        try (InputStream s = new FileInputStream(f)) {
-
-            AdsbDemodulator d = new AdsbDemodulator(s);
-            RawMessage m;
-            while ((m = d.nextMessage()) != null)
-            {
-                if ((m.typeCode() >= 9 && m.typeCode() <= 18) || (m.typeCode() >= 20 && m.typeCode() <= 22))
-                {
-                    System.out.println(AirbornePositionMessage.of(m));
-                    count++;
-                }
-            }
-        }
-        System.out.println(count);
-    }
-
-     */
-
     @Test
     void airbornePositionMessageConstructorThrowsWhenTimeStampIsInvalid() {
         assertThrows(IllegalArgumentException.class, () -> {
