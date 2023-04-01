@@ -19,12 +19,32 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int ALT_START = 36;
     private final static int ALT_LENGTH = 12;
     private final static int PARITY_START = 34;
-    private final static int PARITY_LENGTH = 1;
+    private final static int BIT_SIZE = 1;
     private final static int LON_CPR_START = 0;
     private final static int LAT_CPR_START = 17;
     private final static int LAT_LON_LENGTH = LAT_CPR_START;
     private final static int Q_START = 4;
-    private final static int Q_LENGTH = PARITY_LENGTH;
+    private final static int Q1_PART1_START = 5;
+    private final static int Q1_PART1_LENGTH = 7;
+    private final static int Q1_PART2_START = 0;
+    private final static int Q1_PART2_LENGTH = 4;
+    private final static int Q0_PART1_START = Q1_PART2_START;
+    private final static int Q0_PART1_LENGTH = 3;
+    private final static int Q0_PART2_START = Q0_PART1_LENGTH;
+    private final static int Q0_PART2_LENGTH = 9;
+    private final static int A1_POS = 10;
+    private final static int A2_POS = 8;
+    private final static int A4_POS = 6;
+    private final static int B1_POS = 5;
+    private final static int B2_POS = 3;
+    private final static int B4_POS = 1;
+    private final static int C1_POS = 11;
+    private final static int C2_POS = 9;
+    private final static int C4_POS = 7;
+    private final static int D1_POS = 4;
+    private final static int D2_POS = 2;
+    private final static int D4_POS = 0;
+    private final static int BITS_NUMBER = 12;
 
 
     /**
@@ -59,26 +79,26 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
         double altitudeMeter;
         int altitude = Bits.extractUInt(rawMessage.payload(), ALT_START, ALT_LENGTH);
-        int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, PARITY_LENGTH);
+        int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, BIT_SIZE);
         double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
         double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
 
-        int Q = Bits.extractUInt(altitude, Q_START, Q_LENGTH);
+        int Q = Bits.extractUInt(altitude, Q_START, BIT_SIZE);
 
         if (Q == 1) {
-            int part1 = Bits.extractUInt(altitude, 5, 7);
-            int part2 = Bits.extractUInt(altitude, 0, 4);
+            int part1 = Bits.extractUInt(altitude, Q1_PART1_START, Q1_PART1_LENGTH);
+            int part2 = Bits.extractUInt(altitude, Q1_PART2_START, Q1_PART2_LENGTH);
             altitude = (part1 << 4) | part2;
 
             altitudeMeter = Units.convertFrom(-1000 + altitude * 25, Units.Length.FOOT);
         } else {
             int disentangledAlt = disentangling(altitude);
 
-            int part1 = Bits.extractUInt(disentangledAlt, 0, 3);
-            int part2 = Bits.extractUInt(disentangledAlt, 3, 9);
+            int part1 = Bits.extractUInt(disentangledAlt, Q0_PART1_START, Q0_PART1_LENGTH);
+            int part2 = Bits.extractUInt(disentangledAlt, Q0_PART2_START, Q0_PART2_LENGTH);
 
-            part1 = grayCodeValueOf(part1, 3);
-            part2 = grayCodeValueOf(part2, 9);
+            part1 = grayCodeValueOf(part1, Q0_PART1_LENGTH);
+            part2 = grayCodeValueOf(part2, Q0_PART2_LENGTH);
 
             if (part1 == 0 || part1 == 5 || part1 == 6) {
                 return null;
@@ -98,11 +118,11 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
 
     private static int disentangling(int altitude) {
 
-        int[] bitPositions = {4, 2, 0, 10, 8, 6, 5, 3, 1, 11, 9, 7};
+        int[] bitPositions = {D1_POS, D2_POS, D4_POS, A1_POS, A2_POS, A4_POS, B1_POS, B2_POS, B4_POS, C1_POS, C2_POS, C4_POS};
         int disentangledAlt = 0;
 
-        for (int i = 0; i < 12; i++) {
-            disentangledAlt |= Bits.extractUInt(altitude, bitPositions[i], 1) << (11 - i);
+        for (int i = 0; i < BITS_NUMBER; i++) {
+            disentangledAlt |= Bits.extractUInt(altitude, bitPositions[i], BIT_SIZE) << (11 - i);
         }
 
         return disentangledAlt;
