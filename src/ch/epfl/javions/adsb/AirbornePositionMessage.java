@@ -75,13 +75,16 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
      * or null if the altitude it contains is invalid
      */
     public static AirbornePositionMessage of(RawMessage rawMessage) {
+
         long timeStamp = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        double altitudeMeter;
+
         int altitude = Bits.extractUInt(rawMessage.payload(), ALT_START, ALT_LENGTH);
         int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, BIT_SIZE);
         double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
         double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
+
+        double altitudeMeter;
 
         int Q = Bits.extractUInt(altitude, Q_START, BIT_SIZE);
 

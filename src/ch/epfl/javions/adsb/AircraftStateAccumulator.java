@@ -14,6 +14,7 @@ import java.util.Objects;
  */
 
 public class AircraftStateAccumulator<T extends AircraftStateSetter> {
+    private static final long MAX_TIME_INTERVAL_NS = (long) Math.pow(10, 10);
     private final T stateSetter;
     private AirbornePositionMessage lastEvenMessage;
     private AirbornePositionMessage lastOddMessage;
@@ -78,6 +79,6 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
     }
 
     private boolean validInterval(Message mess0, Message mess1) {
-        return (mess0.timeStampNs() - mess1.timeStampNs()) <= Math.pow(10, 10);
+        return (mess0.timeStampNs() - mess1.timeStampNs()) <= MAX_TIME_INTERVAL_NS;
     }
 }
