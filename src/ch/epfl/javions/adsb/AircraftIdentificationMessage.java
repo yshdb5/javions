@@ -27,6 +27,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     private final static int NUMBERS_BOUND1 = 48;
     private final static int NUMBERS_BOUND2 = 57;
     private final static int SPACE_CHAR = 32;
+    private final static int GIVEN_CONST = 14;
 
     /**
      * @param timeStampNs the time stamp of the message, in nanoseconds
@@ -60,10 +61,9 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
             callString = callString.substring(0, (callString.length() - 1));
         }
 
-
         long timeStamps = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        int category = Byte.toUnsignedInt((byte) (((14 - typeCode) << 4) | categoryByte));
+        int category = Byte.toUnsignedInt((byte) (((GIVEN_CONST - typeCode) << 4) | categoryByte));
 
         CallSign callSign = new CallSign(callString);
 
@@ -76,13 +76,11 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         StringBuilder callString = new StringBuilder();
         for (int i = 0; i < CHARS_NUMBER; i++) {
             int extractedInt = Bits.extractUInt(payload, bitStart, CHARS_SIZE);
-            if (extractedInt >= LETTERS_BOUND1 && extractedInt <= LETTERS_BOUND2) {
+            if (extractedInt >= LETTERS_BOUND1 && extractedInt <= LETTERS_BOUND2)
                 callString.append((char) (extractedInt + LETTERS_START_ASCII));
-            } else if ((extractedInt >= NUMBERS_BOUND1 && extractedInt <= NUMBERS_BOUND2) || (extractedInt == SPACE_CHAR)) {
+            else if ((extractedInt >= NUMBERS_BOUND1 && extractedInt <= NUMBERS_BOUND2) || (extractedInt == SPACE_CHAR))
                 callString.append((char) extractedInt);
-            } else {
-                return null;
-            }
+            else return null;
             bitStart -= CHARS_SIZE;
         }
         return callString.toString();

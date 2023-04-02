@@ -16,6 +16,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class AircraftDatabase {
     private final String fileName;
+    private final static int CSV_ADDRESS_START = 4;
 
     /**
      * the constructor : checks that its argument is not null and stores it in an attribute of the class
@@ -35,7 +36,7 @@ public final class AircraftDatabase {
      * @throws IOException in case of input/output error
      */
     public AircraftData get(IcaoAddress address) throws IOException {
-        String csvAddress = address.string().substring(4) + ".csv";
+        String csvAddress = address.string().substring(CSV_ADDRESS_START) + ".csv";
 
         String[] splitData;
 
@@ -46,18 +47,14 @@ public final class AircraftDatabase {
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.compareTo(address.string()) < 0) {
-                    continue;
-                }
+                if (line.compareTo(address.string()) < 0) continue;
                 if (line.startsWith(address.string())) {
                     splitData = line.split(",", -1);
 
                     return new AircraftData(new AircraftRegistration(splitData[1]), new AircraftTypeDesignator(splitData[2]), splitData[3],
                             new AircraftDescription(splitData[4]), WakeTurbulenceCategory.of(splitData[5]));
                 }
-                if (line.compareTo(address.string()) > 0) {
-                    return null;
-                }
+                if (line.compareTo(address.string()) > 0) return null;
             }
         }
         return null;

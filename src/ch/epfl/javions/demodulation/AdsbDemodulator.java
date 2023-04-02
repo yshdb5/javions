@@ -1,6 +1,5 @@
 package ch.epfl.javions.demodulation;
 
-import ch.epfl.javions.Bits;
 import ch.epfl.javions.adsb.RawMessage;
 
 import java.io.IOException;
@@ -23,7 +22,6 @@ public final class AdsbDemodulator {
     private static final int INDEXVALLEYS4 = 25;
     private static final int INDEXVALLEYS5 = 30;
     private static final int INDEXVALLEYS6 = 40;
-    private static final int EXPECTED_DF = 17;
     private static final int PREAMBLE_SIZE = 80;
     private static final int PERIOD = 5;
     private final PowerWindow powerWindow;
@@ -75,12 +73,10 @@ public final class AdsbDemodulator {
                 if (maybeMessage != null) {
                     powerWindow.advanceBy(WINDOWSIZE);
                     return maybeMessage;
-                } else {
-                    powerWindow.advance();
                 }
-            } else {
-                powerWindow.advance();
+                else powerWindow.advance();
             }
+            else powerWindow.advance();
         }
 
         return null;
@@ -99,15 +95,13 @@ public final class AdsbDemodulator {
     }
 
     private int sumValley() {
-        return powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3) + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
+        return powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3)
+                + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
     }
 
     private byte bitI(int i) {
-        if (powerWindow.get(PREAMBLE_SIZE + (2 * PERIOD) * i) < powerWindow.get((PREAMBLE_SIZE + PERIOD) + (2 * PERIOD) * i)) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return (byte) (powerWindow.get(PREAMBLE_SIZE + (2 * PERIOD) * i)
+                < powerWindow.get((PREAMBLE_SIZE + PERIOD) + (2 * PERIOD) * i)? 0 : 1);
     }
 
     private byte byteI(int j) {
@@ -120,7 +114,6 @@ public final class AdsbDemodulator {
     }
 
     private boolean dfIsOk(byte byte0) {
-        int DF = Bits.extractUInt(byte0, 3, 5);
-        return DF == EXPECTED_DF;
+        return RawMessage.size(byte0) == RawMessage.LENGTH;
     }
 }

@@ -70,17 +70,9 @@ public final class PowerComputer {
             int lastIndex = lastEightTab[(head - i + VALUES_IN_SAMPLE) % VALUES_IN_SAMPLE];
 
             if (i % 2 == 0) {
-                if (i % 4 == 0) {
-                    evenSum -= lastIndex;
-                } else {
-                    evenSum += lastIndex;
-                }
+                evenSum = (i % 4 == 0)? evenSum - lastIndex : evenSum + lastIndex;
             } else {
-                if (i % 4 == 1) {
-                    oddSum += lastIndex;
-                } else {
-                    oddSum -= lastIndex;
-                }
+                oddSum = (i % 4 == 1)? oddSum + lastIndex : oddSum - lastIndex;
             }
         }
 

@@ -115,11 +115,11 @@ class AirborneVelocityMessageTest {
     void testSpeed4() {
         RawMessage rawmessage1 = new RawMessage(0, ByteString.ofHexadecimalString("8D4B1A00EA0DC89E8F7C0857D5F5"));
         AirborneVelocityMessage message1 = AirborneVelocityMessage.of(rawmessage1);
-        System.out.println(message1);
         assertEquals(1061.4503686262444, message1.speed());
         assertEquals(4.221861463749146, message1.trackOrHeading());
     }
 
+    /*
     @Test
     void PrintAirborneVelocityMessage() throws IOException {
         int count = 0;
@@ -137,4 +137,6 @@ class AirborneVelocityMessageTest {
         }
         System.out.println(count);
     }
+
+     */
 }

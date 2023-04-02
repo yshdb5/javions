@@ -75,12 +75,9 @@ public final class PowerWindow {
      */
     public int get(int i) {
         Objects.checkIndex(i, windowSize);
+        return (((position % BATCH_SIZE) + i) < BATCH_SIZE)?
+                evenBatch[(position % BATCH_SIZE) + i] : oddBatch[(position % BATCH_SIZE) + i - BATCH_SIZE];
 
-        if (((position % BATCH_SIZE) + i) < BATCH_SIZE) {
-            return evenBatch[(position % BATCH_SIZE) + i];
-        } else {
-            return oddBatch[(position % BATCH_SIZE) + i - BATCH_SIZE];
-        }
     }
 
     /**
