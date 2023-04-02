@@ -60,6 +60,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
             callString = callString.substring(0, (callString.length() - 1));
         }
 
+
         long timeStamps = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
         int category = Byte.toUnsignedInt((byte) (((14 - typeCode) << 4) | categoryByte));
