@@ -25,7 +25,7 @@ public final class PowerComputer {
      * PowerComputer's constructor
      * creates the array that contains the samples
      *
-     * @param stream the stream
+     * @param stream    the stream
      * @param batchSize the batch size
      */
     public PowerComputer(InputStream stream, int batchSize) {

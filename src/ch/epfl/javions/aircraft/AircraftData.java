@@ -2,10 +2,6 @@ package ch.epfl.javions.aircraft;
 
 import java.util.Objects;
 
-
-//test ...
-
-
 /**
  * record AircraftData : collects fix data of an aircraft
  *
@@ -17,10 +13,10 @@ public record AircraftData(AircraftRegistration registration, AircraftTypeDesign
     /**
      * throws an exception if one of the arguments is Null using requireNonNull
      *
-     * @param registration the aircraft registration
-     * @param typeDesignator the aircraft type Designator
-     * @param model the aircraft model
-     * @param description the aircraft description
+     * @param registration           the aircraft registration
+     * @param typeDesignator         the aircraft type Designator
+     * @param model                  the aircraft model
+     * @param description            the aircraft description
      * @param wakeTurbulenceCategory the turbulence category of the aircraft
      * @throws NullPointerException checks that the parameters are not null
      */

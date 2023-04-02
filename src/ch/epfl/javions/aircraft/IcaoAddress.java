@@ -17,7 +17,7 @@ public record IcaoAddress(String string) {
     /**
      * compact constructor : valids the string given in argument, checks if it corresponds to an ICAO pattern
      *
-     * @throws IllegalArgumentException  if it doesn't match with the pattern
+     * @throws IllegalArgumentException if it doesn't match with the pattern
      */
     public IcaoAddress {
         Preconditions.checkArgument(OACI_Pattern.matcher(string).matches());

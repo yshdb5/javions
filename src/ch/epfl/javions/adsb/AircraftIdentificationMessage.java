@@ -98,7 +98,6 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
     /**
      * redefinition of icaoAddress
-
      */
     @Override
     public IcaoAddress icaoAddress() {
