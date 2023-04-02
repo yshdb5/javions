@@ -1,5 +1,11 @@
 package ch.epfl.javions.adsb;
 
+
+
+import ch.epfl.javions.GeoPos;
+import ch.epfl.javions.Preconditions;
+import ch.epfl.javions.Units;
+
 /**
  * class CprDecoder : contains methods to extract a subset of the 64 bits of a long type value
  * represents a CPR position decoder
@@ -7,10 +13,6 @@ package ch.epfl.javions.adsb;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
-import ch.epfl.javions.GeoPos;
-import ch.epfl.javions.Preconditions;
-import ch.epfl.javions.Units;
 
 public class CprDecoder {
     private static final int Z0 = 60;

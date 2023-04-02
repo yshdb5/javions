@@ -43,7 +43,7 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
     /**
      * updates the modifiable state according to the given message
      *
-     * @param message
+     * @param message that allows to modify the aircraft state
      */
     public void update(Message message) {
         stateSetter.setLastMessageTimeStampNs(message.timeStampNs());

@@ -17,7 +17,7 @@ public record AircraftTypeDesignator(String string) {
      * compact constructor : valids the string given in argument, checks if it corresponds to an aircraft designator pattern
      * the string can be empty
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException  if it doesn't match with the pattern
      */
     public AircraftTypeDesignator {
         Preconditions.checkArgument(typePattern.matcher(string).matches() || string.isEmpty());

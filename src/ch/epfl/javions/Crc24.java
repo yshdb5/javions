@@ -58,7 +58,7 @@ public final class Crc24 {
     }
 
     /**
-     * @param bytes
+     * @param bytes the bytes use to calculate the crc
      * @return the CRC24 of the array given
      */
     public int crc(byte[] bytes) {

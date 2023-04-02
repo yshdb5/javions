@@ -16,7 +16,7 @@ public record AircraftRegistration(String string) {
     /**
      * compact constructor : valids the string given in argument, checks if it is an Aircraft registration
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException it doesn't match with the pattern or the string is empty
      */
     public AircraftRegistration {
         Preconditions.checkArgument(registrationPattern.matcher(string).matches());

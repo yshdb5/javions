@@ -17,7 +17,7 @@ public record CallSign(String string) {
      * compact constructor : valids the string given in argument, checks if it corresponds to a call sign pattern
      * the string can be empty
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if it doesn't correspond to a call sign pattern
      */
     public CallSign {
         Preconditions.checkArgument(callSignPattern.matcher(string).matches() || string.isEmpty());

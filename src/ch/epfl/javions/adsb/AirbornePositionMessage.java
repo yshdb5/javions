@@ -70,7 +70,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     }
 
     /**
-     * @param rawMessage
+     * @param rawMessage the raw message that gives the flight position
      * @return the flight positioning message corresponding to the given raw message
      * or null if the altitude it contains is invalid
      */

@@ -23,7 +23,7 @@ public final class ByteString {
      * of the array passed as argument
      * clones bytes (immutable)
      *
-     * @param bytes
+     * @param bytes the bytes we want to clone
      */
     public ByteString(byte[] bytes) {
         this.bytes = bytes.clone();
@@ -35,7 +35,7 @@ public final class ByteString {
      *
      * @param hexString the hexadecimal representation of the string
      * @return the byte string of which the string passed as argument is the hexadecimal representation
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if the hexadecimal string length is not even
      * @throws NumberFormatException    if the sequence given is not an even size or if it contains a non-hexadecimal number
      */
     public static ByteString ofHexadecimalString(String hexString) {
@@ -58,7 +58,7 @@ public final class ByteString {
     /**
      * @param index the index of the byte
      * @return the byte corresponding to the index given.
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException if the index given is invalid
      */
     public int byteAt(int index) {
         Objects.checkIndex(index, bytes.length);

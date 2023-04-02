@@ -20,7 +20,7 @@ public final class AircraftDatabase {
     /**
      * the constructor : checks that its argument is not null and stores it in an attribute of the class
      *
-     * @param fileName
+     * @param fileName the file that contains the data
      * @throws NullPointerException if the file is null
      */
     public AircraftDatabase(String fileName) {

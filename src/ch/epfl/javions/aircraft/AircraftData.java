@@ -17,12 +17,12 @@ public record AircraftData(AircraftRegistration registration, AircraftTypeDesign
     /**
      * throws an exception if one of the arguments is Null using requireNonNull
      *
-     * @param registration
-     * @param typeDesignator
-     * @param model
-     * @param description
-     * @param wakeTurbulenceCategory
-     * @throws NullPointerException
+     * @param registration the aircraft registration
+     * @param typeDesignator the aircraft type Designator
+     * @param model the aircraft model
+     * @param description the aircraft description
+     * @param wakeTurbulenceCategory the turbulence category of the aircraft
+     * @throws NullPointerException checks that the parameters are not null
      */
     public AircraftData {
         Objects.requireNonNull(registration);

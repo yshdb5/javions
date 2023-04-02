@@ -12,7 +12,7 @@ public record GeoPos(int longitudeT32, int latitudeT32) {
      * Compact constructor of GeoPos
      * Checks if the latitude given is valid
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException the latitude isn't valid
      */
     public GeoPos {
         Preconditions.checkArgument(isValidLatitudeT32(latitudeT32));

@@ -43,7 +43,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     }
 
     /**
-     * @param rawMessage
+     * @param rawMessage the raw message that gives the identification message
      * @return the identification message corresponding to the given raw message,
      * or null if at least one of the characters of the code it contains is invalid
      */
@@ -90,8 +90,6 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
     /**
      * redefinition of timeStamps
-     *
-     * @return
      */
     @Override
     public long timeStampNs() {
@@ -100,8 +98,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
     /**
      * redefinition of icaoAddress
-     *
-     * @return
+
      */
     @Override
     public IcaoAddress icaoAddress() {

@@ -32,7 +32,7 @@ public final class AdsbDemodulator {
     /**
      * returns a demodulator obtaining the bytes containing the samples of the stream passed in argument
      *
-     * @param samplesStream
+     * @param samplesStream the samples of the stream that are used to build a demodulator
      * @throws IOException if an input/output error occurs when creating the PowerWindow object
      *                     representing the 1200 power sample window, used to search for messages.
      */

@@ -13,49 +13,49 @@ public interface AircraftStateSetter {
     /**
      * changes the timestamp of the last message received from the aircraft to the given value
      *
-     * @param timeStampNs
+     * @param timeStampNs the new time stamp in nanoseconds
      */
     void setLastMessageTimeStampNs(long timeStampNs);
 
     /**
      * changes the category of the aircraft to the given value
      *
-     * @param category
+     * @param category the new category
      */
     void setCategory(int category);
 
     /**
      * which changes the aircraft designator to the given value
      *
-     * @param callSign
+     * @param callSign the new aircraft designator value
      */
     void setCallSign(CallSign callSign);
 
     /**
      * which changes the position of the aircraft to the given value
      *
-     * @param position
+     * @param position the new position of the aircraft
      */
     void setPosition(GeoPos position);
 
     /**
      * which changes the altitude of the aircraft to the given value
      *
-     * @param altitude
+     * @param altitude the new altitude of the aircraft
      */
     void setAltitude(double altitude);
 
     /**
      * which changes the speed of the aircraft to the given value,
      *
-     * @param velocity
+     * @param velocity the new speed of the aircraft
      */
     void setVelocity(double velocity);
 
     /**
      * changes the direction of the aircraft to the given value.
      *
-     * @param trackOrHeading
+     * @param trackOrHeading the new direction of the aircraft
      */
     void setTrackOrHeading(double trackOrHeading);
 }

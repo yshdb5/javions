@@ -25,8 +25,8 @@ public final class PowerComputer {
      * PowerComputer's constructor
      * creates the array that contains the samples
      *
-     * @param stream
-     * @param batchSize
+     * @param stream the stream
+     * @param batchSize the batch size
      */
     public PowerComputer(InputStream stream, int batchSize) {
         Preconditions.checkArgument((batchSize % VALUES_IN_SAMPLE) == 0);
@@ -40,7 +40,7 @@ public final class PowerComputer {
      * reads from the sample decoder the number of samples needed to calculate a batch
      * of power sample and then computes them
      *
-     * @param batch
+     * @param batch a batch of length 1 << 16
      * @return the number of power samples placed in the array
      * @throws IOException in case of input/output error
      */

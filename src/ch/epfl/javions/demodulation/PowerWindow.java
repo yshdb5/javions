@@ -27,9 +27,9 @@ public final class PowerWindow {
      * PowerWindow's constructor, returns a window of given size on the sequence of power samples
      * computed from the bytes provided by the given input stream
      *
-     * @param stream
-     * @param windowSize
-     * @throws IOException
+     * @param stream the input stream use to compute the power samples
+     * @param windowSize the size of the window
+     * @throws IOException if there is an input/output error
      * @throws IllegalArgumentException if the window's size isn't between O (excluded) and 2 power 16 (included)
      */
 
@@ -86,7 +86,7 @@ public final class PowerWindow {
     /**
      * advances the window of a sample
      *
-     * @throws IOException
+     * @throws IOException in case of input/output error
      */
     public void advance() throws IOException {
         position++;
@@ -105,7 +105,7 @@ public final class PowerWindow {
      * advances the window by the given number of samples
      *
      * @param offset the given number of samples
-     * @throws IOException
+     * @throws IOException in case of output/input error
      * @throws IllegalArgumentException if offset isn't >=0
      */
     public void advanceBy(int offset) throws IOException {

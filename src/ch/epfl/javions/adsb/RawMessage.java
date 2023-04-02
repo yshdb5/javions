@@ -39,8 +39,8 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     /**
      * RawMessage compact constructor
      *
-     * @param timeStampNs
-     * @param bytes
+     * @param timeStampNs the time stamp in nanoseconds
+     * @param bytes a byte string of length 14
      * @throws IllegalArgumentException if the timestamp is (strictly) negative, or if the byte string does not
      *                                  contain LENGTH (14) bytes
      */
@@ -49,8 +49,8 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     }
 
     /**
-     * @param timeStampNs
-     * @param bytes
+     * @param timeStampNs the time stamp in nanoseconds
+     * @param bytes the bytes used to build the raw ADS-B message
      * @return the raw ADS-B message with timestamp and given bytes or null if the CRC24 of the bytes is not 0.
      */
     public static RawMessage of(long timeStampNs, byte[] bytes) {

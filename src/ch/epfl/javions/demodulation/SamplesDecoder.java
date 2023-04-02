@@ -23,7 +23,7 @@ public final class SamplesDecoder {
      * returns a sample decoder using the given input stream to get the bytes from
      * the Airspy radio and producing the samples in batches of given size
      *
-     * @param stream
+     * @param stream the given input stream
      * @param batchSize the number of samples to be produced during each conversion
      * @throws IllegalArgumentException if bachSize <=0
      * @throws NullPointerException     if the stream is null
@@ -43,7 +43,7 @@ public final class SamplesDecoder {
      * reads from the stream passed to the constructor the number of bytes corresponding to a batch,
      * then converts these bytes into signed samples
      *
-     * @param batch
+     * @param batch the batch we want to read
      * @return the number of converted samples
      * @throws IOException              in case of input/output error
      * @throws IllegalArgumentException if the size of the array passed in argument is not equal to the batch size

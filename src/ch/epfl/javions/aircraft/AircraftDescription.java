@@ -17,7 +17,7 @@ public record AircraftDescription(String string) {
      * compact constructor : valids the string given in argument, checks if it corresponds to an aircraft description pattern
      * the string can be empty
      *
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if it doesn't match with the pattern
      */
 
     public AircraftDescription {
