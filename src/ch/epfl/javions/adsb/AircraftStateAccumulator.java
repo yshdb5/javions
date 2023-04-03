@@ -27,10 +27,10 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
      * @throws NullPointerException if the modifiable state is null
      */
     public AircraftStateAccumulator(T stateSetter) {
+        Objects.requireNonNull(stateSetter);
         this.stateSetter = stateSetter;
         lastEvenMessage = null;
         lastOddMessage = null;
-        Objects.requireNonNull(stateSetter);
     }
 
     /**
@@ -59,13 +59,13 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
                 if (apm.parity() == 0) {
                     if ((lastOddMessage != null) && validInterval(apm, lastOddMessage)) {
                         position = CprDecoder.decodePosition(apm.x(), apm.y(), lastOddMessage.x(), lastOddMessage.y(), apm.parity());
-                        stateSetter.setPosition(position);
+                        if (position != null) stateSetter.setPosition(position);
                     }
                     lastEvenMessage = apm;
                 } else {
                     if ((lastEvenMessage != null) && validInterval(apm, lastEvenMessage)) {
                         position = CprDecoder.decodePosition(lastEvenMessage.x(), lastEvenMessage.y(), apm.x(), apm.y(), apm.parity());
-                        stateSetter.setPosition(position);
+                        if (position != null) stateSetter.setPosition(position);
                     }
                     lastOddMessage = apm;
                 }
