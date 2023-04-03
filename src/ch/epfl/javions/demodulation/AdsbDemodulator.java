@@ -73,10 +73,8 @@ public final class AdsbDemodulator {
                 if (maybeMessage != null) {
                     powerWindow.advanceBy(WINDOWSIZE);
                     return maybeMessage;
-                }
-                else powerWindow.advance();
-            }
-            else powerWindow.advance();
+                } else powerWindow.advance();
+            } else powerWindow.advance();
         }
 
         return null;
@@ -101,7 +99,7 @@ public final class AdsbDemodulator {
 
     private byte bitI(int i) {
         return (byte) (powerWindow.get(PREAMBLE_SIZE + (2 * PERIOD) * i)
-                < powerWindow.get((PREAMBLE_SIZE + PERIOD) + (2 * PERIOD) * i)? 0 : 1);
+                < powerWindow.get((PREAMBLE_SIZE + PERIOD) + (2 * PERIOD) * i) ? 0 : 1);
     }
 
     private byte byteI(int j) {

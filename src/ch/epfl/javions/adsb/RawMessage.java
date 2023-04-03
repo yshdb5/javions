@@ -54,7 +54,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * @return the raw ADS-B message with timestamp and given bytes or null if the CRC24 of the bytes is not 0.
      */
     public static RawMessage of(long timeStampNs, byte[] bytes) {
-        return (crc24.crc(bytes) != 0)? null : new RawMessage(timeStampNs, new ByteString(bytes));
+        return (crc24.crc(bytes) != 0) ? null : new RawMessage(timeStampNs, new ByteString(bytes));
     }
 
     /**
@@ -64,7 +64,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     public static int size(byte byte0) {
         int DF = Bits.extractUInt(byte0, 3, 5);
 
-        return (DF == EXPECTED_DF)? LENGTH : 0;
+        return (DF == EXPECTED_DF) ? LENGTH : 0;
     }
 
     /**

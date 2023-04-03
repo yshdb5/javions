@@ -15,8 +15,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public final class AircraftDatabase {
-    private final String fileName;
     private final static int CSV_ADDRESS_START = 4;
+    private final String fileName;
 
     /**
      * the constructor : checks that its argument is not null and stores it in an attribute of the class
