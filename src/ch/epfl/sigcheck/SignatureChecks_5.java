@@ -6,6 +6,18 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_5 {
+    double v01;
+    int v02;
+    ch.epfl.javions.GeoPos v03;
+    ch.epfl.javions.adsb.AircraftIdentificationMessage v04;
+    long v05;
+    ch.epfl.javions.aircraft.IcaoAddress v06;
+    ch.epfl.javions.adsb.CallSign v07;
+    ch.epfl.javions.adsb.RawMessage v08;
+    java.lang.Object v09;
+    boolean v10;
+    java.lang.String v11;
+    ch.epfl.javions.adsb.AirbornePositionMessage v12;
     private SignatureChecks_5() {
     }
 
@@ -38,17 +50,4 @@ final class SignatureChecks_5 {
         v01 = v12.x();
         v01 = v12.y();
     }
-
-    double v01;
-    int v02;
-    ch.epfl.javions.GeoPos v03;
-    ch.epfl.javions.adsb.AircraftIdentificationMessage v04;
-    long v05;
-    ch.epfl.javions.aircraft.IcaoAddress v06;
-    ch.epfl.javions.adsb.CallSign v07;
-    ch.epfl.javions.adsb.RawMessage v08;
-    java.lang.Object v09;
-    boolean v10;
-    java.lang.String v11;
-    ch.epfl.javions.adsb.AirbornePositionMessage v12;
 }

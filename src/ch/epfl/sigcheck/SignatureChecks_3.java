@@ -6,6 +6,15 @@ package ch.epfl.sigcheck;
 // pour cette étape du projet sont corrects.
 
 final class SignatureChecks_3 {
+    ch.epfl.javions.demodulation.SamplesDecoder v01;
+    java.io.InputStream v02;
+    int v03;
+    short[] v04;
+    ch.epfl.javions.demodulation.PowerComputer v05;
+    int[] v06;
+    ch.epfl.javions.demodulation.PowerWindow v07;
+    boolean v08;
+    long v09;
     private SignatureChecks_3() {
     }
 
@@ -28,14 +37,4 @@ final class SignatureChecks_3 {
         v09 = v07.position();
         v03 = v07.size();
     }
-
-    ch.epfl.javions.demodulation.SamplesDecoder v01;
-    java.io.InputStream v02;
-    int v03;
-    short[] v04;
-    ch.epfl.javions.demodulation.PowerComputer v05;
-    int[] v06;
-    ch.epfl.javions.demodulation.PowerWindow v07;
-    boolean v08;
-    long v09;
 }

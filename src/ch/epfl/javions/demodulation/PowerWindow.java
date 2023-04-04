@@ -19,6 +19,7 @@ public final class PowerWindow {
     private final int windowSize;
     private final PowerComputer computer;
     private int position;
+    private int index;
     private int count;
     private int[] evenBatch;
     private int[] oddBatch;
@@ -38,6 +39,7 @@ public final class PowerWindow {
 
         this.windowSize = windowSize;
         position = 0;
+        index = 0;
 
         computer = new PowerComputer(stream, BATCH_SIZE);
 
@@ -75,9 +77,8 @@ public final class PowerWindow {
      */
     public int get(int i) {
         Objects.checkIndex(i, windowSize);
-        int index = position % BATCH_SIZE + i;
-        return (index < BATCH_SIZE) ? evenBatch[index] : oddBatch[index - BATCH_SIZE];
-
+        int indexI = index + i;
+        return (indexI < BATCH_SIZE) ? evenBatch[indexI] : oddBatch[indexI - BATCH_SIZE];
     }
 
     /**
@@ -87,13 +88,15 @@ public final class PowerWindow {
      */
     public void advance() throws IOException {
         position++;
+        index++;
         count--;
 
-        if ((position + windowSize) % BATCH_SIZE == 0) count += computer.readBatch(oddBatch);
-        else if (position % BATCH_SIZE == 0) {
+        if ((index + windowSize) == BATCH_SIZE) count += computer.readBatch(oddBatch);
+        else if (index == BATCH_SIZE) {
             int[] temp = evenBatch;
             evenBatch = oddBatch;
             oddBatch = temp;
+            index = 0;
         }
     }
 

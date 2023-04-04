@@ -8,6 +8,9 @@ package ch.epfl.javions;
  */
 
 public class WebMercator {
+    private static final double OFFSET = 0.5;
+    private static final int POWER = 8;
+
     private WebMercator() {
     }
 
@@ -19,7 +22,7 @@ public class WebMercator {
      * @return the x coordinate that corresponds to the longitude on the zoom
      */
     public static double x(int zoomLevel, double longitude) {
-        return Math.scalb(1, 8 + zoomLevel) * (longitude / (2 * Math.PI) + 0.5);
+        return Math.scalb(1, POWER + zoomLevel) * (longitude / (2 * Math.PI) + OFFSET);
     }
 
     /**
@@ -31,6 +34,6 @@ public class WebMercator {
      */
 
     public static double y(int zoomLevel, double latitude) {
-        return Math.scalb(1, 8 + zoomLevel) * ((-Math2.asinh((Math.tan(latitude))) / (2 * Math.PI)) + 0.5);
+        return Math.scalb(1, POWER + zoomLevel) * ((-Math2.asinh((Math.tan(latitude))) / (2 * Math.PI)) + OFFSET);
     }
 }

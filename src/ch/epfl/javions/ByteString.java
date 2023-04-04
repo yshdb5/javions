@@ -16,6 +16,7 @@ import java.util.Objects;
 
 public final class ByteString {
     private final static HexFormat hf = HexFormat.of().withUpperCase();
+    private final static int SHIFT_VALUE = 8;
     private final byte[] bytes;
 
     /**
@@ -82,7 +83,7 @@ public final class ByteString {
         long mask = Byte.toUnsignedInt(bytes[fromIndex]);
 
         for (int i = (fromIndex + 1); i < toIndex; i++) {
-            mask = ((mask << 8) | (Byte.toUnsignedInt(bytes[i])));
+            mask = ((mask << SHIFT_VALUE) | (Byte.toUnsignedInt(bytes[i])));
         }
 
         return mask;

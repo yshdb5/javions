@@ -5,7 +5,6 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 
 import java.util.Map;
 
-public final class AircraftStateManager
-{
+public final class AircraftStateManager {
     private Map<AircraftStateAccumulator, IcaoAddress> map;
 }

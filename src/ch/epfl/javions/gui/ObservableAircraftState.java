@@ -4,8 +4,7 @@ import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.adsb.AircraftStateSetter;
 import ch.epfl.javions.adsb.CallSign;
 
-public final class ObservableAircraftState implements AircraftStateSetter
-{
+public final class ObservableAircraftState implements AircraftStateSetter {
     @Override
     public void setLastMessageTimeStampNs(long timeStampNs) {
 

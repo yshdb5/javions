@@ -45,6 +45,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int D2_POS = 2;
     private final static int D4_POS = 0;
     private final static int BITS_NUMBER = 12;
+    private final static int SHIFT_VALUE = 4;
 
 
     /**
@@ -81,6 +82,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
 
         int altitude = Bits.extractUInt(rawMessage.payload(), ALT_START, ALT_LENGTH);
         int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, BIT_SIZE);
+
         double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
         double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
 
@@ -91,7 +93,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         if (Q == 1) {
             int part1 = Bits.extractUInt(altitude, Q1_PART1_START, Q1_PART1_LENGTH);
             int part2 = Bits.extractUInt(altitude, Q1_PART2_START, Q1_PART2_LENGTH);
-            altitude = (part1 << 4) | part2;
+            altitude = (part1 << SHIFT_VALUE) | part2;
 
             altitudeMeter = Units.convertFrom(-1000 + altitude * 25, Units.Length.FOOT);
         } else {
@@ -135,7 +137,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         int grayCodeValue = 0;
 
         for (int i = 0; i < length; i++) {
-            grayCodeValue = grayCodeValue ^ (value >> i);
+            grayCodeValue ^= value >> i;
         }
 
         return grayCodeValue;
