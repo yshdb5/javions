@@ -77,9 +77,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             track0rHeadingRadian = calculateTrackHeading(directionNS, directionEW, speedEW, speedNS);
 
-            if (track0rHeadingRadian < 0) {
-                track0rHeadingRadian += 2 * Math.PI;
-            }
+            if (track0rHeadingRadian < 0) track0rHeadingRadian += 2 * Math.PI;
 
             speedNormMeterPerSecond = calculateSpeedNormMeterPerSecond(subType, speedNS, speedEW);
 
@@ -94,8 +92,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
                 if (isInvalidSpeed(temporarySpeed)) return null;
 
-                speedNormMeterPerSecond = (subType == 3) ? Units.convertFrom(temporarySpeed, Units.Speed.KNOT) :
-                        Units.convertFrom(temporarySpeed * 4, Units.Speed.KNOT);
+                speedNormMeterPerSecond = calculateSpeedNormMeterPerSecond(subType, temporarySpeed);
 
                 return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
             }
@@ -123,6 +120,11 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
         double hypot = Math.hypot(speedNS, speedEW);
         double speedNormKnots = (subType == 1) ? hypot : hypot * 4;
         return Units.convertFrom(speedNormKnots, Units.Speed.KNOT);
+    }
+
+    private static double calculateSpeedNormMeterPerSecond(int subType, int temporarySpeed) {
+        return (subType == 3) ? Units.convertFrom(temporarySpeed, Units.Speed.KNOT) :
+                Units.convertFrom(temporarySpeed * 4, Units.Speed.KNOT);
     }
 
     private static boolean isInvalidSpeed(int speed) {

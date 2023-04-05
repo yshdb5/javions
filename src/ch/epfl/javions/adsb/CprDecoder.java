@@ -46,9 +46,8 @@ public class CprDecoder {
         int latitude1T32 = convertTurnToT32(latitude1Turn);
 
         if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0T32)
-                || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1T32)) {
-            return null;
-        }
+                || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1T32)) return null;
+
 
         double a0 = aOf(latitude0Turn);
         double a1 = aOf(latitude1Turn);
@@ -56,9 +55,7 @@ public class CprDecoder {
         int zoneNumber00 = zoneNumberOf(a0);
         int zoneNumber01 = zoneNumberOf(a1);
 
-        if (zoneNumber00 != zoneNumber01) {
-            return null;
-        }
+        if (zoneNumber00 != zoneNumber01) return null;
 
         int zoneNumber1 = zoneNumber00 - 1;
 
@@ -66,11 +63,11 @@ public class CprDecoder {
         int zoneLambda0 = (zoneLambda < 0) ? zoneLambda + zoneNumber00 : zoneLambda;
         int zoneLambda1 = (zoneLambda < 0) ? zoneLambda + zoneNumber1 : zoneLambda;
 
-        double deltaLambda0 = ((double) 1) / zoneNumber00;
-        double deltaLambda1 = ((double) 1) / zoneNumber1;
+        double deltaLambda0 = calculateDeltaLambda(zoneNumber00);
+        double deltaLambda1 = calculateDeltaLambda(zoneNumber1);
 
-        double longitude0Turn = (zoneNumberOf(a0) == 1) ? recenterPosition(x0) : recenterPosition(deltaLambda0 * (zoneLambda0 + x0));
-        double longitude1Turn = (zoneNumberOf(a0) == 1) ? recenterPosition(x1) : recenterPosition(deltaLambda1 * (zoneLambda1 + x1));
+        double longitude0Turn = calculateLongitudeTurn(zoneNumber00, x0, deltaLambda0, zoneLambda0);
+        double longitude1Turn = calculateLongitudeTurn(zoneNumber00, x1, deltaLambda1, zoneLambda1);
 
         int longitude0T32 = convertTurnToT32(longitude0Turn);
         int longitude1T32 = convertTurnToT32(longitude1Turn);
@@ -95,5 +92,17 @@ public class CprDecoder {
 
     private static int convertTurnToT32(double latitudeOrLongitude_TURN) {
         return (int) Math.rint(Units.convert(latitudeOrLongitude_TURN, Units.Angle.TURN, Units.Angle.T32));
+    }
+
+    private static double calculateDeltaLambda(int zoneNumber)
+    {
+        return ((double) 1) / zoneNumber;
+    }
+
+    private static double calculateLongitudeTurn(int zoneNumber0, double x, double deltaLambda, int zoneLambda)
+    {
+        return (zoneNumber0 == 1) ?
+                recenterPosition(x) :
+                recenterPosition(deltaLambda * (zoneLambda + x));
     }
 }

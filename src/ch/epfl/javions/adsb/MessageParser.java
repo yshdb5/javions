@@ -28,14 +28,13 @@ public class MessageParser {
     public static Message parse(RawMessage rawMessage) {
         int typeCode = rawMessage.typeCode();
 
-        if (typeCode >= IDENTIFICATION_BOUND1 && typeCode <= IDENTIFICATION_BOUND2) {
+        if (typeCode >= IDENTIFICATION_BOUND1 && typeCode <= IDENTIFICATION_BOUND2)
             return AircraftIdentificationMessage.of(rawMessage);
-        } else if ((typeCode >= POSITION_BOUND1 && typeCode <= POSITION_BOUND2) || (typeCode >= POSITION_BOUND3 && typeCode <= POSITION_BOUND4)) {
+        else if ((typeCode >= POSITION_BOUND1 && typeCode <= POSITION_BOUND2) ||
+                (typeCode >= POSITION_BOUND3 && typeCode <= POSITION_BOUND4))
             return AirbornePositionMessage.of(rawMessage);
-        } else if (typeCode == VELOCITY_TYPECODE) {
-            return AirborneVelocityMessage.of(rawMessage);
-        } else {
-            return null;
-        }
+        else if (typeCode == VELOCITY_TYPECODE) return AirborneVelocityMessage.of(rawMessage);
+        else return null;
+
     }
 }

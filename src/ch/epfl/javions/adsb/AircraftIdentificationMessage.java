@@ -85,20 +85,4 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
         }
         return callString.toString();
     }
-
-    /**
-     * redefinition of timeStamps
-     */
-    @Override
-    public long timeStampNs() {
-        return timeStampNs;
-    }
-
-    /**
-     * redefinition of icaoAddress
-     */
-    @Override
-    public IcaoAddress icaoAddress() {
-        return icaoAddress;
-    }
 }

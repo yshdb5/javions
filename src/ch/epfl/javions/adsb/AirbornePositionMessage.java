@@ -46,6 +46,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int D4_POS = 0;
     private final static int BITS_NUMBER = 12;
     private final static int SHIFT_VALUE = 4;
+    private final static double DIVISOR = Math.scalb(1d, -17);
 
 
     /**
@@ -83,8 +84,8 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         int altitude = Bits.extractUInt(rawMessage.payload(), ALT_START, ALT_LENGTH);
         int parity = Bits.extractUInt(rawMessage.payload(), PARITY_START, BIT_SIZE);
 
-        double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
-        double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * Math.scalb(1d, -17);
+        double latitude = Bits.extractUInt(rawMessage.payload(), LAT_CPR_START, LAT_LON_LENGTH) * DIVISOR;
+        double longitude = Bits.extractUInt(rawMessage.payload(), LON_CPR_START, LAT_LON_LENGTH) * DIVISOR;
 
         double altitudeMeter;
 
@@ -105,15 +106,9 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
             part1 = grayCodeValueOf(part1, Q0_PART1_LENGTH);
             part2 = grayCodeValueOf(part2, Q0_PART2_LENGTH);
 
-            if (part1 == 0 || part1 == 5 || part1 == 6) {
-                return null;
-            }
-            if (part1 == 7) {
-                part1 = 5;
-            }
-            if (part2 % 2 == 1) {
-                part1 = 6 - part1;
-            }
+            if (part1 == 0 || part1 == 5 || part1 == 6) return null;
+            if (part1 == 7) part1 = 5;
+            if (part2 % 2 == 1) part1 = 6 - part1;
 
             altitudeMeter = Units.convertFrom(-1300 + part1 * 100 + part2 * 500, Units.Length.FOOT);
         }
@@ -127,7 +122,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         int disentangledAlt = 0;
 
         for (int i = 0; i < BITS_NUMBER; i++) {
-            disentangledAlt |= Bits.extractUInt(altitude, bitPositions[i], BIT_SIZE) << (11 - i);
+            disentangledAlt |= Bits.extractUInt(altitude, bitPositions[i], BIT_SIZE) << ((BITS_NUMBER - 1) - i);
         }
 
         return disentangledAlt;
@@ -141,15 +136,5 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
         }
 
         return grayCodeValue;
-    }
-
-    @Override
-    public long timeStampNs() {
-        return timeStampNs;
-    }
-
-    @Override
-    public IcaoAddress icaoAddress() {
-        return icaoAddress;
     }
 }

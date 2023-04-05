@@ -54,19 +54,12 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
             }
             case AirbornePositionMessage apm -> {
                 stateSetter.setAltitude(apm.altitude());
-                GeoPos position;
 
                 if (apm.parity() == 0) {
-                    if ((lastOddMessage != null) && validInterval(apm, lastOddMessage)) {
-                        position = CprDecoder.decodePosition(apm.x(), apm.y(), lastOddMessage.x(), lastOddMessage.y(), apm.parity());
-                        if (position != null) stateSetter.setPosition(position);
-                    }
+                    setPosition(lastOddMessage, apm);
                     lastEvenMessage = apm;
                 } else {
-                    if ((lastEvenMessage != null) && validInterval(apm, lastEvenMessage)) {
-                        position = CprDecoder.decodePosition(lastEvenMessage.x(), lastEvenMessage.y(), apm.x(), apm.y(), apm.parity());
-                        if (position != null) stateSetter.setPosition(position);
-                    }
+                    setPosition(lastEvenMessage, apm);
                     lastOddMessage = apm;
                 }
             }
@@ -80,5 +73,16 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
 
     private boolean validInterval(Message mess0, Message mess1) {
         return (mess0.timeStampNs() - mess1.timeStampNs()) <= MAX_TIME_INTERVAL_NS;
+    }
+
+    private void setPosition (AirbornePositionMessage lastMessage, AirbornePositionMessage apm)
+    {
+        GeoPos position;
+        if ((lastMessage != null) && validInterval(apm, lastMessage)) {
+            position = (apm.parity() == 0) ?
+                    CprDecoder.decodePosition(apm.x(), apm.y(), lastMessage.x(), lastMessage.y(), apm.parity()) :
+                    CprDecoder.decodePosition(lastMessage.x(), lastMessage.y(), apm.x(), apm.y(), apm.parity());
+            if (position != null) stateSetter.setPosition(position);
+        }
     }
 }
