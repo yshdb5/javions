@@ -9,21 +9,23 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 public final class ObservableAircraftState implements AircraftStateSetter {
     private final IcaoAddress icaoAddress;
     private final AircraftData aircraftData;
-    private LongProperty lastMessageTimeStampNs;
-    private IntegerProperty category;
-    private ObjectProperty<CallSign> callSign;
-    private ObjectProperty<GeoPos> position;
-    private DoubleProperty altitude;
-    private DoubleProperty velocity;
-    private DoubleProperty trackOrHeading;
-    private ObservableList<AirbornePos> modifiableList;
-    private ObservableList<AirbornePos> unmodifiableList;
+    private final LongProperty lastMessageTimeStampNs;
+    private final IntegerProperty category;
+    private final ObjectProperty<CallSign> callSign;
+    private final ObjectProperty<GeoPos> position;
+    private final DoubleProperty altitude;
+    private final DoubleProperty velocity;
+    private final DoubleProperty trackOrHeading;
+    private final ObservableList<AirbornePos> trajectory;
+    private final ObservableList<AirbornePos> unmodifiableTrajectory;
+    private double lastPositionTimeStamp;
 
-    public ObservableAircraftState(IcaoAddress icaoAddress, AircraftData aircraftData)
-    {
+    public ObservableAircraftState(IcaoAddress icaoAddress, AircraftData aircraftData) {
         this.icaoAddress = icaoAddress;
         this.aircraftData = aircraftData;
         lastMessageTimeStampNs = new SimpleLongProperty();
@@ -33,49 +35,73 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         altitude = new SimpleDoubleProperty();
         velocity = new SimpleDoubleProperty();
         trackOrHeading = new SimpleDoubleProperty();
-        modifiableList = FXCollections.observableArrayList();
-        unmodifiableList = FXCollections.unmodifiableObservableList(modifiableList);
+        trajectory = FXCollections.observableArrayList();
+        unmodifiableTrajectory = FXCollections.unmodifiableObservableList(trajectory);
+        lastPositionTimeStamp = -1;
     }
 
-    private record AirbornePos(GeoPos pos, int altitude) {}
-
-    public ReadOnlyLongProperty lastMessageTimeStampNs()
-    {
+    public ReadOnlyLongProperty lastMessageTimeStampNs() {
         return lastMessageTimeStampNs;
     }
-    public ReadOnlyIntegerProperty categoryProperty()
-    {
+
+    public ReadOnlyIntegerProperty categoryProperty() {
         return category;
     }
 
-    public ReadOnlyObjectProperty callSignProperty()
-    {
+    public ReadOnlyObjectProperty callSignProperty() {
         return callSign;
     }
 
-    public ReadOnlyObjectProperty positionProperty()
-    {
+    public ReadOnlyObjectProperty positionProperty() {
         return position;
     }
 
-    public ReadOnlyListProperty trajectoryProperty()
-    {
-        return (ReadOnlyListProperty) unmodifiableList;
+    public ReadOnlyListProperty trajectoryProperty() {
+        return (ReadOnlyListProperty) unmodifiableTrajectory;
     }
 
-    public ReadOnlyDoubleProperty altitudeProperty()
-    {
+    public ReadOnlyDoubleProperty altitudeProperty() {
         return altitude;
     }
 
-    public ReadOnlyDoubleProperty velocityProperty()
-    {
+    public ReadOnlyDoubleProperty velocityProperty() {
         return velocity;
     }
 
-    public ReadOnlyDoubleProperty trackOrHeadingProperty()
-    {
+    public ReadOnlyDoubleProperty trackOrHeadingProperty() {
         return trackOrHeading;
+    }
+
+    public long getLastMessageTimeStampNs() {
+        return lastMessageTimeStampNs.get();
+    }
+
+    public int getCategory() {
+        return category.get();
+    }
+
+    public CallSign getCallSign() {
+        return callSign.get();
+    }
+
+    public GeoPos getPosition() {
+        return position.get();
+    }
+
+    public double getAltitude() {
+        return altitude.get();
+    }
+
+    public double getVelocity() {
+        return velocity.get();
+    }
+
+    public double getTrackOrHeading() {
+        return trackOrHeading.get();
+    }
+    public List<AirbornePos> getTrajectory()
+    {
+        return trajectory;
     }
 
     @Override
@@ -96,11 +122,13 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     @Override
     public void setPosition(GeoPos position) {
         this.position.set(position);
+        updateTrajectory();
     }
 
     @Override
     public void setAltitude(double altitude) {
         this.altitude.set(altitude);
+        updateTrajectory();
     }
 
     @Override
@@ -113,8 +141,19 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.trackOrHeading.set(trackOrHeading);
     }
 
-    public void setTrajectory(double trajectory)
-    {
+    private record AirbornePos(GeoPos pos, double altitude) {
+    }
 
+    private void updateTrajectory()
+    {
+        double actualAltitude = getAltitude();
+        GeoPos actualPos = getPosition();
+        double lastTimeStamp = getLastMessageTimeStampNs();
+
+        if (trajectory.isEmpty() || !trajectory.get(trajectory.size()-1).pos.equals(actualPos)) {
+            trajectory.add(new AirbornePos(actualPos, actualAltitude));
+            lastPositionTimeStamp = lastTimeStamp;
+        } else if (lastTimeStamp == lastPositionTimeStamp)
+            trajectory.set(trajectory.size()-1, new AirbornePos(actualPos, actualAltitude));
     }
 }

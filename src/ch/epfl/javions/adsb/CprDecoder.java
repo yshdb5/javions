@@ -94,13 +94,11 @@ public class CprDecoder {
         return (int) Math.rint(Units.convert(latitudeOrLongitude_TURN, Units.Angle.TURN, Units.Angle.T32));
     }
 
-    private static double calculateDeltaLambda(int zoneNumber)
-    {
+    private static double calculateDeltaLambda(int zoneNumber) {
         return ((double) 1) / zoneNumber;
     }
 
-    private static double calculateLongitudeTurn(int zoneNumber0, double x, double deltaLambda, int zoneLambda)
-    {
+    private static double calculateLongitudeTurn(int zoneNumber0, double x, double deltaLambda, int zoneLambda) {
         return (zoneNumber0 == 1) ?
                 recenterPosition(x) :
                 recenterPosition(deltaLambda * (zoneLambda + x));

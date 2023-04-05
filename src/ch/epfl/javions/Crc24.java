@@ -63,7 +63,7 @@ public final class Crc24 {
     private static int[] buildTable(int generator) {
         int[] table = new int[TABLE_SIZE];
 
-        for (int i = 0; i < TABLE_SIZE; i++) table[i] = crc_bitwise(generator,new byte [] {(byte) i});
+        for (int i = 0; i < TABLE_SIZE; i++) table[i] = crc_bitwise(generator, new byte[]{(byte) i});
 
         return table;
     }

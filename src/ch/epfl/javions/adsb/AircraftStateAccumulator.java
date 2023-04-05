@@ -75,8 +75,7 @@ public class AircraftStateAccumulator<T extends AircraftStateSetter> {
         return (mess0.timeStampNs() - mess1.timeStampNs()) <= MAX_TIME_INTERVAL_NS;
     }
 
-    private void setPosition (AirbornePositionMessage lastMessage, AirbornePositionMessage apm)
-    {
+    private void setPosition(AirbornePositionMessage lastMessage, AirbornePositionMessage apm) {
         GeoPos position;
         if ((lastMessage != null) && validInterval(apm, lastMessage)) {
             position = (apm.parity() == 0) ?
