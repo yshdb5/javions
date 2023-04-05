@@ -62,7 +62,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * @return the size of a message whose first byte is the given
      */
     public static int size(byte byte0) {
-        int DF = Bits.extractUInt(byte0, 3, 5);
+        int DF = Bits.extractUInt(byte0, DF_START, DF_LENGTH);
 
         return (DF == EXPECTED_DF) ? LENGTH : 0;
     }

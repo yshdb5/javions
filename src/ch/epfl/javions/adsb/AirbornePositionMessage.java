@@ -23,7 +23,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int LON_CPR_START = 0;
     private final static int LAT_CPR_START = 17;
     private final static int LAT_LON_LENGTH = LAT_CPR_START;
-    private final static int Q_START = 4;
+    private final static int Q_POSITION = 4;
     private final static int Q1_PART1_START = 5;
     private final static int Q1_PART1_LENGTH = 7;
     private final static int Q1_PART2_START = 0;
@@ -89,9 +89,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
 
         double altitudeMeter;
 
-        int Q = Bits.extractUInt(altitude, Q_START, BIT_SIZE);
-
-        if (Q == 1) {
+        if (Bits.testBit(altitude, Q_POSITION)) {
             int part1 = Bits.extractUInt(altitude, Q1_PART1_START, Q1_PART1_LENGTH);
             int part2 = Bits.extractUInt(altitude, Q1_PART2_START, Q1_PART2_LENGTH);
             altitude = (part1 << SHIFT_VALUE) | part2;

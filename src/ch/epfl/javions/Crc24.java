@@ -7,14 +7,11 @@ package ch.epfl.javions;
  * @author Gabriel Taieb (360560)
  */
 public final class Crc24 {
-    /**
-     * constant
-     * contains the 24 bits of lower importance of the generator used to calculate the CRC24 of ADS-B messages
-     */
     public static final int GENERATOR = 0xFFF409;
     private static final int CRC_BITS = 24;
     private static final int TABLE_SIZE = 256;
-    private final int[] table;
+    private final int[] crcTable;
+
 
     /**
      * public constructor of Crc24
@@ -22,7 +19,7 @@ public final class Crc24 {
      * @param generator the generator used to calculate a CRC24
      */
     public Crc24(int generator) {
-        table = buildTable(generator);
+        crcTable = buildTable(generator);
     }
 
     private static int crc_bitwise(int generator, byte[] bytes) {
@@ -37,24 +34,11 @@ public final class Crc24 {
             }
         }
 
-        for (int i = 0; i < CRC_BITS; i++) {
-            crc = (crc << 1) ^ tab[Bits.extractUInt(crc, (CRC_BITS - 1), 1)];
-        }
+        for (int i = 0; i < CRC_BITS; i++) crc = (crc << 1) ^ tab[Bits.extractUInt(crc, (CRC_BITS - 1), 1)];
 
         crc = Bits.extractUInt(crc, 0, CRC_BITS);
 
         return crc;
-    }
-
-    private static int[] buildTable(int generator) {
-        int[] table = new int[TABLE_SIZE];
-
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            byte[] tab = {(byte) i};
-            table[i] = crc_bitwise(generator, tab);
-        }
-
-        return table;
     }
 
     /**
@@ -64,16 +48,23 @@ public final class Crc24 {
     public int crc(byte[] bytes) {
         int crc = 0;
 
-        for (byte o : bytes) {
-            crc = ((crc << Byte.SIZE) | Byte.toUnsignedInt(o)) ^ table[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
-        }
+        for (byte o : bytes)
+            crc = ((crc << Byte.SIZE) | Byte.toUnsignedInt(o)) ^ crcTable[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
 
-        for (int i = 0; i < 3; i++) {
-            crc = (crc << Byte.SIZE) ^ table[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
-        }
+
+        for (int i = 0; i < 3; i++)
+            crc = (crc << Byte.SIZE) ^ crcTable[Bits.extractUInt(crc, (CRC_BITS - Byte.SIZE), Byte.SIZE)];
 
         crc = Bits.extractUInt(crc, 0, CRC_BITS);
 
         return crc;
+    }
+
+    private static int[] buildTable(int generator) {
+        int[] table = new int[TABLE_SIZE];
+
+        for (int i = 0; i < TABLE_SIZE; i++) table[i] = crc_bitwise(generator,new byte [] {(byte) i});
+
+        return table;
     }
 }

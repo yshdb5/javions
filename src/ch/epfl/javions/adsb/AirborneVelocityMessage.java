@@ -28,8 +28,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int EW_DIR_START = 21;
     private final static int NS_DIR_START = 10;
     private final static int DIR_LENGTH = 1;
-    private final static int HS_START = EW_DIR_START;
-    private final static int HS_LENGTH = DIR_LENGTH;
+    private final static int HS_POSITION = EW_DIR_START;
     private final static int TRACK_START = EW_SPEED_START;
     private final static int TRACK_LENGTH = SPEEDS_LENGTH;
     private final static int AIRSPEED_START = NS_SPEED_START;
@@ -83,9 +82,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
         } else {
-            int capAvailability = Bits.extractUInt(subPayload, HS_START, HS_LENGTH);
 
-            if (capAvailability == 1) {
+            if (Bits.testBit(subPayload, HS_POSITION)) {
                 track0rHeadingRadian = calculateTrackHeading(subPayload);
 
                 int temporarySpeed = (Bits.extractUInt(subPayload, AIRSPEED_START, SPEEDS_LENGTH) - 1);
