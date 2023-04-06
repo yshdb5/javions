@@ -28,10 +28,10 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int EW_DIR_START = 21;
     private final static int NS_DIR_START = 10;
     private final static int DIR_LENGTH = 1;
-    private final static int HS_POSITION = EW_DIR_START;
-    private final static int TRACK_START = EW_SPEED_START;
-    private final static int TRACK_LENGTH = SPEEDS_LENGTH;
-    private final static int AIRSPEED_START = NS_SPEED_START;
+    private final static int HS_POSITION = 21;
+    private final static int TRACK_START = 11;
+    private final static int TRACK_LENGTH = 10;
+    private final static int AIRSPEED_START = 0;
     private static final double MIN_VALID_VALUE = 0;
 
 

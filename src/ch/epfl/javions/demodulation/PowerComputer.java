@@ -16,7 +16,7 @@ import java.io.InputStream;
 public final class PowerComputer {
     private static final int VALUES_IN_SAMPLE = 8;
     private final SamplesDecoder decoder;
-    private final short[] samplesbatchTab;
+    private final short[] samplesBatchTab;
     private final int batchSize;
     private final short[] lastEightTab = new short[VALUES_IN_SAMPLE];
     private int head = 0;
@@ -32,7 +32,7 @@ public final class PowerComputer {
         Preconditions.checkArgument((batchSize % VALUES_IN_SAMPLE) == 0);
 
         this.batchSize = batchSize;
-        samplesbatchTab = new short[2 * batchSize];
+        samplesBatchTab = new short[2 * batchSize];
         decoder = new SamplesDecoder(stream, 2 * batchSize);
     }
 
@@ -47,14 +47,14 @@ public final class PowerComputer {
     public int readBatch(int[] batch) throws IOException {
         Preconditions.checkArgument((batch.length == batchSize) && batchSize > 0);
 
-        int samplesNumber = decoder.readBatch(samplesbatchTab);
+        int samplesNumber = decoder.readBatch(samplesBatchTab);
         int count = 0;
 
         for (int i = 0, j = 0; i < (samplesNumber - 1); i += 2, j++) {
             head = (head + 1) % VALUES_IN_SAMPLE;
-            lastEightTab[head] = samplesbatchTab[i];
+            lastEightTab[head] = samplesBatchTab[i];
             head = (head + 1) % VALUES_IN_SAMPLE;
-            lastEightTab[head] = samplesbatchTab[i + 1];
+            lastEightTab[head] = samplesBatchTab[i + 1];
 
             batch[j] = calculatedPower();
             count++;

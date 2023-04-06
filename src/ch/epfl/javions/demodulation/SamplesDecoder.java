@@ -60,8 +60,6 @@ public final class SamplesDecoder {
             short short1 = (short) (((Byte.toUnsignedInt(byte2) << Byte.SIZE) | Byte.toUnsignedInt(byte1)) - RECENTER_VALUE);
             batch[j] = short1;
         }
-
         return samplesCount;
     }
-
 }
