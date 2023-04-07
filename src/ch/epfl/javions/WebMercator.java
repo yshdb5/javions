@@ -7,7 +7,7 @@ package ch.epfl.javions;
  * @author Gabriel Taieb (360560)
  */
 
-public class WebMercator {
+public final class WebMercator {
     private static final double OFFSET = 0.5;
     private static final int POWER = 8;
 

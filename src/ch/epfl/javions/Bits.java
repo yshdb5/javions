@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author Gabriel Taieb (360560)
  */
 
-public class Bits {
+public final class Bits {
     private Bits() {
     }
 

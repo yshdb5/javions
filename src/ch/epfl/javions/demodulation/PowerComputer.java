@@ -29,7 +29,7 @@ public final class PowerComputer {
      * @param batchSize the batch size
      */
     public PowerComputer(InputStream stream, int batchSize) {
-        Preconditions.checkArgument((batchSize % VALUES_IN_SAMPLE) == 0);
+        Preconditions.checkArgument((batchSize % VALUES_IN_SAMPLE) == 0 && batchSize > 0);
 
         this.batchSize = batchSize;
         samplesBatchTab = new short[2 * batchSize];
@@ -45,15 +45,15 @@ public final class PowerComputer {
      * @throws IOException in case of input/output error
      */
     public int readBatch(int[] batch) throws IOException {
-        Preconditions.checkArgument((batch.length == batchSize) && batchSize > 0);
+        Preconditions.checkArgument((batch.length == batchSize));
 
         int samplesNumber = decoder.readBatch(samplesBatchTab);
         int count = 0;
 
         for (int i = 0, j = 0; i < (samplesNumber - 1); i += 2, j++) {
-            head = (head + 1) % VALUES_IN_SAMPLE;
+            incrementHead();
             lastEightTab[head] = samplesBatchTab[i];
-            head = (head + 1) % VALUES_IN_SAMPLE;
+            incrementHead();
             lastEightTab[head] = samplesBatchTab[i + 1];
 
             batch[j] = calculatedPower();
@@ -69,13 +69,15 @@ public final class PowerComputer {
         for (int i = 0; i < VALUES_IN_SAMPLE; i++) {
             int lastIndex = lastEightTab[(head - i + VALUES_IN_SAMPLE) % VALUES_IN_SAMPLE];
 
-            if (i % 2 == 0) {
-                evenSum = (i % 4 == 0) ? evenSum - lastIndex : evenSum + lastIndex;
-            } else {
-                oddSum = (i % 4 == 1) ? oddSum + lastIndex : oddSum - lastIndex;
-            }
+            if (i % 2 == 0) evenSum = (i % 4 == 0) ? evenSum - lastIndex : evenSum + lastIndex;
+            else oddSum = (i % 4 == 1) ? oddSum + lastIndex : oddSum - lastIndex;
         }
 
         return evenSum * evenSum + oddSum * oddSum;
+    }
+
+    private void incrementHead()
+    {
+        head = (head + 1) % VALUES_IN_SAMPLE;
     }
 }

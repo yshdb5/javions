@@ -13,7 +13,7 @@ import ch.epfl.javions.Units;
  * @author Gabriel Taieb (360560)
  */
 
-public class CprDecoder {
+public final class CprDecoder {
     private static final int Z0 = 60;
     private static final int Z1 = 59;
     private static final double DELTA0 = (1.0) / Z0;

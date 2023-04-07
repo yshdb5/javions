@@ -8,7 +8,7 @@ package ch.epfl.javions.adsb;
  * @author Gabriel Taieb (360560)
  */
 
-public class MessageParser {
+public final class MessageParser {
 
     private MessageParser() {
     }
