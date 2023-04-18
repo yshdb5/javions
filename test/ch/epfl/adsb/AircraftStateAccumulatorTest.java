@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AircraftStateAccumulatorTest
 {
-    /*
+/*
     public static void main(String[] args) throws IOException
     {
         String f = "resources/samples_20230304_1442.bin";
@@ -33,7 +33,8 @@ class AircraftStateAccumulatorTest
             }
         }
     }
-     */
+
+ */
 
     @Test
     void aircraftStateAccumulatorConstructorThrowsIfStateSetterIsNull() {
