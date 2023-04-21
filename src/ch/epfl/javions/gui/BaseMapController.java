@@ -2,7 +2,9 @@ package ch.epfl.javions.gui;
 
 import ch.epfl.javions.GeoPos;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -34,8 +36,7 @@ public final class BaseMapController {
             newS.addPreLayoutPulseListener(this::redrawIfNeeded);
         });
 
-        manageScroll();
-        manageZoom();
+        creatEventHandlers();
 
         mapParameters.minXProperty().addListener(e -> redrawOnNextPulse());
         mapParameters.minYProperty().addListener(e -> redrawOnNextPulse());
@@ -51,7 +52,6 @@ public final class BaseMapController {
 
     public void centerOn(GeoPos pos) {
         // … à faire : mise à jour de la carte;
-        redrawOnNextPulse();
     }
 
     private void redrawIfNeeded() {
@@ -87,15 +87,7 @@ public final class BaseMapController {
         Platform.requestNextPulse();
     }
 
-    private void manageScroll()
-    {
-        pane.setOnMouseDragged(e -> {
-            mapParameters.scroll(e.getX(), e.getY());
-            redrawOnNextPulse();
-        });
-    }
-
-    private void manageZoom()
+    private void creatEventHandlers()
     {
         LongProperty minScrollTime = new SimpleLongProperty();
         pane.setOnScroll(e -> {
@@ -109,7 +101,20 @@ public final class BaseMapController {
             mapParameters.scroll(e.getX(), e.getY());
             mapParameters.changeZoomLevel(zoomDelta);
             mapParameters.scroll(-e.getX(), -e.getY());
-            redrawOnNextPulse();
+        });
+
+        DoubleProperty lastX = new SimpleDoubleProperty();
+        DoubleProperty lastY = new SimpleDoubleProperty();
+        pane.setOnMousePressed(e -> {
+            lastX.set(e.getX());
+            lastY.set(e.getY());
+        });
+        pane.setOnMouseDragged(e -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime < minScrollTime.get()) return;
+            minScrollTime.set(currentTime + 200);
+
+            mapParameters.scroll(lastX.get() - e.getX(),lastY.get() - e.getY());
         });
     }
 }
