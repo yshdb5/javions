@@ -76,37 +76,13 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         return lastMessageTimeStampNs.get();
     }
 
-    public int getCategory() {
-        return category.get();
-    }
-
-    public CallSign getCallSign() {
-        return callSign.get();
-    }
-
-    public GeoPos getPosition() {
-        return position.get();
-    }
-
-    public double getAltitude() {
-        return altitude.get();
-    }
-
-    public double getVelocity() {
-        return velocity.get();
-    }
-
-    public double getTrackOrHeading() {
-        return trackOrHeading.get();
-    }
-    public List<AirbornePos> getTrajectory()
-    {
-        return trajectory;
-    }
-
     @Override
     public void setLastMessageTimeStampNs(long timeStampNs) {
         lastMessageTimeStampNs.set(timeStampNs);
+    }
+
+    public int getCategory() {
+        return category.get();
     }
 
     @Override
@@ -114,9 +90,17 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.category.set(category);
     }
 
+    public CallSign getCallSign() {
+        return callSign.get();
+    }
+
     @Override
     public void setCallSign(CallSign callSign) {
         this.callSign.set(callSign);
+    }
+
+    public GeoPos getPosition() {
+        return position.get();
     }
 
     @Override
@@ -125,10 +109,18 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         updateTrajectory();
     }
 
+    public double getAltitude() {
+        return altitude.get();
+    }
+
     @Override
     public void setAltitude(double altitude) {
         this.altitude.set(altitude);
         updateTrajectory();
+    }
+
+    public double getVelocity() {
+        return velocity.get();
     }
 
     @Override
@@ -136,24 +128,31 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.velocity.set(velocity);
     }
 
+    public double getTrackOrHeading() {
+        return trackOrHeading.get();
+    }
+
     @Override
     public void setTrackOrHeading(double trackOrHeading) {
         this.trackOrHeading.set(trackOrHeading);
     }
 
-    private record AirbornePos(GeoPos pos, double altitude) {
+    public List<AirbornePos> getTrajectory() {
+        return trajectory;
     }
 
-    private void updateTrajectory()
-    {
+    private void updateTrajectory() {
         double actualAltitude = getAltitude();
         GeoPos actualPos = getPosition();
         double lastTimeStamp = getLastMessageTimeStampNs();
 
-        if (trajectory.isEmpty() || !trajectory.get(trajectory.size()-1).pos.equals(actualPos)) {
+        if (trajectory.isEmpty() || !trajectory.get(trajectory.size() - 1).pos.equals(actualPos)) {
             trajectory.add(new AirbornePos(actualPos, actualAltitude));
             lastPositionTimeStamp = lastTimeStamp;
         } else if (lastTimeStamp == lastPositionTimeStamp)
-            trajectory.set(trajectory.size()-1, new AirbornePos(actualPos, actualAltitude));
+            trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAltitude));
+    }
+
+    private record AirbornePos(GeoPos pos, double altitude) {
     }
 }
