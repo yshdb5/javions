@@ -11,35 +11,48 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class AircraftStateManagerTest {
+    private static class AddressComparator
+            implements Comparator<ObservableAircraftState> {
+        @Override
+        public int compare(ObservableAircraftState o1,
+                           ObservableAircraftState o2) {
+            String s1 = o1.getIcaoAddress().string();
+            String s2 = o2.getIcaoAddress().string();
+            return s1.compareTo(s2);
+        }
+    }
     private static String findArrow(double trackOrHeading) {
         if ((0 <= trackOrHeading && trackOrHeading <= 22.5) || (337.5 <= trackOrHeading && trackOrHeading <= 360)) {
             return "↑";
         }
         if (22.5 < trackOrHeading && trackOrHeading <= 67.5) {
-            return "↗️";
+            return "↗";
         }
         if (67.5 < trackOrHeading && trackOrHeading <= 112.5) {
             return "→";
         }
         if (112.5 < trackOrHeading && trackOrHeading <= 157.5) {
-            return "↘️";
+            return "️↘";
         }
         if (157.5 < trackOrHeading && trackOrHeading <= 202.5) {
             return "↓";
         }
         if (202.5 < trackOrHeading && trackOrHeading <= 247.5) {
-            return "↙️";
+            return "↙";
         }
         if (247.5 < trackOrHeading && trackOrHeading <= 292.5) {
             return "←";
         }
         if (292.5 < trackOrHeading && trackOrHeading <= 337.5) {
-            return "↖️";
+            return "↖";
         }
         return "";
     }
@@ -55,6 +68,9 @@ public class AircraftStateManagerTest {
                         new FileInputStream(d)))) {
             byte[] bytes = new byte[RawMessage.LENGTH];
             AircraftStateManager manager = new AircraftStateManager(new AircraftDatabase(f));
+            //List<ObservableAircraftState> statesList = new ArrayList<>(manager.states());
+            //AddressComparator comparator = new AddressComparator();
+            //statesList.sort(comparator);
 
             while (true) {
                 long timeStampNs = s.readLong();
@@ -62,22 +78,22 @@ public class AircraftStateManagerTest {
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 RawMessage rawMessage = new RawMessage(timeStampNs, message);
-                manager.updateWithMessage(Objects.requireNonNull(MessageParser.parse(rawMessage)));
+                manager.updateWithMessage(MessageParser.parse(rawMessage));
+                manager.purge();
 
                 for (ObservableAircraftState state : manager.states()) {
                     if (state.getPosition() != null) {
-                        System.out.println("-----------------------");
-                        System.out.println(state.getIcaoAddress());
-                        System.out.println(state.getCallSign());
-                        System.out.println(state.getAircraftData().registration());
-                        System.out.println(state.getAircraftData().model());
-                        System.out.println(Units.convertTo(state.getPosition().longitude(),
-                                Units.Angle.DEGREE));
-                        System.out.println(Units.convertTo(state.getPosition().latitude(),
-                                Units.Angle.DEGREE));
-                        System.out.println(state.getAltitude());
-                        System.out.println(state.getVelocity() * 3.6);
-                        System.out.println(findArrow(Units.convertTo(state.trackOrHeadingProperty().get(),Units.Angle.DEGREE)));
+                        System.out.printf("%-6s | %-6s | %-8s | %-32s | %-18s | %-18s | %-5s | %-5s | %s%n",
+                                state.getIcaoAddress().string(),
+                                (state.getCallSign() != null) ? state.getCallSign().string() : "    ",
+                                state.getAircraftData().registration().string(),
+                                state.getAircraftData().model(),
+                                Units.convertTo(state.getPosition().longitude(), Units.Angle.DEGREE),
+                                Units.convertTo(state.getPosition().latitude(), Units.Angle.DEGREE),
+                                (int) state.getAltitude(),
+                                (int) (state.getVelocity() * 3.6),
+                                findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)));
+
                         Thread.sleep(10);
                     }
                 }

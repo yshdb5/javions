@@ -1,6 +1,8 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.GeoPos;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
@@ -9,6 +11,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -79,6 +82,8 @@ public final class BaseMapController {
     private void creatEventHandlers()
     {
         LongProperty minScrollTime = new SimpleLongProperty();
+        final double SCROLL_SPEED = 0.5;
+
         pane.setOnScroll(e -> {
             int zoomDelta = (int) Math.signum(e.getDeltaY());
             if (zoomDelta == 0) return;
@@ -94,6 +99,9 @@ public final class BaseMapController {
 
         DoubleProperty lastX = new SimpleDoubleProperty();
         DoubleProperty lastY = new SimpleDoubleProperty();
+        DoubleProperty translateX = new SimpleDoubleProperty();
+        DoubleProperty translateY = new SimpleDoubleProperty();
+
         pane.setOnMousePressed(e -> {
             lastX.set(e.getX());
             lastY.set(e.getY());
