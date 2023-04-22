@@ -28,22 +28,10 @@ public final class BaseMapController {
         redrawNeeded = false;
 
         this.pane = new Pane(canvas);
-        canvas.widthProperty().bind(pane.widthProperty());
-        canvas.heightProperty().bind(pane.heightProperty());
+        bindPaneToCanvas();
 
-        canvas.sceneProperty().addListener((p, oldS, newS) -> {
-            assert oldS == null;
-            newS.addPreLayoutPulseListener(this::redrawIfNeeded);
-        });
-
+        addListeners();
         creatEventHandlers();
-
-        mapParameters.minXProperty().addListener(e -> redrawOnNextPulse());
-        mapParameters.minYProperty().addListener(e -> redrawOnNextPulse());
-        mapParameters.zoomProperty().addListener(e -> redrawOnNextPulse());
-
-        canvas.widthProperty().addListener(e -> redrawOnNextPulse());
-        canvas.heightProperty().addListener(e -> redrawOnNextPulse());
     }
 
     public Pane pane() {
@@ -51,7 +39,7 @@ public final class BaseMapController {
     }
 
     public void centerOn(GeoPos pos) {
-        // … à faire : mise à jour de la carte;
+
     }
 
     private void redrawIfNeeded() {
@@ -69,6 +57,7 @@ public final class BaseMapController {
             graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, X, Y)), 0, 0);
         }
         catch (IOException ignored) {}
+
         double maxX = (mapParameters.getMinX() + canvas.getWidth()) / TILE_SIZE;
         double maxY = (mapParameters.getMinY() + canvas.getWidth()) / TILE_SIZE;
 
@@ -112,9 +101,31 @@ public final class BaseMapController {
         pane.setOnMouseDragged(e -> {
             long currentTime = System.currentTimeMillis();
             if (currentTime < minScrollTime.get()) return;
-            minScrollTime.set(currentTime + 200);
+            minScrollTime.set(currentTime + 50);
 
             mapParameters.scroll(lastX.get() - e.getX(),lastY.get() - e.getY());
+
+            lastX.set(e.getX());
+            lastY.set(e.getY());
         });
+    }
+
+    private void bindPaneToCanvas() {
+        canvas.widthProperty().bind(pane.widthProperty());
+        canvas.heightProperty().bind(pane.heightProperty());
+    }
+
+    private void addListeners() {
+        canvas.sceneProperty().addListener((p, oldScene, newScene) -> {
+            assert oldScene == null;
+            newScene.addPreLayoutPulseListener(this::redrawIfNeeded);
+        });
+
+        mapParameters.minXProperty().addListener(e -> redrawOnNextPulse());
+        mapParameters.minYProperty().addListener(e -> redrawOnNextPulse());
+        mapParameters.zoomProperty().addListener(e -> redrawOnNextPulse());
+
+        canvas.widthProperty().addListener(e -> redrawOnNextPulse());
+        canvas.heightProperty().addListener(e -> redrawOnNextPulse());
     }
 }

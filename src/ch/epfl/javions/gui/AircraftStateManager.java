@@ -4,7 +4,6 @@ import ch.epfl.javions.adsb.AircraftStateAccumulator;
 import ch.epfl.javions.adsb.Message;
 import ch.epfl.javions.aircraft.AircraftDatabase;
 import ch.epfl.javions.aircraft.IcaoAddress;
-import javafx.beans.property.ReadOnlyListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 
@@ -29,8 +28,8 @@ public final class AircraftStateManager {
         lastMessage = null;
     }
 
-    public ReadOnlyListProperty states() {
-        return (ReadOnlyListProperty) unmodifiablestateAccumulatorList;
+    public ObservableSet<ObservableAircraftState> states() {
+        return unmodifiablestateAccumulatorList;
     }
 
     public void updateWithMessage(Message message) throws IOException {

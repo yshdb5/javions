@@ -48,15 +48,15 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         return category;
     }
 
-    public ReadOnlyObjectProperty callSignProperty() {
+    public ReadOnlyObjectProperty<CallSign> callSignProperty() {
         return callSign;
     }
 
-    public ReadOnlyObjectProperty positionProperty() {
+    public ReadOnlyObjectProperty<GeoPos> positionProperty() {
         return position;
     }
 
-    public ReadOnlyListProperty trajectoryProperty() {
+    public ReadOnlyListProperty<AirbornePos> trajectoryProperty() {
         return (ReadOnlyListProperty) unmodifiableTrajectory;
     }
 
@@ -71,6 +71,10 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     public ReadOnlyDoubleProperty trackOrHeadingProperty() {
         return trackOrHeading;
     }
+
+    public IcaoAddress getIcaoAddress() {return icaoAddress;}
+
+    public AircraftData getAircraftData() {return aircraftData;}
 
     public long getLastMessageTimeStampNs() {
         return lastMessageTimeStampNs.get();
@@ -90,9 +94,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.category.set(category);
     }
 
-    public CallSign getCallSign() {
-        return callSign.get();
-    }
+    public CallSign getCallSign() {return callSign.get();}
 
     @Override
     public void setCallSign(CallSign callSign) {
@@ -138,7 +140,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     }
 
     public List<AirbornePos> getTrajectory() {
-        return trajectory;
+        return unmodifiableTrajectory;
     }
 
     private void updateTrajectory() {
@@ -146,13 +148,14 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         GeoPos actualPos = getPosition();
         double lastTimeStamp = getLastMessageTimeStampNs();
 
-        if (trajectory.isEmpty() || !trajectory.get(trajectory.size() - 1).pos.equals(actualPos)) {
+        if (actualPos != null &&
+                (trajectory.isEmpty()
+                        || !trajectory.get(trajectory.size() - 1).pos.equals(actualPos))) {
             trajectory.add(new AirbornePos(actualPos, actualAltitude));
             lastPositionTimeStamp = lastTimeStamp;
         } else if (lastTimeStamp == lastPositionTimeStamp)
             trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAltitude));
     }
 
-    private record AirbornePos(GeoPos pos, double altitude) {
-    }
+    private record AirbornePos(GeoPos pos, double altitude) {}
 }
