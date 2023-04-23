@@ -28,10 +28,9 @@ public final class BaseMapController {
         this.mapParameters = mapParameters;
         this.canvas = new Canvas();
         redrawNeeded = false;
-
         this.pane = new Pane(canvas);
-        bindPaneToCanvas();
 
+        bindPaneToCanvas();
         addListeners();
         creatEventHandlers();
     }
@@ -58,8 +57,8 @@ public final class BaseMapController {
         double maxX = getTileIndex(mapParameters.getMinX() + canvas.getWidth());
         double maxY = getTileIndex(mapParameters.getMinY() + canvas.getWidth());
 
-        for(int x = x0, a = 0; x < maxX; x++, a += TILE_WIDTH) {
-            for (int y = y0, b = 0; y < maxY; y++, b += TILE_WIDTH) {
+        for(int x = x0, a = 0; x <= maxX; x++, a += TILE_WIDTH) {
+            for (int y = y0, b = 0; y <= maxY; y++, b += TILE_WIDTH) {
                 try{
                     graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)), a, b);
                 }
