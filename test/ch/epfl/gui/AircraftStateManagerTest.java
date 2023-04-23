@@ -2,6 +2,7 @@ package ch.epfl.gui;
 
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.Units;
+import ch.epfl.javions.adsb.Message;
 import ch.epfl.javions.adsb.MessageParser;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.AircraftDatabase;
@@ -14,7 +15,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -68,9 +68,7 @@ public class AircraftStateManagerTest {
                         new FileInputStream(d)))) {
             byte[] bytes = new byte[RawMessage.LENGTH];
             AircraftStateManager manager = new AircraftStateManager(new AircraftDatabase(f));
-            //List<ObservableAircraftState> statesList = new ArrayList<>(manager.states());
-            //AddressComparator comparator = new AddressComparator();
-            //statesList.sort(comparator);
+            AddressComparator comparator = new AddressComparator();
 
             while (true) {
                 long timeStampNs = s.readLong();
@@ -78,12 +76,16 @@ public class AircraftStateManagerTest {
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 RawMessage rawMessage = new RawMessage(timeStampNs, message);
-                manager.updateWithMessage(MessageParser.parse(rawMessage));
+                Message parsedMessage = MessageParser.parse(rawMessage);
+                if (parsedMessage == null) continue;
+                manager.updateWithMessage(parsedMessage);
                 manager.purge();
+                List<ObservableAircraftState> statesList = new ArrayList<>(manager.states());
+                statesList.sort(comparator);
 
-                for (ObservableAircraftState state : manager.states()) {
+                for (ObservableAircraftState state : statesList) {
                     if (state.getPosition() != null) {
-                        System.out.printf("%-6s | %-6s | %-8s | %-32s | %-18s | %-18s | %-5s | %-5s | %s%n",
+                        System.out.printf("%-6s | %-7s | %-8s | %-32s | %-18s | %-18s | %-5s | %-5s | %s%n",
                                 state.getIcaoAddress().string(),
                                 (state.getCallSign() != null) ? state.getCallSign().string() : "    ",
                                 state.getAircraftData().registration().string(),

@@ -1,8 +1,6 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.GeoPos;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
@@ -11,14 +9,13 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 import java.io.IOException;
 
 public final class BaseMapController {
-    private static final int TILE_SIZE = 256;
+    private static final int TILE_WIDTH = 256;
     private final TileManager tileManager;
-    private MapParameters mapParameters;
+    private final MapParameters mapParameters;
     private final Canvas canvas;
     private final Pane pane;
     private GraphicsContext graphicsContext;
@@ -52,20 +49,15 @@ public final class BaseMapController {
         graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        int X = (int) Math.rint(mapParameters.getMinX() / TILE_SIZE);
-        int Y = (int) Math.rint(mapParameters.getMinY() / TILE_SIZE);
+        int x0 = getTileIndex(mapParameters.getMinX());
+        int y0 = getTileIndex(mapParameters.getMinY());
         int zoom = mapParameters.getZoom();
 
-        try {
-            graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, X, Y)), 0, 0);
-        }
-        catch (IOException ignored) {}
+        double maxX = getTileIndex(mapParameters.getMinX() + canvas.getWidth());
+        double maxY = getTileIndex(mapParameters.getMinY() + canvas.getWidth());
 
-        double maxX = (mapParameters.getMinX() + canvas.getWidth()) / TILE_SIZE;
-        double maxY = (mapParameters.getMinY() + canvas.getWidth()) / TILE_SIZE;
-
-        for(int x = X, a = 0; x < maxX; x ++, a += TILE_SIZE) {
-            for (int y = Y, b = 0; y < maxY; y ++, b += TILE_SIZE) {
+        for(int x = x0, a = 0; x < maxX; x++, a += TILE_WIDTH) {
+            for (int y = y0, b = 0; y < maxY; y++, b += TILE_WIDTH) {
                 try{
                     graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)), a, b);
                 }
@@ -82,7 +74,6 @@ public final class BaseMapController {
     private void creatEventHandlers()
     {
         LongProperty minScrollTime = new SimpleLongProperty();
-        final double SCROLL_SPEED = 0.5;
 
         pane.setOnScroll(e -> {
             int zoomDelta = (int) Math.signum(e.getDeltaY());
@@ -99,18 +90,12 @@ public final class BaseMapController {
 
         DoubleProperty lastX = new SimpleDoubleProperty();
         DoubleProperty lastY = new SimpleDoubleProperty();
-        DoubleProperty translateX = new SimpleDoubleProperty();
-        DoubleProperty translateY = new SimpleDoubleProperty();
 
         pane.setOnMousePressed(e -> {
             lastX.set(e.getX());
             lastY.set(e.getY());
         });
         pane.setOnMouseDragged(e -> {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime < minScrollTime.get()) return;
-            minScrollTime.set(currentTime + 50);
-
             mapParameters.scroll(lastX.get() - e.getX(),lastY.get() - e.getY());
 
             lastX.set(e.getX());
@@ -135,5 +120,9 @@ public final class BaseMapController {
 
         canvas.widthProperty().addListener(e -> redrawOnNextPulse());
         canvas.heightProperty().addListener(e -> redrawOnNextPulse());
+    }
+
+    private int getTileIndex(double pos) {
+        return (int) Math.rint(pos / (TILE_WIDTH));
     }
 }
