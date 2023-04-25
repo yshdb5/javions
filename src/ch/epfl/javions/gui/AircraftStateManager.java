@@ -16,20 +16,20 @@ public final class AircraftStateManager {
     private static final long MAX_TIME_INTERVAL_NS = Duration.ofMinutes(1).toNanos();
     private final AircraftDatabase database;
     private final Map<IcaoAddress, AircraftStateAccumulator<ObservableAircraftState>> accumulatorMap;
-    private final ObservableSet<ObservableAircraftState> stateAccumulatorList;
-    private final ObservableSet<ObservableAircraftState> unmodifiablestateAccumulatorList;
+    private final ObservableSet<ObservableAircraftState> statesAccumulatorList;
+    private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private Message lastMessage;
 
     public AircraftStateManager(AircraftDatabase database) {
         this.database = database;
         accumulatorMap = new HashMap<>();
-        stateAccumulatorList = FXCollections.observableSet();
-        unmodifiablestateAccumulatorList = FXCollections.unmodifiableObservableSet(stateAccumulatorList);
+        statesAccumulatorList = FXCollections.observableSet();
+        unmodifiableStatesAccumulatorList = FXCollections.unmodifiableObservableSet(statesAccumulatorList);
         lastMessage = null;
     }
 
     public ObservableSet<ObservableAircraftState> states() {
-        return unmodifiablestateAccumulatorList;
+        return unmodifiableStatesAccumulatorList;
     }
 
     public void updateWithMessage(Message message) throws IOException {
@@ -40,12 +40,12 @@ public final class AircraftStateManager {
                 new AircraftStateAccumulator<>(observableAircraftState));
         accumulatorMap.get(message.icaoAddress()).update(message);
 
-        stateAccumulatorList.add(observableAircraftState);
+        statesAccumulatorList.add(observableAircraftState);
         lastMessage = message;
     }
 
     public void purge() {
-        stateAccumulatorList.removeIf(state ->
+        statesAccumulatorList.removeIf(state ->
                 (lastMessage.timeStampNs() - state.getLastMessageTimeStampNs()) > MAX_TIME_INTERVAL_NS);
     }
 }

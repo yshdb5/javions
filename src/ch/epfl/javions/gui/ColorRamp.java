@@ -39,7 +39,7 @@ public final class ColorRamp {
         else if (index > 1) return colorList.get(colorList.size() - 1);
         else {
             int i = (int) (index / interval);
-            double proportion = (index - i * interval) / interval; // à corriger
+            double proportion = (index - i * interval) % interval / interval;
             return colorList.get(i).interpolate(colorList.get(i + 1), proportion);
         }
     }
