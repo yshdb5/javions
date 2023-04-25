@@ -23,12 +23,14 @@ public final class ColorRamp {
             Color.valueOf("0xfdb52eff"), Color.valueOf("0xfdc229ff"),
             Color.valueOf("0xfccf25ff"), Color.valueOf("0xf9dd24ff"),
             Color.valueOf("0xf5eb27ff"), Color.valueOf("0xf0f921ff"));
-    List<Color> colorList;
+    private final List<Color> colorList;
+    private final double interval;
     public ColorRamp (Color ... color)
     {
         Preconditions.checkArgument(color.length >= 2);
 
         colorList = List.of(color);
+        interval = ((double) 1) / (colorList.size() - 1);
     }
 
     public Color at(double index)
@@ -36,8 +38,9 @@ public final class ColorRamp {
         if (index < 0) return colorList.get(0);
         else if (index > 1) return colorList.get(colorList.size() - 1);
         else {
-            double i = ((double) 1) / (colorList.size() - 1);
-            return null;
+            int i = (int) (index / interval);
+            double proportion = (index - i * interval) / interval; // à corriger
+            return colorList.get(i).interpolate(colorList.get(i + 1), proportion);
         }
     }
 }
