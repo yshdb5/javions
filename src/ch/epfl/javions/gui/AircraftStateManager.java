@@ -12,9 +12,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * test
- */
 public final class AircraftStateManager {
     private static final long MAX_TIME_INTERVAL_NS = Duration.ofMinutes(1).toNanos();
     private final AircraftDatabase database;
