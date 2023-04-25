@@ -1,6 +1,7 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.GeoPos;
+import ch.epfl.javions.WebMercator;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
@@ -39,8 +40,12 @@ public final class BaseMapController {
     }
 
     public void centerOn(GeoPos pos) {
-        mapParameters.scroll(pos.longitude() - mapParameters.getMinX() - canvas.getWidth() / 2,
-                pos.latitude() - mapParameters.getMinY() - canvas.getHeight() / 2);
+        double x  = WebMercator.x(mapParameters.getZoom(), pos.longitude());
+        double y = WebMercator.y(mapParameters.getZoom(), pos.latitude());
+
+        double deltaX = x - (mapParameters.getMinX() + canvas.getWidth() / 2);
+        double deltaY = y - (mapParameters.getMinY() + canvas.getHeight() / 2);
+        mapParameters.scroll(deltaX, deltaY);
     }
 
     private void redrawIfNeeded() {
