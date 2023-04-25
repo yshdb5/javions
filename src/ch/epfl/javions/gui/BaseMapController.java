@@ -21,7 +21,6 @@ public final class BaseMapController {
     private final Pane pane;
     private GraphicsContext graphicsContext;
     private boolean redrawNeeded;
-    private Point2D lastMousePosition;
 
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
         this.tileManager = tileManager;
@@ -55,11 +54,12 @@ public final class BaseMapController {
         int zoom = mapParameters.getZoom();
 
         double maxX = getTileIndex(mapParameters.getMinX() + canvas.getWidth());
-        double maxY = getTileIndex(mapParameters.getMinY() + canvas.getWidth());
+        double maxY = getTileIndex(mapParameters.getMinY() + canvas.getHeight());
 
         for(int x = x0, a = 0; x <= maxX; x++, a += TILE_WIDTH) {
             for (int y = y0, b = 0; y <= maxY; y++, b += TILE_WIDTH) {
                 try{
+                    if(!TileManager.TileId.isValid(zoom, x, y)) continue;
                     graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)), a, b);
                 }
                 catch (IOException ignored) {}
@@ -84,9 +84,11 @@ public final class BaseMapController {
             if (currentTime < minScrollTime.get()) return;
             minScrollTime.set(currentTime + 200);
 
-            mapParameters.scroll(e.getX(), e.getY());
+            double x = e.getX();
+            double y = e.getY();
+            mapParameters.scroll(x, y);
             mapParameters.changeZoomLevel(zoomDelta);
-            mapParameters.scroll(-e.getX(), -e.getY());
+            mapParameters.scroll(-x, -y);
         });
 
         DoubleProperty lastX = new SimpleDoubleProperty();
