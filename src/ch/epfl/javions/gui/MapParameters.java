@@ -29,8 +29,8 @@ public final class MapParameters {
         zoom.set(Math2.clamp(MIN_ZOOM, zoom.get() + deltaZoom, MAX_ZOOM));
         int newZoom = zoom.get();
         if (oldZoom != newZoom) {
-            minX.set(minX.get() * (1 << deltaZoom));
-            minY.set(minY.get() * (1 << deltaZoom));
+            minX.set(Math.scalb(minX.get(), deltaZoom));
+            minY.set(Math.scalb(minY.get(), deltaZoom));
         }
     }
 

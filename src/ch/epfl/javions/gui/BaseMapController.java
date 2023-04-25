@@ -39,7 +39,8 @@ public final class BaseMapController {
     }
 
     public void centerOn(GeoPos pos) {
-
+        mapParameters.scroll(pos.longitude() - mapParameters.getMinX() - canvas.getWidth() / 2,
+                pos.latitude() - mapParameters.getMinY() - canvas.getHeight() / 2);
     }
 
     private void redrawIfNeeded() {
@@ -53,14 +54,18 @@ public final class BaseMapController {
         int y0 = getTileIndex(mapParameters.getMinY());
         int zoom = mapParameters.getZoom();
 
+        double minX = mapParameters.getMinX();
+        double minY = mapParameters.getMinY();
+
         double maxX = getTileIndex(mapParameters.getMinX() + canvas.getWidth());
         double maxY = getTileIndex(mapParameters.getMinY() + canvas.getHeight());
 
-        for(int x = x0, a = 0; x <= maxX; x++, a += TILE_WIDTH) {
-            for (int y = y0, b = 0; y <= maxY; y++, b += TILE_WIDTH) {
+        for(int x = x0; x <= maxX; x++) {
+            for (int y = y0; y <= maxY; y++) {
                 try{
                     if(!TileManager.TileId.isValid(zoom, x, y)) continue;
-                    graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)), a, b);
+                    graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)),
+                            x*TILE_WIDTH - minX, y*TILE_WIDTH - minY);
                 }
                 catch (IOException ignored) {}
             }
@@ -86,6 +91,7 @@ public final class BaseMapController {
 
             double x = e.getX();
             double y = e.getY();
+
             mapParameters.scroll(x, y);
             mapParameters.changeZoomLevel(zoomDelta);
             mapParameters.scroll(-x, -y);
@@ -126,6 +132,6 @@ public final class BaseMapController {
     }
 
     private int getTileIndex(double pos) {
-        return (int) Math.rint(pos / (TILE_WIDTH));
+        return (int) Math.floor(pos / (TILE_WIDTH));
     }
 }
