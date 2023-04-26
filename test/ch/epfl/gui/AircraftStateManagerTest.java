@@ -79,12 +79,9 @@ public class AircraftStateManagerTest {
                 Message parsedMessage = MessageParser.parse(rawMessage);
                 if (parsedMessage == null) continue;
                 manager.updateWithMessage(parsedMessage);
-                manager.purge();
-                List<ObservableAircraftState> statesList = new ArrayList<>(manager.states());
-                statesList.sort(comparator);
 
-                for (ObservableAircraftState state : statesList) {
-                    if (state.getPosition() != null) {
+                for (ObservableAircraftState state : manager.states()) {
+                     {
                         System.out.printf("%-6s | %-7s | %-8s | %-32s | %-18s | %-18s | %-5s | %-5s | %s%n",
                                 state.getIcaoAddress().string(),
                                 (state.getCallSign() != null) ? state.getCallSign().string() : "    ",
