@@ -63,33 +63,42 @@ public class Main {
                 RawMessage rawMessage = new RawMessage(timeStampNs, message);
                 manager.updateWithMessage(Objects.requireNonNull(MessageParser.parse(rawMessage)));
                 manager.purge();
-                System.out.println("OACI   CallSign    Registration    Model    Longitude    Latitude    Altitude    Speed    Direction");
-                System.out.println("---------------------------------------------------------------------------------------------------");
-                for (ObservableAircraftState state : manager.states()) {
-                    if (state.getPosition() == null) continue;
-                    System.out.printf(state.getIcaoAddress().string() + " ");
-                    if (state.getCallSign() != null)
-                        System.out.printf(state.getCallSign().string());
-                    if(state.getAircraftData().registration() != null)
-                        System.out.printf(state.getAircraftData().registration().string() + " ");
-                    if(state.getAircraftData().model() != null)
-                        System.out.print(state.getAircraftData().model() + " ");
-                    System.out.print(Units.convertTo(state.getPosition().longitude(),
-                            Units.Angle.DEGREE) + " ");
-                    System.out.print(Units.convertTo(state.getPosition().latitude(),
-                            Units.Angle.DEGREE) + " ");
-                    System.out.print(state.getAltitude() + " ");
-                    System.out.print(state.getVelocity() * 3.6 + " ");
-                    System.out.print(findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)) + " ");
-                    System.out.println();
-                    Thread.sleep(100);
-                }
-                System.out.println();
                 System.out.print(CLEAR_SCREEN);
+                System.out.println("OACI   CallSign    Registration                Model                    Longitude             Latitude              Altitude               Speed             Direction");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+                for (ObservableAircraftState state : manager.states()) {
+                    System.out.printf(state.getIcaoAddress().string() + "  ");
+                    if (state.getCallSign() != null)
+                        System.out.printf("|%-10s|", state.getCallSign().string());
+                    else System.out.print("|          |");
+                    if(state.getAircraftData() != null ) {
+                        if (state.getAircraftData().registration() != null)
+                            System.out.printf("|%-10s|", state.getAircraftData().registration().string() + " ");
+                        else System.out.print("|          |");
+                        if (state.getAircraftData().model() != null)
+                            System.out.printf("|%35s| ", state.getAircraftData().model());
+                        else System.out.print("|                                  |");
+                    }
+                    else System.out.print("|          ||                                   |  ");
+                    System.out.printf("|%20s|", Units.convertTo(state.getPosition().longitude(),
+                            Units.Angle.DEGREE) + " ");
+                    System.out.printf("|%20s|", Units.convertTo(state.getPosition().latitude(),
+                            Units.Angle.DEGREE) + " ");
+                    System.out.printf("|%20s|", state.getAltitude() + " ");
+                    System.out.printf("|%20s|", state.getVelocity() * 3.6 + " ");
+                    System.out.print("|     " + findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)) + " ");
+                    System.out.println();
+                }
+                Thread.sleep(10);
+                System.out.print(MOVE_TO_TOP_LEFT);
+                System.out.println();
             }
-        } catch (EOFException e) { /* nothing to do */ }
-          catch (IOException | InterruptedException e) {
-              throw new RuntimeException(e);
+        } catch (EOFException e) { /* nothing to do */ } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

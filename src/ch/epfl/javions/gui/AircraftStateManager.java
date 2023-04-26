@@ -40,7 +40,9 @@ public final class AircraftStateManager {
                 new AircraftStateAccumulator<>(observableAircraftState));
         accumulatorMap.get(message.icaoAddress()).update(message);
 
-        statesAccumulatorList.add(observableAircraftState);
+        if (observableAircraftState.getPosition() != null)
+            statesAccumulatorList.add(observableAircraftState);
+
         lastMessage = message;
     }
 

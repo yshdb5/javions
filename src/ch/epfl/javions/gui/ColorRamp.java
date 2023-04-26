@@ -25,7 +25,7 @@ public final class ColorRamp {
             Color.valueOf("0xf5eb27ff"), Color.valueOf("0xf0f921ff"));
     private final List<Color> colorList;
     private final double interval;
-    public ColorRamp (Color ... color)
+    private ColorRamp (Color ... color)
     {
         Preconditions.checkArgument(color.length >= 2);
 
