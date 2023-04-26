@@ -1,13 +1,10 @@
-package ch.epfl.gui;
+package ch.epfl.javions.gui;
 
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.Units;
 import ch.epfl.javions.adsb.MessageParser;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.AircraftDatabase;
-import ch.epfl.javions.gui.AircraftStateManager;
-import ch.epfl.javions.gui.ObservableAircraftState;
-
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -69,6 +66,7 @@ public class Main {
                 System.out.println("OACI   CallSign    Registration    Model    Longitude    Latitude    Altitude    Speed    Direction");
                 System.out.println("---------------------------------------------------------------------------------------------------");
                 for (ObservableAircraftState state : manager.states()) {
+                    if (state.getPosition() == null) continue;
                     System.out.printf(state.getIcaoAddress().string() + " ");
                     if (state.getCallSign() != null)
                         System.out.printf(state.getCallSign().string());
