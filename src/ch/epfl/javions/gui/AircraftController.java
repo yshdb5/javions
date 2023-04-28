@@ -1,5 +1,6 @@
 package ch.epfl.javions.gui;
 
+import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.Units;
 import ch.epfl.javions.WebMercator;
 import ch.epfl.javions.aircraft.AircraftData;
@@ -96,22 +97,35 @@ public final class AircraftController {
                 mapParameters.zoomProperty().addListener(z -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
             }
         });
-
-//        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() ->
-//                WebMercator.x(mapParameters.getZoom(), aircraftState.getTrajectory().)));
-//        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() ->
-//                WebMercator.y(mapParameters.getZoom(), aircraftState.getTrajectory())));
-
-
         return trajectoryGroup;
     }
 
     private void redrawTrajectory(List<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
+        if (trajectory.size() < 2) return;
         List<Line> lineList = new ArrayList<>();
-        for (ObservableAircraftState.AirbornePos airbornePos : trajectory) {
+        double previousX = 0;
+        double previousY = 0;
+
+        for (int i = 0; i < trajectory.size(); ++i) {
             Line line = new Line();
 
+            double x = WebMercator.x(mapParameters.getZoom(), trajectory.get(i).pos().longitude());
+            double y = WebMercator.y(mapParameters.getZoom(), trajectory.get(i).pos().latitude());
+
+            if (i == 0) continue;
+
+            line.setStartX(previousX);
+            line.setStartY(previousY);
+            line.setEndX(x);
+            line.setEndY(y);
+
+            previousX = x;
+            previousY =y;
+
+            lineList.add(line);
         }
+
+        trajectoryGroup.getChildren().addAll(lineList);
     };
     private Group label(ObservableAircraftState aircraftState){
         Text txt = new Text();
