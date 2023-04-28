@@ -89,7 +89,7 @@ public class Main {
                     System.out.print("|     " + findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)) + " ");
                     System.out.println();
                 }
-                Thread.sleep(10);
+                Thread.sleep(100);
                 System.out.print(MOVE_TO_TOP_LEFT);
                 System.out.println();
             }

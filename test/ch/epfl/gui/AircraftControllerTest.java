@@ -16,29 +16,36 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-class AircraftControllerTest extends Application {
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+public class AircraftControllerTest extends Application {
     public static void main(String[] args) { launch(args); }
 
-    static List<RawMessage> readAllMessages(String fileName) {
+    static List<RawMessage> readAllMessages(String fileName){
         List<RawMessage> messageList = new ArrayList<>();
+        String f = AircraftControllerTest.class.getResource(fileName).getFile();
+        f = URLDecoder.decode(f, UTF_8);
+
         try (DataInputStream s = new DataInputStream(
                 new BufferedInputStream(
-                        new FileInputStream(fileName)))){
+                        new FileInputStream(f)))){
             byte[] bytes = new byte[RawMessage.LENGTH];
-            while (true) {
+            while (s.available() > 0) {
                 long timeStampNs = s.readLong();
                 int bytesRead = s.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 messageList.add(new RawMessage(timeStampNs, message));
             }
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return messageList;
     }
 
     @Override
@@ -63,7 +70,7 @@ class AircraftControllerTest extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        var mi = readAllMessages("messages_20230318_0915.bin")
+        var mi = readAllMessages("/messages_20230318_0915.bin")
                 .iterator();
 
         // Animation des aéronefs
