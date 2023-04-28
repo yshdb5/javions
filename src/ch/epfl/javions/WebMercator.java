@@ -22,7 +22,7 @@ public final class WebMercator {
      * @return the x coordinate that corresponds to the longitude on the zoom
      */
     public static double x(int zoomLevel, double longitude) {
-        return Math.scalb(1, POWER + zoomLevel) * (longitude / (2 * Math.PI) + OFFSET);
+        return calculateCoordinate(longitude, zoomLevel);
     }
 
     /**
@@ -34,6 +34,10 @@ public final class WebMercator {
      */
 
     public static double y(int zoomLevel, double latitude) {
-        return Math.scalb(1, POWER + zoomLevel) * ((-Math2.asinh((Math.tan(latitude))) / (2 * Math.PI)) + OFFSET);
+        return calculateCoordinate(-Math2.asinh(Math.tan(latitude)), zoomLevel);
+    }
+
+    private static double calculateCoordinate(double value, int zoomLevel){
+        return Math.scalb(Units.convertTo(value, Units.Angle.TURN) + OFFSET, POWER + zoomLevel);
     }
 }

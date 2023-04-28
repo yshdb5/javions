@@ -1,11 +1,4 @@
 package ch.epfl.javions.demodulation;
-/**
- * final class SampleDecoder: represents an object capable of transforming the bytes coming from
- * AirSpy into signed 12-bit samples .
- *
- * @author Yshai  (356356)
- * @author Gabriel Taieb (360560)
- */
 
 import ch.epfl.javions.Preconditions;
 
@@ -13,6 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+/**
+ * final class SampleDecoder: represents an object capable of transforming the bytes coming from
+ * AirSpy into signed 12-bit samples .
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class SamplesDecoder {
     private final static double RECENTER_VALUE = Math.scalb(1, 11);
     private final InputStream stream;
@@ -51,15 +51,15 @@ public final class SamplesDecoder {
     public int readBatch(short[] batch) throws IOException {
         Preconditions.checkArgument(batch.length == batchSize);
 
-        int samplesCount = stream.readNBytes(batchTab, 0, batchSize * 2) / (Short.BYTES);
+        int samplesCount = stream.readNBytes(batchTab, 0, batchSize * 2);
 
-        for (int i = 0, j = 0; i < samplesCount * 2; i += 2, j++) {
+        for (int i = 0, j = 0; i < samplesCount; i += 2, j++) {
             byte byte1 = batchTab[i];
             byte byte2 = batchTab[i + 1];
 
             short short1 = (short) (((Byte.toUnsignedInt(byte2) << Byte.SIZE) | Byte.toUnsignedInt(byte1)) - RECENTER_VALUE);
             batch[j] = short1;
         }
-        return samplesCount;
+        return samplesCount / Short.BYTES;
     }
 }

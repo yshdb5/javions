@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * final class AdsbDemodulator : represents a demodulator for ADS-B messages
+ * Final class AdsbDemodulator : represents a demodulator for ADS-B messages.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
 public final class AdsbDemodulator {
+    public static final int TIME_FACTOR = 100;
     private static final int WINDOWSIZE = 1200;
-    private static final int INDEXPICS2 = 10;
-    private static final int INDEXPICS3 = 35;
-    private static final int INDEXPICS4 = 45;
+    private static final int INDEXPEAK2 = 10;
+    private static final int INDEXPEAK3 = 35;
+    private static final int INDEXPEAK4 = 45;
     private static final int INDEXVALLEYS1 = 5;
     private static final int INDEXVALLEYS2 = 15;
     private static final int INDEXVALLEYS3 = 20;
@@ -24,11 +25,13 @@ public final class AdsbDemodulator {
     private static final int INDEXVALLEYS6 = 40;
     private static final int PREAMBLE_SIZE = 80;
     private static final int PERIOD = 5;
+    private static final byte[] message = new byte[RawMessage.LENGTH];
     private final PowerWindow powerWindow;
 
 
+
     /**
-     * returns a demodulator obtaining the bytes containing the samples of the stream passed in argument
+     * return a demodulator obtaining the bytes containing the samples of the stream passed in argument
      *
      * @param samplesStream the samples of the stream that are used to build a demodulator
      * @throws IOException if an input/output error occurs when creating the PowerWindow object
@@ -39,23 +42,22 @@ public final class AdsbDemodulator {
     }
 
     /**
+     *
      * @return the next ADS-B message in the sample stream passed to the constructor,
      * or null if the end of the sample stream has been reached
      * @throws IOException in case of an input/output error.
      */
     public RawMessage nextMessage() throws IOException {
-        int pics0 = 0;
-        int picsPlus1;
-        int picsMinus1;
+        int peak0 = 0;
+        int peakPlus1;
+        int peakMinus1;
 
         while (powerWindow.isFull()) {
-            picsMinus1 = pics0;
-            pics0 = sumPics(0);
-            picsPlus1 = sumPics(1);
+            peakMinus1 = peak0;
+            peak0 = sumPeaks(0);
+            peakPlus1 = sumPeaks(1);
 
-            if (isPreamble(picsMinus1, pics0, picsPlus1)) {
-                byte[] message = new byte[RawMessage.LENGTH];
-
+            if (isPreamble(peakMinus1, peak0, peakPlus1)) {
                 message[0] = byteI(0);
 
                 if (!dfIsOk(message[0])) {
@@ -67,7 +69,7 @@ public final class AdsbDemodulator {
                     message[i] = byteI(i);
                 }
 
-                long timeStamp = powerWindow.position() * 100;
+                long timeStamp = powerWindow.position() * TIME_FACTOR;
                 RawMessage maybeMessage = RawMessage.of(timeStamp, message);
 
                 if (maybeMessage != null) {
@@ -80,19 +82,19 @@ public final class AdsbDemodulator {
         return null;
     }
 
-    private boolean isPreamble(int picsMinus1, int pics0, int picsPlus1) {
-        boolean condition1 = pics0 >= 2 * sumValley();
-        boolean condition2 = picsMinus1 < pics0;
-        boolean condition3 = pics0 > picsPlus1;
+    private boolean isPreamble(int peakMinus1, int peak0, int peakPlus1) {
+        boolean condition1 = peak0 >= 2 * sumValleys();
+        boolean condition2 = peakMinus1 < peak0;
+        boolean condition3 = peak0 > peakPlus1;
 
         return condition1 && condition2 && condition3;
     }
 
-    private int sumPics(int i) {
-        return powerWindow.get(i) + powerWindow.get(INDEXPICS2 + i) + powerWindow.get(INDEXPICS3 + i) + powerWindow.get(INDEXPICS4 + i);
+    private int sumPeaks(int i) {
+        return powerWindow.get(i) + powerWindow.get(INDEXPEAK2 + i) + powerWindow.get(INDEXPEAK3 + i) + powerWindow.get(INDEXPEAK4 + i);
     }
 
-    private int sumValley() {
+    private int sumValleys() {
         return powerWindow.get(INDEXVALLEYS1) + powerWindow.get(INDEXVALLEYS2) + powerWindow.get(INDEXVALLEYS3)
                 + powerWindow.get(INDEXVALLEYS4) + powerWindow.get(INDEXVALLEYS5) + powerWindow.get(INDEXVALLEYS6);
     }

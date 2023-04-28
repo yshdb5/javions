@@ -40,8 +40,6 @@ public final class ByteString {
      * @throws NumberFormatException    if the sequence given is not an even size or if it contains a non-hexadecimal number
      */
     public static ByteString ofHexadecimalString(String hexString) {
-        Preconditions.checkArgument((hexString.length() % 2) == 0);
-
         byte[] bytes = hf.parseHex(hexString);
 
         return new ByteString(bytes);
@@ -62,8 +60,6 @@ public final class ByteString {
      * @throws IndexOutOfBoundsException if the index given is invalid
      */
     public int byteAt(int index) {
-        Objects.checkIndex(index, bytes.length);
-
         return Byte.toUnsignedInt(bytes[index]);
     }
 
@@ -77,13 +73,12 @@ public final class ByteString {
      */
     public long bytesInRange(int fromIndex, int toIndex) {
         Objects.checkFromToIndex(fromIndex, toIndex, this.size());
-        Preconditions.checkArgument((toIndex - fromIndex) < Long.SIZE);
-
+        Preconditions.checkArgument((toIndex - fromIndex) < Long.BYTES);
 
         long mask = Byte.toUnsignedInt(bytes[fromIndex]);
 
         for (int i = (fromIndex + 1); i < toIndex; i++) {
-            mask = ((mask << SHIFT_VALUE) | (Byte.toUnsignedInt(bytes[i])));
+            mask = ((mask << SHIFT_VALUE) | byteAt(i));
         }
 
         return mask;

@@ -16,6 +16,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class AircraftDatabase {
     private final static int CSV_ADDRESS_START = 4;
+    private final static String SEPARATOR = ",";
     private final String fileName;
 
     /**
@@ -25,9 +26,7 @@ public final class AircraftDatabase {
      * @throws NullPointerException if the file is null
      */
     public AircraftDatabase(String fileName) {
-        Objects.requireNonNull(fileName);
-
-        this.fileName = fileName;
+        this.fileName = Objects.requireNonNull(fileName);;
     }
 
     /**
@@ -49,12 +48,15 @@ public final class AircraftDatabase {
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.compareTo(address.string()) < 0) continue;
                 if (line.startsWith(address.string())) {
-                    splitData = line.split(",", -1);
+                    splitData = line.split(SEPARATOR, -1);
 
-                    return new AircraftData(new AircraftRegistration(splitData[1]), new AircraftTypeDesignator(splitData[2]), splitData[3],
-                            new AircraftDescription(splitData[4]), WakeTurbulenceCategory.of(splitData[5]));
+                    return new AircraftData(
+                            new AircraftRegistration(splitData[1]),
+                            new AircraftTypeDesignator(splitData[2]),
+                            splitData[3],
+                            new AircraftDescription(splitData[4]),
+                            WakeTurbulenceCategory.of(splitData[5]));
                 }
-                if (line.compareTo(address.string()) > 0) return null;
             }
         }
         return null;
