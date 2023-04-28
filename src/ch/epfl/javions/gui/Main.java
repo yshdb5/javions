@@ -93,11 +93,8 @@ public class Main {
                 System.out.print(MOVE_TO_TOP_LEFT);
                 System.out.println();
             }
-        } catch (EOFException e) { /* nothing to do */ } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (EOFException e) { /* nothing to do */
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

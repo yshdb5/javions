@@ -24,8 +24,7 @@ public final class Math2 {
     public static int clamp(int min, int v, int max) {
         Preconditions.checkArgument(min <= max);
 
-        if (v < min) return min;
-        else return Math.min(v, max);
+        return Math.max(min, Math.min(v, max));
     }
 
     /**
@@ -35,6 +34,6 @@ public final class Math2 {
      * @return applies the reciprocal hyperbolic sine formula to x
      */
     public static double asinh(double x) {
-        return Math.log(x + Math.sqrt(1 + x * x));
+        return Math.log(x + Math.hypot(1, x));
     }
 }

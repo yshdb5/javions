@@ -141,7 +141,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.trackOrHeading.set(trackOrHeading);
     }
 
-    public List<AirbornePos> getTrajectory() {
+    public ObservableList<AirbornePos> getTrajectory() {
         return unmodifiableTrajectory;
     }
 
@@ -163,5 +163,5 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         }
     }
 
-    private record AirbornePos(GeoPos pos, double altitude) {}
+    public record AirbornePos(GeoPos pos, double altitude) {}
 }

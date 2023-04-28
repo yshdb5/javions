@@ -39,6 +39,7 @@ public final class Bits {
      * @param value the long value we want to test
      * @param index the index we want to test
      * @return true if the value of the index given is 1
+     * @throws IndexOutOfBoundsException if the index is negative or bigger than the size of a long
      */
     public static boolean testBit(long value, int index) {
         Objects.checkIndex(index, Long.SIZE);
