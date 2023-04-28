@@ -76,7 +76,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             track0rHeadingRadian = calculateTrackHeading(directionNS, directionEW, speedEW, speedNS);
 
-            if (track0rHeadingRadian < 0) track0rHeadingRadian += 2 * Math.PI;
+            if (track0rHeadingRadian < 0) track0rHeadingRadian += Units.Angle.TURN;
 
             speedNormMeterPerSecond = calculateSpeedNormMeterPerSecond(subType, speedNS, speedEW);
 
@@ -111,7 +111,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     }
 
     private static double calculateTrackHeading(int subPayload) {
-        return Units.convertFrom(Bits.extractUInt(subPayload, TRACK_START, TRACK_LENGTH) * Math.scalb(1d, -10), Units.Angle.TURN);
+        return Units.convertFrom(Math.scalb(Bits.extractUInt(subPayload, TRACK_START, TRACK_LENGTH), -10), Units.Angle.TURN);
     }
 
     private static double calculateSpeedNormMeterPerSecond(int subType, double speedNS, double speedEW) {

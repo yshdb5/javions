@@ -23,6 +23,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * LENGTH : constant of value 14
      */
     public static final int LENGTH = 14;
+    public static final int DF_INDEX = 0;
     private static final int PAYLOAD_START = 4;
     private static final int PAYLOAD_LENGTH = 10;
     private static final int EXPECTED_DF = 17;
@@ -33,8 +34,8 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     private static final int ICAO_START = 1;
     private static final int ICAO_LENGTH = 4;
     private static final int ICAO_SIZE = 6;
-    private final static HexFormat hf = HexFormat.of().withUpperCase();
-    private final static Crc24 crc24 = new Crc24(Crc24.GENERATOR);
+    private final static HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
+    private final static Crc24 CRC24 = new Crc24(Crc24.GENERATOR);
 
     /**
      * RawMessage compact constructor
@@ -54,7 +55,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * @return the raw ADS-B message with timestamp and given bytes or null if the CRC24 of the bytes is not 0.
      */
     public static RawMessage of(long timeStampNs, byte[] bytes) {
-        return (crc24.crc(bytes) != 0) ? null : new RawMessage(timeStampNs, new ByteString(bytes));
+        return (CRC24.crc(bytes) != 0) ? null : new RawMessage(timeStampNs, new ByteString(bytes));
     }
 
     /**
@@ -80,7 +81,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * @return the DF attribute stored in its first byte
      */
     public int downLinkFormat() {
-        byte byte0 = (byte) this.bytes.byteAt(0);
+        byte byte0 = (byte) this.bytes.byteAt(DF_INDEX);
 
         return Bits.extractUInt(byte0, DF_START, DF_LENGTH);
     }
@@ -91,7 +92,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     public IcaoAddress icaoAddress() {
         long address = this.bytes.bytesInRange(ICAO_START, ICAO_LENGTH);
 
-        return new IcaoAddress(hf.toHexDigits(address, ICAO_SIZE));
+        return new IcaoAddress(HEX_FORMAT.toHexDigits(address, ICAO_SIZE));
     }
 
     /**

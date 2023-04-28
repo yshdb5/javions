@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 
 public final class ByteString {
-    private final static HexFormat hf = HexFormat.of().withUpperCase();
+    private final static HexFormat HEX_FORMAT = HexFormat.of().withUpperCase();
     private final static int SHIFT_VALUE = 8;
     private final byte[] bytes;
 
@@ -40,7 +40,7 @@ public final class ByteString {
      * @throws NumberFormatException    if the sequence given is not an even size or if it contains a non-hexadecimal number
      */
     public static ByteString ofHexadecimalString(String hexString) {
-        byte[] bytes = hf.parseHex(hexString);
+        byte[] bytes = HEX_FORMAT.parseHex(hexString);
 
         return new ByteString(bytes);
     }
@@ -114,6 +114,6 @@ public final class ByteString {
      */
     @Override
     public String toString() {
-        return hf.formatHex(bytes);
+        return HEX_FORMAT.formatHex(bytes);
     }
 }

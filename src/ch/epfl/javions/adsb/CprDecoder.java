@@ -77,12 +77,12 @@ public final class CprDecoder {
 
     private static double aOf(double latitude_TURN) {
         double angle_rad = Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN)) * Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN));
-        return 1 - ((1 - Math.cos(Math.PI * 2 * DELTA0)) / (angle_rad));
+        return 1 - ((1 - Math.cos(Units.Angle.TURN * DELTA0)) / (angle_rad));
     }
 
     private static int zoneNumberOf(double A) {
         if (Math.abs(A) > 1) return 1;
-        else return (int) Math.floor((Math.PI * 2.0) / Math.acos(A));
+        else return (int) Math.floor(Units.Angle.TURN / Math.acos(A));
     }
 
     private static double recenterPosition(double latitudeOrLongitude_TURN) {
