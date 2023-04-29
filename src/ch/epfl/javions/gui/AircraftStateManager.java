@@ -12,6 +12,12 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * final AircraftStateManager class : is intended to keep the states of a set
+ * of aircraft up to date based on messages received from them.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class AircraftStateManager {
     private static final long MAX_TIME_INTERVAL_NS = Duration.ofMinutes(1).toNanos();
     private final AircraftDatabase database;
@@ -19,6 +25,11 @@ public final class AircraftStateManager {
     private final ObservableSet<ObservableAircraftState> statesAccumulatorList;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private Message lastMessage;
+
+    /**
+     * AircraftStateManager's constructor.
+     * @param database the database containing the fixed characteristics of aircraft.
+     */
 
     public AircraftStateManager(AircraftDatabase database) {
         this.database = database;
@@ -28,9 +39,20 @@ public final class AircraftStateManager {
         lastMessage = null;
     }
 
+    /**
+     * @return the observable, but not modifiable, set of observable states of the aircraft whose position is known.
+     */
+
     public ObservableSet<ObservableAircraftState> states() {
         return unmodifiableStatesAccumulatorList;
     }
+
+
+    /**
+     * Takes a message to update the state of the aircraft that sent it.
+     * @param message the message we want to update the state of the aircraft
+     * @throws IOException in case of input/output error.
+     */
 
     public void updateWithMessage(Message message) throws IOException {
         IcaoAddress address = message.icaoAddress();
@@ -46,6 +68,11 @@ public final class AircraftStateManager {
         lastMessage = message;
     }
 
+    /**
+     * Removes from the set of observable states all those corresponding to aircraft
+     * for which no message has been received in the minute preceding the reception
+     * of the last message passed to updateWithMessage.
+     */
     public void purge() {
         statesAccumulatorList.removeIf(state ->
                 (lastMessage.timeStampNs() - state.getLastMessageTimeStampNs()) > MAX_TIME_INTERVAL_NS);
