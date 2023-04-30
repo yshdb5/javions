@@ -9,11 +9,25 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 
+/**
+ * Final  AircraftController class : manages the view of the aircraft.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public final class AircraftController {
     private MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
     private Pane pane;
+
+    /**
+     * AircraftController's constructor.
+     * @param mapParameters the parameters of the portion of the map visible on the screen
+     * @param unmodifiableStatesAccumulatorList the set (observable but not modifiable) of aircraft states that must appear on the view
+     * @param selectedAircraftStateProperty a JavaFX property containing the state of the selected aircraft,
+     *                                      whose content can be null when no aircraft is selected.
+     */
 
     public AircraftController(MapParameters mapParameters,
                               ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList,
@@ -29,6 +43,9 @@ public final class AircraftController {
         setListeners();
     }
 
+    /**
+     * @return the JavaFX panel on which the aircraft are displayed
+     */
     public Pane pane() {return pane;}
 
     private void setListeners()

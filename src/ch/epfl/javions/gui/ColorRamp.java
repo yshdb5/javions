@@ -5,7 +5,16 @@ import javafx.scene.paint.Color;
 
 import java.util.List;
 
+/**
+ * Final immutable ColorRamp class : represents a gradient of colors.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public final class ColorRamp {
+    /**
+     * The constant that defines the Plasma gradient.
+     */
     public static final ColorRamp PLASMA = new ColorRamp(
             Color.valueOf("0x0d0887ff"), Color.valueOf("0x220690ff"),
             Color.valueOf("0x320597ff"), Color.valueOf("0x40049dff"),
@@ -25,6 +34,11 @@ public final class ColorRamp {
             Color.valueOf("0xf5eb27ff"), Color.valueOf("0xf0f921ff"));
     private final List<Color> colorList;
     private final double interval;
+
+    /**
+     * private ColorRamp's constructor : accepts as argument a JavaFX color sequence, of type Color
+     * @param color the color sequence.
+     */
     private ColorRamp (Color ... color)
     {
         Preconditions.checkArgument(color.length >= 2);
@@ -33,6 +47,12 @@ public final class ColorRamp {
         interval = ((double) 1) / (colorList.size() - 1);
     }
 
+
+    /**
+     *
+     * @param index the index of the colour.
+     * @return the color corresponding to the index mixed with the colour of the next index.
+     */
     public Color at(double index)
     {
         if (index < 0) return colorList.get(0);
