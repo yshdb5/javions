@@ -13,6 +13,12 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
+/**
+ * Final BaseMapController class : manages the display and interaction with the background map.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public final class BaseMapController {
     private static final int TILE_WIDTH = 256;
     private final TileManager tileManager;
@@ -22,6 +28,11 @@ public final class BaseMapController {
     private GraphicsContext graphicsContext;
     private boolean redrawNeeded;
 
+    /**
+     * BaseMapController's constructor.
+     * @param tileManager the tile manager to be used to get the tiles from the map.
+     * @param mapParameters the parameters of the visible portion of the map.
+     */
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
         this.tileManager = tileManager;
         this.mapParameters = mapParameters;
@@ -34,10 +45,18 @@ public final class BaseMapController {
         creatEventHandlers();
     }
 
+    /**
+     * @return the JavaFX panel displaying the background map
+     */
+
     public Pane pane() {
         return pane;
     }
 
+    /**
+     * moves the visible portion of the map so that it is centered at the position given
+     * @param pos a point on the surface of the Earth
+     */
     public void centerOn(GeoPos pos) {
         double x = WebMercator.x(mapParameters.getZoom(), pos.longitude());
         double y = WebMercator.y(mapParameters.getZoom(), pos.latitude());
