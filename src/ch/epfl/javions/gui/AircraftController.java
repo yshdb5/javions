@@ -1,9 +1,16 @@
 package ch.epfl.javions.gui;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
@@ -104,20 +111,28 @@ public final class AircraftController {
 
         trajectoryGroup.visibleProperty().bind(Bindings.equal(aircraftState, selectedAircraftStateProperty));
 
+        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinX(),
+                mapParameters.minXProperty()));
+        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinY(),
+                mapParameters.minYProperty()));
+
         trajectoryGroup.visibleProperty().addListener((object, oldVisible, newVisible) ->
         {
             if (newVisible)
             {
                 redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup);
-                mapParameters.zoomProperty().addListener(z -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
+                mapParameters.zoomProperty().addListener(zoom -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
+                aircraftState.getTrajectory().addListener((ListChangeListener<ObservableAircraftState.AirbornePos>)
+                        change -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
             }
         });
         return trajectoryGroup;
     }
 
-    private void redrawTrajectory(List<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
+    private void redrawTrajectory(ObservableList<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
         if (trajectory.size() < 2) return;
         List<Line> lineList = new ArrayList<>();
+
         double previousX = 0;
         double previousY = 0;
 
@@ -127,15 +142,26 @@ public final class AircraftController {
             double x = WebMercator.x(mapParameters.getZoom(), trajectory.get(i).pos().longitude());
             double y = WebMercator.y(mapParameters.getZoom(), trajectory.get(i).pos().latitude());
 
-            if (i == 0) continue;
-
             line.setStartX(previousX);
             line.setStartY(previousY);
             line.setEndX(x);
             line.setEndY(y);
 
             previousX = x;
-            previousY =y;
+            previousY = y;
+
+            if (i == 0) continue;
+
+            double altitude = trajectory.get(i).altitude();
+
+            Color c0 = ColorRamp.PLASMA.at(1/trajectory.get(i - 1).altitude());
+            Color c1 = ColorRamp.PLASMA.at(1/altitude);
+            Stop s0 = new Stop(1, c0);
+            Stop s1 = new Stop(0, c1);
+
+            line.setStroke((altitude == trajectory.get(i - 1).altitude())?
+                            c1 :
+                    new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, s0, s1));
 
             lineList.add(line);
         }
