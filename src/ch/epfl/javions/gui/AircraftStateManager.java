@@ -26,6 +26,7 @@ public final class AircraftStateManager {
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private Message lastMessage;
 
+
     /**
      * AircraftStateManager's constructor.
      * @param database the database containing the fixed characteristics of aircraft.
