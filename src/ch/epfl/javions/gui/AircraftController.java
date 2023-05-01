@@ -1,5 +1,6 @@
 package ch.epfl.javions.gui;
-import javafx.beans.InvalidationListener;
+import ch.epfl.javions.adsb.CallSign;
+import ch.epfl.javions.aircraft.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -16,10 +17,6 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
 import ch.epfl.javions.Units;
 import ch.epfl.javions.WebMercator;
-import ch.epfl.javions.aircraft.AircraftData;
-import ch.epfl.javions.aircraft.AircraftDescription;
-import ch.epfl.javions.aircraft.AircraftTypeDesignator;
-import ch.epfl.javions.aircraft.WakeTurbulenceCategory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.Line;
@@ -131,6 +128,7 @@ public final class AircraftController {
 
     private void redrawTrajectory(ObservableList<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
         if (trajectory.size() < 2) return;
+        trajectoryGroup.getChildren().clear();
         List<Line> lineList = new ArrayList<>();
 
         double previousX = 0;
@@ -167,14 +165,14 @@ public final class AircraftController {
         }
 
         trajectoryGroup.getChildren().addAll(lineList);
-    };
+    }
     private Group label(ObservableAircraftState aircraftState){
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
         txt.textProperty().bind(
-                Bindings.format("%s \n %5f km/h %5f m",
-                        (aircraftState.callSignProperty().get() != null)? aircraftState.callSignProperty().get().string() : "",
+                Bindings.format("%s \n %.0f km/h\u2002%.0f m",
+                        chooseIdentifier(aircraftState),
                         aircraftState.velocityProperty(),
                         aircraftState.altitudeProperty()));
         rect.widthProperty().bind(
@@ -189,6 +187,15 @@ public final class AircraftController {
                 or(selectedAircraftStateProperty.isEqualTo(aircraftState)));
 
         return labelGroup;
+    }
+
+    private String chooseIdentifier(ObservableAircraftState aircraftState){
+        CallSign callSign = aircraftState.getCallSign();
+        AircraftData data = aircraftState.getAircraftData();
+        IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
+        if (callSign != null) return callSign.string();
+        else if (data != null && data.registration() != null) return data.registration().string();
+        else return icaoAddress.string();
     }
     private SVGPath icon(ObservableAircraftState aircraftState){
         AircraftData data = aircraftState.getAircraftData();
@@ -210,7 +217,7 @@ public final class AircraftController {
         iconPath.contentProperty().bind(iconProperty.map(AircraftIcon::svgPath));
         iconPath.rotateProperty().bind(Bindings.createDoubleBinding(()-> iconProperty.get().canRotate()?
                 Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0, iconProperty, aircraftState.trackOrHeadingProperty()));
-        iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c -> ColorRamp.PLASMA.at(1/c.doubleValue())));
+        //iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c -> ColorRamp.PLASMA.at(1/c.doubleValue())));
 
         iconPath.setOnMouseClicked(e -> selectedAircraftStateProperty.set(aircraftState));
 
