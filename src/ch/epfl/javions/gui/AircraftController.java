@@ -30,6 +30,8 @@ import java.util.List;
  */
 
 public final class AircraftController {
+    public static final int MAX_ALTITUDE = 12000;
+    public static final double POWER_FACTOR = 1.0 / 3.0;
     private final MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
@@ -90,7 +92,7 @@ public final class AircraftController {
 
     private Group iconLabel(ObservableAircraftState aircraftState)
     {
-        Group iconLabelGroup = new Group(icon(aircraftState), label(aircraftState));
+        Group iconLabelGroup = new Group(label(aircraftState), icon(aircraftState));
 
         iconLabelGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() ->
                         WebMercator.x(mapParameters.getZoom(), aircraftState.getPosition().longitude()) - mapParameters.getMinX(),
@@ -150,14 +152,15 @@ public final class AircraftController {
 
             if (i == 0) continue;
 
-            double altitude = trajectory.get(i).altitude();
+            double currentAltitude = trajectory.get(i).altitude();
+            double previousAltitude = trajectory.get(i - 1).altitude();
 
-            Color c0 = ColorRamp.PLASMA.at(1/trajectory.get(i - 1).altitude());
-            Color c1 = ColorRamp.PLASMA.at(1/altitude);
+            Color c0 = ColorRamp.PLASMA.at(calculateColor(previousAltitude));
+            Color c1 = ColorRamp.PLASMA.at(calculateColor(currentAltitude));
             Stop s0 = new Stop(1, c0);
             Stop s1 = new Stop(0, c1);
 
-            line.setStroke((altitude == trajectory.get(i - 1).altitude())?
+            line.setStroke((currentAltitude == previousAltitude)?
                             c1 :
                     new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, s0, s1));
 
@@ -166,21 +169,29 @@ public final class AircraftController {
 
         trajectoryGroup.getChildren().addAll(lineList);
     }
+
+    private double calculateColor (double altitude)
+    {
+        return Math.pow(altitude/ MAX_ALTITUDE, POWER_FACTOR);
+    }
     private Group label(ObservableAircraftState aircraftState){
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
         txt.textProperty().bind(
-                Bindings.format("%s \n %.0f km/h\u2002%.0f m",
+                Bindings.format("%s \n %s km/h\u2002%s m",
                         chooseIdentifier(aircraftState),
-                        aircraftState.velocityProperty(),
-                        aircraftState.altitudeProperty()));
+                        aircraftState.velocityProperty() != null?
+                                aircraftState.velocityProperty().map(v ->
+                                        (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
+                        aircraftState.altitudeProperty() != null?
+                                aircraftState.altitudeProperty().asString("%.0f") : "?"));
         rect.widthProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
         rect.heightProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getHeight() + 4));
 
-        Group labelGroup = new Group(txt, rect);
+        Group labelGroup = new Group(rect, txt);
         labelGroup.getStyleClass().add("label");
 
         labelGroup.visibleProperty().bind(Bindings.lessThanOrEqual(11, mapParameters.zoomProperty()).
@@ -215,9 +226,9 @@ public final class AircraftController {
         iconPath.getStyleClass().add("aircraft");
 
         iconPath.contentProperty().bind(iconProperty.map(AircraftIcon::svgPath));
-        iconPath.rotateProperty().bind(Bindings.createDoubleBinding(()-> iconProperty.get().canRotate()?
+        iconPath.rotateProperty().bind(Bindings.createDoubleBinding(() -> iconProperty.get().canRotate() ?
                 Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0, iconProperty, aircraftState.trackOrHeadingProperty()));
-        //iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c -> ColorRamp.PLASMA.at(1/c.doubleValue())));
+        iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c -> ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
 
         iconPath.setOnMouseClicked(e -> selectedAircraftStateProperty.set(aircraftState));
 
