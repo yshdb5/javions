@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -169,6 +170,13 @@ public final class AircraftTableController
         numericalColumns.forEach(column -> {
             column.setPrefWidth(85);
             column.getStyleClass().add("numeric");
+            column.setComparator((o1, o2) -> {
+                if (o1.isEmpty() || o2.isEmpty())
+                    return o1.compareTo(o2);
+                else
+                    return Double.compare(Double.parseDouble(o1), Double.parseDouble(o2));
+                // a corriger
+            });
         });
         return numericalColumns;
     }
