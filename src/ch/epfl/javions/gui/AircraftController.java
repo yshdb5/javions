@@ -70,9 +70,7 @@ public final class AircraftController {
         unmodifiableStatesAccumulatorList.addListener((SetChangeListener<ObservableAircraftState>)
                 change -> {
                     if (change.wasAdded()) {
-                        ObservableAircraftState aircraftState = change.getElementAdded();
-
-                        annotatedAircraft(aircraftState);
+                        annotatedAircraft(change.getElementAdded());
                     }
                     if (change.wasRemoved())
                         pane.getChildren().removeIf(e ->
