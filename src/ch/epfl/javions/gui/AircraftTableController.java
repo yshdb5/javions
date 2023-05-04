@@ -1,7 +1,6 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.Units;
-import ch.epfl.javions.adsb.CallSign;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableSet;
@@ -97,16 +96,18 @@ public final class AircraftTableController
         tableView.getStylesheets().add("/table.css");
         tableView.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS);
         tableView.setTableMenuButtonVisible(true);
-        tableView.getColumns().addAll(stringColumns());
-        tableView.getColumns().addAll(numericalColumns());
+        tableView.getColumns().addAll(columns());
     }
 
-    private List<TableColumn<ObservableAircraftState, String>> stringColumns(){
+    private List<TableColumn<ObservableAircraftState, String>> columns(){
+        NumberFormat numberFormat1 = configureFormat(MAX_FRACTION_DIGITS);
+        NumberFormat numberFormat2 = configureFormat(MIN_FRACTION_DIGITS);
+
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
                         f -> f.getIcaoAddress().string()),
                 createTextColumn("Indicatif", CALLSIGN_COLUMN_WIDTH,
-                        f -> String.valueOf(f.callSignProperty())),
+                        f -> f.getCallSign() == null ? "" : f.getCallSign().string()),
                 createTextColumn("Immatriculation", REGISTRATION_COLUMN_WIDTH,
                         f -> f.getAircraftData() == null ? "" : f.getAircraftData().registration().string()),
                 createTextColumn("Modele", MODEL_COLUMN_WIDTH,
@@ -114,39 +115,16 @@ public final class AircraftTableController
                 createTextColumn("Type", TYPE_COLUMN_WIDTH,
                         f -> f.getAircraftData() == null ? "" : f.getAircraftData().typeDesignator().string()),
                 createTextColumn("Description", DESCRIPTION_COLUMN_WIDTH,
-                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().description().string())
-        );
-    }
+                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().description().string()),
 
-    private List<TableColumn<ObservableAircraftState, String>> numericalColumns(){
-        NumberFormat numberFormat1 = configureFormat(MAX_FRACTION_DIGITS);
-        NumberFormat numberFormat2 = configureFormat(MIN_FRACTION_DIGITS);
-
-        List<TableColumn<ObservableAircraftState, String>> numericalColumns = List.of(
-                createColumn("Longitude (°)", f -> numberFormat1.format(
+                createNumColumn("Longitude (°)", f -> numberFormat1.format(
                         Units.convertTo(f.getPosition().longitude(), Units.Angle.DEGREE))),
-                createColumn("Latitude (°)", f -> numberFormat1.format(
+                createNumColumn("Latitude (°)", f -> numberFormat1.format(
                         Units.convertTo(f.getPosition().latitude(), Units.Angle.DEGREE))),
-                createColumn("Altitude (m)", f -> numberFormat2.format(f.getAltitude())),
-                createColumn("Vitesse (km/h)", f -> numberFormat2.format(
+                createNumColumn("Altitude (m)", f -> numberFormat2.format(f.getAltitude())),
+                createNumColumn("Vitesse (km/h)", f -> numberFormat2.format(
                         Units.convertTo(f.getVelocity(), Units.Speed.KILOMETER_PER_HOUR))));
 
-        numericalColumns.forEach(column -> {
-            column.setPrefWidth(NUM_COLUMN_WIDTH);
-            column.getStyleClass().add("numeric");
-            column.setComparator((o1, o2) -> {
-                if (o1.isEmpty() || o2.isEmpty())
-                    return o1.compareTo(o2);
-                else {
-                    try {
-                        return Double.compare(numberFormat1.parse(o1).doubleValue(), numberFormat1.parse(o2).doubleValue());
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        });
-        return numericalColumns;
     }
 
     private TableColumn<ObservableAircraftState, String> createColumn(
@@ -154,6 +132,29 @@ public final class AircraftTableController
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
         column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(valueExtractor.apply(f.getValue())));
+
+        return column;
+    }
+
+    private TableColumn<ObservableAircraftState, String> createNumColumn(
+            String name, Function<ObservableAircraftState, String> valueFactory) {
+
+        TableColumn<ObservableAircraftState, String> column = createColumn(name, valueFactory);
+        column.setPrefWidth(NUM_COLUMN_WIDTH);
+        column.getStyleClass().add("numeric");
+        NumberFormat format = NumberFormat.getInstance();
+        column.setComparator((o1, o2) -> {
+            if (o1.isEmpty() || o2.isEmpty())
+                return o1.compareTo(o2);
+            else {
+                try {
+                    return Double.compare(format.parse(o1).doubleValue(), format.parse(o2).doubleValue());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
 
         return column;
     }

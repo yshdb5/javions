@@ -207,17 +207,7 @@ public final class AircraftController {
         else return icaoAddress.string();
     }
     private SVGPath icon(ObservableAircraftState aircraftState){
-        AircraftData data = aircraftState.getAircraftData();
-        AircraftTypeDesignator typeDesignator = (data != null)?
-                data.typeDesignator() : new AircraftTypeDesignator("");
-        AircraftDescription aircraftDescription = (data != null)?
-                data.description() : new AircraftDescription("");
-        WakeTurbulenceCategory wakeTurbulenceCategory = (data != null)?
-                data.wakeTurbulenceCategory() : WakeTurbulenceCategory.of("");
-
-        AircraftIcon icon = AircraftIcon.iconFor(typeDesignator, aircraftDescription,
-                aircraftState.getCategory(), wakeTurbulenceCategory);
-
+        AircraftIcon icon = getIcon(aircraftState);
         ObjectProperty<AircraftIcon> iconProperty =  new SimpleObjectProperty<>(icon);
 
         SVGPath iconPath = new SVGPath();
@@ -225,11 +215,27 @@ public final class AircraftController {
 
         iconPath.contentProperty().bind(iconProperty.map(AircraftIcon::svgPath));
         iconPath.rotateProperty().bind(Bindings.createDoubleBinding(() -> iconProperty.get().canRotate() ?
-                Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0, iconProperty, aircraftState.trackOrHeadingProperty()));
-        iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c -> ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
+                Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0,
+                iconProperty, aircraftState.trackOrHeadingProperty()));
+        iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c ->
+                ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
 
         iconPath.setOnMouseClicked(e -> selectedAircraftStateProperty.set(aircraftState));
 
         return iconPath;
+    }
+
+    private AircraftIcon getIcon(ObservableAircraftState state)
+    {
+        AircraftData data = state.getAircraftData();
+        AircraftTypeDesignator typeDesignator = (data != null)?
+                data.typeDesignator() : new AircraftTypeDesignator("");
+        AircraftDescription aircraftDescription = (data != null)?
+                data.description() : new AircraftDescription("");
+        WakeTurbulenceCategory wakeTurbulenceCategory = (data != null)?
+                data.wakeTurbulenceCategory() : WakeTurbulenceCategory.of("");
+
+        return AircraftIcon.iconFor(typeDesignator, aircraftDescription,
+                state.getCategory(), wakeTurbulenceCategory);
     }
 }
