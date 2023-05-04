@@ -31,7 +31,7 @@ import java.util.List;
 
 public final class AircraftController {
     public static final int MAX_ALTITUDE = 12000;
-    public static final double POWER_FACTOR = 1.0 / 3.0;
+    public static final double POWER_FACTOR = 1d / 3d;
     private final MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
@@ -123,6 +123,7 @@ public final class AircraftController {
                         change -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
             }
         });
+
         return trajectoryGroup;
     }
 

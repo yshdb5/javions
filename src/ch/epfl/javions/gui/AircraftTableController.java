@@ -124,7 +124,6 @@ public final class AircraftTableController
                 createNumColumn("Altitude (m)", f -> numberFormat2.format(f.getAltitude())),
                 createNumColumn("Vitesse (km/h)", f -> numberFormat2.format(
                         Units.convertTo(f.getVelocity(), Units.Speed.KILOMETER_PER_HOUR))));
-
     }
 
     private TableColumn<ObservableAircraftState, String> createColumn(
@@ -154,7 +153,6 @@ public final class AircraftTableController
                 }
             }
         });
-
 
         return column;
     }
