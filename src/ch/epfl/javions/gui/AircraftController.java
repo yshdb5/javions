@@ -180,10 +180,11 @@ public final class AircraftController {
         txt.textProperty().bind(
                 Bindings.format("%s \n %s km/h\u2002%s m",
                         chooseIdentifier(aircraftState),
-                        aircraftState.velocityProperty() != null?
-                                aircraftState.velocityProperty().map(v ->
-                                        (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
-                        aircraftState.altitudeProperty() != null?
+                        (aircraftState.velocityProperty() != null && !Double.isNaN(aircraftState.velocityProperty().doubleValue())) ?
+                                aircraftState.velocityProperty().map(v -> {
+                                    System.out.println(aircraftState.getVelocity());
+                                        return (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR));}) : "?",
+                        (aircraftState.altitudeProperty() != null && !Double.isNaN(aircraftState.altitudeProperty().doubleValue()))  ?
                                 aircraftState.altitudeProperty().asString("%.0f") : "?"));
         rect.widthProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
