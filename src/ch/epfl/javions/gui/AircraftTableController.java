@@ -103,6 +103,7 @@ public final class AircraftTableController
         NumberFormat numberFormat1 = configureFormat(MAX_FRACTION_DIGITS);
         NumberFormat numberFormat2 = configureFormat(MIN_FRACTION_DIGITS);
 
+
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
                         f -> f.getIcaoAddress().string()),
@@ -122,9 +123,11 @@ public final class AircraftTableController
                 createNumColumn("Latitude (°)", f -> numberFormat1.format(
                         Units.convertTo(f.getPosition().latitude(), Units.Angle.DEGREE))),
                 createNumColumn("Altitude (m)", f -> numberFormat2.format(f.getAltitude())),
-                createNumColumn("Vitesse (km/h)", f -> numberFormat2.format(
-                        Units.convertTo(f.getVelocity(), Units.Speed.KILOMETER_PER_HOUR))));
-    }
+                createNumColumn("Vitesse (km/h)", f -> {
+                    double velocity = f.getVelocity();
+                    return Double.isNaN(velocity) ? "" : numberFormat2.format(velocity);
+                }))
+    ;}
 
     private TableColumn<ObservableAircraftState, String> createColumn(
             String name, Function<ObservableAircraftState, String> valueExtractor) {
@@ -172,4 +175,6 @@ public final class AircraftTableController
         numberFormat.setMinimumFractionDigits(MIN_FRACTION_DIGITS);
         return numberFormat;
     }
+
+
 }
