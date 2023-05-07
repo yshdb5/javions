@@ -103,7 +103,6 @@ public final class AircraftTableController
         NumberFormat numberFormat1 = configureFormat(MAX_FRACTION_DIGITS);
         NumberFormat numberFormat2 = configureFormat(MIN_FRACTION_DIGITS);
 
-
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
                         f -> f.getIcaoAddress().string()),
