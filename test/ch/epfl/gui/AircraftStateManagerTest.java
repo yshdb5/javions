@@ -2,33 +2,19 @@ package ch.epfl.gui;
 
 import ch.epfl.javions.ByteString;
 import ch.epfl.javions.Units;
-import ch.epfl.javions.adsb.Message;
 import ch.epfl.javions.adsb.MessageParser;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.AircraftDatabase;
 import ch.epfl.javions.gui.AircraftStateManager;
 import ch.epfl.javions.gui.ObservableAircraftState;
-import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class AircraftStateManagerTest {
-    private static class AddressComparator
-            implements Comparator<ObservableAircraftState> {
-        @Override
-        public int compare(ObservableAircraftState o1,
-                           ObservableAircraftState o2) {
-            String s1 = o1.getIcaoAddress().string();
-            String s2 = o2.getIcaoAddress().string();
-            return s1.compareTo(s2);
-        }
-    }
     private static String findArrow(double trackOrHeading) {
         if ((0 <= trackOrHeading && trackOrHeading <= 22.5) || (337.5 <= trackOrHeading && trackOrHeading <= 360)) {
             return "↑";
@@ -40,7 +26,7 @@ public class AircraftStateManagerTest {
             return "→";
         }
         if (112.5 < trackOrHeading && trackOrHeading <= 157.5) {
-            return "️↘";
+            return "↘";
         }
         if (157.5 < trackOrHeading && trackOrHeading <= 202.5) {
             return "↓";
@@ -56,47 +42,62 @@ public class AircraftStateManagerTest {
         }
         return "";
     }
-
-    @Test
-    void generalTest() throws IOException {
-        String d = getClass().getResource("/messages_20230318_0915.bin").getFile();
-        String f = getClass().getResource("/aircraft.zip").getFile();
+    public static void main(String[] args){
+        String d = "/resources/messages_20230318_0915.bin";
+        String f = "/resources/aircraft.zip";
         d = URLDecoder.decode(d, UTF_8);
         f = URLDecoder.decode(f, UTF_8);
+        long startTime = System.nanoTime();
+        AircraftStateManager manager;
         try (DataInputStream s = new DataInputStream(
                 new BufferedInputStream(
                         new FileInputStream(d)))) {
             byte[] bytes = new byte[RawMessage.LENGTH];
-            AircraftStateManager manager = new AircraftStateManager(new AircraftDatabase(f));
-            AddressComparator comparator = new AddressComparator();
-
+            manager = new AircraftStateManager(new AircraftDatabase(f));
+            String CSI = "\u001B[";
+            String MOVE_TO_TOP_LEFT = CSI + ";H";
+            String CLEAR_SCREEN = CSI + "2J";
             while (true) {
                 long timeStampNs = s.readLong();
                 int bytesRead = s.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 RawMessage rawMessage = new RawMessage(timeStampNs, message);
-                Message parsedMessage = MessageParser.parse(rawMessage);
-                if (parsedMessage == null) continue;
-                manager.updateWithMessage(parsedMessage);
-
+                manager.updateWithMessage(Objects.requireNonNull(MessageParser.parse(rawMessage)));
+                manager.purge();
+                System.out.print(CLEAR_SCREEN);
+                System.out.println("OACI   CallSign    Registration                Model                    Longitude             Latitude              Altitude               Speed             Direction");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------");
                 for (ObservableAircraftState state : manager.states()) {
-                     {
-                        System.out.printf("%-6s | %-7s | %-8s | %-32s | %-18s | %-18s | %-5s | %-5s | %s%n",
-                                state.getIcaoAddress().string(),
-                                (state.getCallSign() != null) ? state.getCallSign().string() : "    ",
-                                state.getAircraftData().registration().string(),
-                                state.getAircraftData().model(),
-                                Units.convertTo(state.getPosition().longitude(), Units.Angle.DEGREE),
-                                Units.convertTo(state.getPosition().latitude(), Units.Angle.DEGREE),
-                                (int) state.getAltitude(),
-                                (int) (state.getVelocity() * 3.6),
-                                findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)));
-
-                        Thread.sleep(10);
+                    System.out.printf(state.getIcaoAddress().string() + "  ");
+                    if (state.getCallSign() != null)
+                        System.out.printf("|%-10s|", state.getCallSign().string());
+                    else System.out.print("|          |");
+                    if(state.getAircraftData() != null ) {
+                        if (state.getAircraftData().registration() != null)
+                            System.out.printf("|%-10s|", state.getAircraftData().registration().string() + " ");
+                        else System.out.print("|          |");
+                        if (state.getAircraftData().model() != null)
+                            System.out.printf("|%35s| ", state.getAircraftData().model());
+                        else System.out.print("|                                  |");
                     }
+                    else System.out.print("|          ||                                   |  ");
+                    System.out.printf("|%20s|", Units.convertTo(state.getPosition().longitude(),
+                            Units.Angle.DEGREE) + " ");
+                    System.out.printf("|%20s|", Units.convertTo(state.getPosition().latitude(),
+                            Units.Angle.DEGREE) + " ");
+                    System.out.printf("|%20s|", state.getAltitude() + " ");
+                    System.out.printf("|%20s|", state.getVelocity() * 3.6 + " ");
+                    System.out.print("|     " + findArrow(Units.convertTo(state.trackOrHeadingProperty().get(), Units.Angle.DEGREE)) + " ");
+                    System.out.println();
                 }
+                Thread.sleep(100);
+                System.out.print(MOVE_TO_TOP_LEFT);
+                System.out.println();
             }
-        } catch (EOFException e) { /* nothing to do */ } catch (InterruptedException e) {throw new RuntimeException(e);}
+        } catch (EOFException e) { /* nothing to do */
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -138,6 +138,7 @@ public final class AircraftTableController
                 numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()), unit))));
 
         column.setPrefWidth(NUM_COLUMN_WIDTH);
+        //TODO: verifier ce qu'il voulair dire par attacher le style numeric directement aux colonnes
         column.getStyleClass().add("numeric");
         column.setComparator((o1, o2) -> {
             if (o1.isEmpty() || o2.isEmpty())
