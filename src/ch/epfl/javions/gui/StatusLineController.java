@@ -12,7 +12,7 @@ public final class StatusLineController
     public StatusLineController(){
         creatPane();
     }
-    private BorderPane pane(){
+    public BorderPane pane(){
         return borderPane;
     }
 
