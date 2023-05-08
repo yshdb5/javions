@@ -52,7 +52,7 @@ public class AircraftControllerTest extends Application {
     public void start(Stage primaryStage) throws Exception {
         Path tileCache = Path.of("tile-cache");
         TileManager tm = new TileManager(tileCache, "tile.openstreetmap.org");
-        MapParameters mp = new MapParameters(17, 17_389_327, 11_867_430);
+        MapParameters mp = new MapParameters(8, 33_530, 23_070);
         BaseMapController bmc = new BaseMapController(tm, mp);
 
         // Création de la base de données
