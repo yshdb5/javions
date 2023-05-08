@@ -12,6 +12,7 @@ import javafx.scene.input.MouseButton;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -100,9 +101,6 @@ public final class AircraftTableController
     }
 
     private List<TableColumn<ObservableAircraftState, String>> columns(){
-        NumberFormat numberFormat1 = configureFormat(MAX_FRACTION_DIGITS);
-        NumberFormat numberFormat2 = configureFormat(MIN_FRACTION_DIGITS);
-
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
                         f -> f.getIcaoAddress().string()),
@@ -117,39 +115,36 @@ public final class AircraftTableController
                 createTextColumn("Description", DESCRIPTION_COLUMN_WIDTH,
                         f -> f.getAircraftData() == null ? "" : f.getAircraftData().description().string()),
 
-                createNumColumn("Longitude (°)", f -> numberFormat1.format(
-                        Units.convertTo(f.getPosition().longitude(), Units.Angle.DEGREE))),
-                createNumColumn("Latitude (°)", f -> numberFormat1.format(
-                        Units.convertTo(f.getPosition().latitude(), Units.Angle.DEGREE))),
-                createNumColumn("Altitude (m)", f -> numberFormat2.format(f.getAltitude())),
-                createNumColumn("Vitesse (km/h)", f -> {
-                    double velocity = f.getVelocity();
-                    return Double.isNaN(velocity) ? "" : numberFormat2.format(velocity);
-                }))
-    ;}
-
-    private TableColumn<ObservableAircraftState, String> createColumn(
-            String name, Function<ObservableAircraftState, String> valueExtractor) {
-
-        TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
-        column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(valueExtractor.apply(f.getValue())));
-
-        return column;
+                createNumColumn("Longitude (°)", f -> f.getPosition().longitude(),
+                        MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
+                createNumColumn("Latitude (°)", f -> f.getPosition().latitude(),
+                        MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
+                createNumColumn("Altitude (m)", ObservableAircraftState::getAltitude,
+                        MIN_FRACTION_DIGITS, Units.Length.METER),
+                createNumColumn("Vitesse (km/h)", ObservableAircraftState::getVelocity,
+                        MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
 
     private TableColumn<ObservableAircraftState, String> createNumColumn(
-            String name, Function<ObservableAircraftState, String> valueFactory) {
+            String name, Function<ObservableAircraftState, Double> valueFactory, int fractionDigits,
+            double unit) {
 
-        TableColumn<ObservableAircraftState, String> column = createColumn(name, valueFactory);
+        TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
+
+        NumberFormat numFormat = configureFormat(fractionDigits);
+
+        column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(
+                Double.isNaN(valueFactory.apply(f.getValue())) ? "" :
+                numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()), unit))));
+
         column.setPrefWidth(NUM_COLUMN_WIDTH);
         column.getStyleClass().add("numeric");
-        NumberFormat format = NumberFormat.getInstance();
         column.setComparator((o1, o2) -> {
             if (o1.isEmpty() || o2.isEmpty())
                 return o1.compareTo(o2);
             else {
                 try {
-                    return Double.compare(format.parse(o1).doubleValue(), format.parse(o2).doubleValue());
+                    return Double.compare(numFormat.parse(o1).doubleValue(), numFormat.parse(o2).doubleValue());
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -162,7 +157,8 @@ public final class AircraftTableController
     private TableColumn<ObservableAircraftState, String> createTextColumn(
             String name, int width, Function<ObservableAircraftState, String> valueFactory) {
 
-        TableColumn<ObservableAircraftState, String> column = createColumn(name, valueFactory);
+        TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
+        column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(valueFactory.apply(f.getValue())));
         column.setPrefWidth(width);
 
         return column;
@@ -174,6 +170,4 @@ public final class AircraftTableController
         numberFormat.setMinimumFractionDigits(MIN_FRACTION_DIGITS);
         return numberFormat;
     }
-
-
 }
