@@ -5,12 +5,14 @@ import ch.epfl.javions.adsb.Message;
 import ch.epfl.javions.adsb.MessageParser;
 import ch.epfl.javions.adsb.RawMessage;
 import ch.epfl.javions.aircraft.AircraftDatabase;
+import ch.epfl.javions.demodulation.AdsbDemodulator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableSet;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -21,7 +23,6 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -30,7 +31,12 @@ import static com.sun.javafx.scene.control.skin.Utils.getResource;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Main extends Application {
-    private ConcurrentLinkedQueue<RawMessage> messageQueue;
+    public static final int MIN_WIDTH = 800;
+    public static final int MIN_HEIGHT = 600;
+    public static final int INITIAL_ZOOM = 8;
+    public static final int X = 33_530;
+    public static final int Y = 23_070;
+    private final ConcurrentLinkedQueue<RawMessage> messageQueue = new ConcurrentLinkedQueue<>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -39,7 +45,7 @@ public final class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Path tileCache = Path.of("tile-cache");
         TileManager tileManager = new TileManager(tileCache, "tile.openstreetmap.org");
-        MapParameters mapParameters = new MapParameters(8, 33_530, 23_070);
+        MapParameters mapParameters = new MapParameters(INITIAL_ZOOM, X, Y);
         BaseMapController mapController = new BaseMapController(tileManager, mapParameters);
 
         URL url = getClass().getResource("/aircraft.zip");
@@ -58,29 +64,37 @@ public final class Main extends Application {
 
         StatusLineController lineController = new StatusLineController();
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
+        lineController.messageCountProperty().set(0);
 
         StackPane stackPane = new StackPane(mapController.pane(), controller.pane());
         BorderPane borderPane = new BorderPane(
                 tableController.pane(), lineController.pane(), null, null,  null);
 
         SplitPane splitPane = new SplitPane(stackPane, borderPane);
+        splitPane.orientationProperty().set(Orientation.VERTICAL);
 
         primaryStage.setTitle("Javions");
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(MIN_WIDTH);
+        primaryStage.setMinHeight(MIN_HEIGHT);
         primaryStage.setScene(new Scene(splitPane));
         primaryStage.show();
 
         new Thread(() -> {
-            messageQueue = new ConcurrentLinkedQueue<>();
             List<String> args = getParameters().getRaw();
             if(args.isEmpty())
             {
-
+                try {
+                    AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
+                    while (true) {
+                        messageQueue.add(demodulator.nextMessage());
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else
             {
-                messageQueue.addAll(readAllMessages(args.get(0)));
+                readAllMessages(args.get(0));
             }
         });
 
@@ -103,8 +117,7 @@ public final class Main extends Application {
         }.start();
     }
 
-    private static List<RawMessage> readAllMessages(String fileName){
-        List<RawMessage> messageList = new ArrayList<>();
+    private void readAllMessages(String fileName){
         String f = getResource(fileName).getFile();
         f = URLDecoder.decode(f, UTF_8);
 
@@ -117,11 +130,10 @@ public final class Main extends Application {
                 int bytesRead = s.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
-                messageList.add(new RawMessage(timeStampNs, message));
+                messageQueue.add(new RawMessage(timeStampNs, message));
             }
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return messageList;
     }
 }

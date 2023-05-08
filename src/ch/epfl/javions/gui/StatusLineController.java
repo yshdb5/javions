@@ -15,9 +15,9 @@ public final class StatusLineController
     private final IntegerProperty aircraftCountProperty;
     private final LongProperty messageCountProperty;
     public StatusLineController(){
-        creatPane();
         aircraftCountProperty = new SimpleIntegerProperty();
         messageCountProperty = new SimpleLongProperty();
+        creatPane();
     }
     public BorderPane pane(){
         return borderPane;
@@ -35,8 +35,8 @@ public final class StatusLineController
         borderPane = new BorderPane();
         borderPane.getStylesheets().add("/status.css");
 
-        Text textL = configureText("Aéronefs visibles : " + aircraftCountProperty().get());
-        Text textR = configureText("Messages reçus : " + messageCountProperty().get());
+        Text textL = configureText("Aéronefs visibles : " + aircraftCountProperty.get());
+        Text textR = configureText("Messages reçus : " + messageCountProperty.get());
 
         borderPane.setLeft(textL);
         borderPane.setRight(textR);
