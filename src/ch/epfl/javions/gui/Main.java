@@ -1,7 +1,6 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.ByteString;
-import ch.epfl.javions.Units;
 import ch.epfl.javions.adsb.Message;
 import ch.epfl.javions.adsb.MessageParser;
 import ch.epfl.javions.adsb.RawMessage;
@@ -25,10 +24,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -44,6 +40,11 @@ public final class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    //TODO: EN GENERAL
+    //TODO: comprendre pourquoi le programme est lent
+    // (surement en rapport avec la vitesse de lecture des messages dans l'animation ou le delai dans readAllmessages)
+    //TODO: Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -67,7 +68,8 @@ public final class Main extends Application {
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
 
         StatusLineController lineController = new StatusLineController();
-        //TODO: comprendre pourquoi ca marche pas, les valeurs de aircraftCountProperty et messageCountProperty ne changent pas
+        //TODO: comprendre pourquoi ca marche pas,
+        // les valeurs de aircraftCountProperty et messageCountProperty ne changent pas
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
         LongProperty messageCountProperty = lineController.messageCountProperty();
 

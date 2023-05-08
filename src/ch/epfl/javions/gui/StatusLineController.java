@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-
 public final class StatusLineController
 {
     private BorderPane borderPane;
@@ -44,8 +43,7 @@ public final class StatusLineController
 
     private Text configureText(String s){
         Text text = new Text();
-        text.textProperty().bind(Bindings.createStringBinding(
-                () -> s));
+        text.textProperty().bind(Bindings.createStringBinding(() -> s));
         return text;
     }
 }
