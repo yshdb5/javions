@@ -9,8 +9,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.List;
-
 /**
  * final class ObservableAircraftState : represents the state of an aircraft.
  * @author Yshai  (356356)
@@ -49,7 +47,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /** An observable list not modifiable, of the positions in space that the aircraft has occupied since the first message received.*/
     private final ObservableList<AirbornePos> unmodifiableTrajectory;
-    private double lastPositionTimeStamp;
+    private double lastTrajTimeStamp;
 
     /**
      * ObservableAircraftState constructor
@@ -68,7 +66,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         trackOrHeading = new SimpleDoubleProperty();
         trajectory = FXCollections.observableArrayList();
         unmodifiableTrajectory = FXCollections.unmodifiableObservableList(trajectory);
-        lastPositionTimeStamp = -1;
+        lastTrajTimeStamp = -1;
     }
 
     public ReadOnlyLongProperty lastMessageTimeStampNs() {
@@ -269,20 +267,20 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     }
 
     private void updateTrajectory() {
-        double actualAltitude = getAltitude();
-        if (getPosition() == null) return;
+        //TODO: verifier si c'est la bonne implementation de la methode.
+        double actualAlt = getAltitude();
         GeoPos actualPos = getPosition();
+        if (actualPos == null) return;
+
         double lastTimeStamp = getLastMessageTimeStampNs();
 
-        if (trajectory.isEmpty()
-                        || trajectory.get(trajectory.size() - 1).pos.longitude() != actualPos.longitude()
-                        || trajectory.get(trajectory.size() - 1).pos.latitude() != actualPos.latitude())
+        if (trajectory.isEmpty() || lastTimeStamp != lastTrajTimeStamp)
         {
-            trajectory.add(new AirbornePos(actualPos, actualAltitude));
-            lastPositionTimeStamp = lastTimeStamp;
+            trajectory.add(new AirbornePos(actualPos, actualAlt));
+            lastTrajTimeStamp = lastTimeStamp;
         }
-        else if (lastTimeStamp == lastPositionTimeStamp) {
-            trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAltitude));
+        else {
+            trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAlt));
         }
     }
 

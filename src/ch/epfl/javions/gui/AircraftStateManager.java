@@ -75,8 +75,13 @@ public final class AircraftStateManager {
      * of the last message passed to updateWithMessage.
      */
     public void purge() {
-        statesAccumulatorList.removeIf(state ->
-                (lastMessage.timeStampNs() - state.getLastMessageTimeStampNs()) > MAX_TIME_INTERVAL_NS);
+        statesAccumulatorList.removeIf(state -> shouldRemove(state.getLastMessageTimeStampNs()));
+        accumulatorMap.entrySet().removeIf(entry ->
+                shouldRemove(entry.getValue().stateSetter().getLastMessageTimeStampNs()));
+    }
+
+    private boolean shouldRemove(long lastTimeStampNs) {
+        return (lastMessage.timeStampNs() - lastTimeStampNs) > MAX_TIME_INTERVAL_NS;
     }
 }
 
