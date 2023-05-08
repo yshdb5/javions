@@ -67,6 +67,7 @@ public final class Main extends Application {
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
 
         StatusLineController lineController = new StatusLineController();
+        //TODO: comprendre pourquoi ca marche pas, les valeurs de aircraftCountProperty et messageCountProperty ne changent pas
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
         LongProperty messageCountProperty = lineController.messageCountProperty();
 
@@ -137,10 +138,10 @@ public final class Main extends Application {
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 //TODO: verifier comment bien faire ca
-                //while (System.nanoTime() < timeStampNs + startTime) Thread.sleep(Duration.ofNanos(1).toMillis());
+                while (System.nanoTime() < timeStampNs + startTime) Thread.sleep(1);
                 messageQueue.add(new RawMessage(timeStampNs, message));
             }
-        }catch (IOException /*| InterruptedException*/ e) {
+        }catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

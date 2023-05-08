@@ -66,8 +66,7 @@ public final class AircraftTableController
         statesAccumulatorList.addListener((SetChangeListener<ObservableAircraftState>)
                 change -> {
                     if (change.wasAdded()) {
-                        ObservableAircraftState aircraftState = change.getElementAdded();
-                        tableView.getItems().add(aircraftState);
+                        tableView.getItems().add(change.getElementAdded());
                         tableView.sort();
                     }
                     if (change.wasRemoved())
@@ -78,8 +77,10 @@ public final class AircraftTableController
             if (newValue != null)
             {
                 tableView.getSelectionModel().select(newValue);
-                if(!newValue.equals(selectedAircraftState.get()))
+                if(newValue.equals(selectedAircraftState.get()))
                 {
+                    //TODO: verifier si c'est bien le bon endroit pour mettre le scrollTo
+                    // pour afficher l'avion selectioné en premier dans le tableau
                     tableView.scrollTo(newValue);
                 }
             }
