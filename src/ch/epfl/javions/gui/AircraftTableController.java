@@ -1,8 +1,10 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.Units;
+import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.scene.control.TableColumn;
@@ -12,7 +14,6 @@ import javafx.scene.input.MouseButton;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -74,13 +75,10 @@ public final class AircraftTableController
                 });
 
         selectedAircraftState.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null)
+            if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem()))
             {
                 tableView.getSelectionModel().select(newValue);
-                if(newValue.equals(selectedAircraftState.get()))
-                {
-                    tableView.scrollTo(newValue);
-                }
+                tableView.scrollTo(newValue);
             }
         });
 
@@ -159,7 +157,7 @@ public final class AircraftTableController
             String name, int width, Function<ObservableAircraftState, String> valueFactory) {
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
-        column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(valueFactory.apply(f.getValue())));
+        column.setCellValueFactory(f -> new ReadOnlyStringWrapper(valueFactory.apply(f.getValue())));
         column.setPrefWidth(width);
 
         return column;
