@@ -1,9 +1,7 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.Units;
-import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
@@ -123,7 +121,8 @@ public final class AircraftTableController
     }
 
 
-    // TODO corriger comme indiqué sur ED pour augmenter la vitesse
+    //TODO corriger comme indiqué sur ED pour augmenter la vitesse et afficher les informations en live
+    // et pas seulement quand scroll sur les lignes
     private TableColumn<ObservableAircraftState, String> createNumColumn(
             String name, Function<ObservableAircraftState, Double> valueFactory, int fractionDigits,
             double unit) {
@@ -132,7 +131,7 @@ public final class AircraftTableController
 
         NumberFormat numFormat = configureFormat(fractionDigits);
 
-        column.setCellValueFactory(f -> new ReadOnlyObjectWrapper<>(
+        column.setCellValueFactory(f -> new ReadOnlyStringWrapper(
                 Double.isNaN(valueFactory.apply(f.getValue())) ? "" :
                 numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()), unit))));
 
@@ -153,11 +152,14 @@ public final class AircraftTableController
         return column;
     }
 
+    //TODO corriger comme indiqué sur ED pour augmenter la vitesse et afficher les informations en live
+    // et pas seulement quand scroll sur les lignes
     private TableColumn<ObservableAircraftState, String> createTextColumn(
             String name, int width, Function<ObservableAircraftState, String> valueFactory) {
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
-        column.setCellValueFactory(f -> new ReadOnlyStringWrapper(valueFactory.apply(f.getValue())));
+        column.setCellValueFactory(f ->
+                new ReadOnlyStringWrapper(valueFactory.apply(f.getValue())));
         column.setPrefWidth(width);
 
         return column;
