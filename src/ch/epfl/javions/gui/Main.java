@@ -66,9 +66,9 @@ public final class Main extends Application {
                 new AircraftController(mapParameters, observableAircraftSet, aircraftStateProperty);
         AircraftTableController tableController =
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
+        tableController.setOnDoubleClick(state -> baseMap.centerOn(state.positionProperty().get()));
 
         StatusLineController lineController = new StatusLineController();
-
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
         LongProperty messageCountProperty = lineController.messageCountProperty();
 
