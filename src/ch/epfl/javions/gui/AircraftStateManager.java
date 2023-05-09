@@ -76,7 +76,6 @@ public final class AircraftStateManager {
      */
     public void purge() {
         statesAccumulatorList.removeIf(state -> shouldRemove(state.getLastMessageTimeStampNs()));
-        //TODO: verifier qu'il faut faire comme ca pour purge la map
         accumulatorMap.entrySet().removeIf(entry ->
                 shouldRemove(entry.getValue().stateSetter().getLastMessageTimeStampNs()));
     }

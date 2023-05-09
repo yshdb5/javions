@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.http.WebSocket;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -41,10 +42,10 @@ public final class Main extends Application {
         launch(args);
     }
 
-    //TODO: EN GENERAL
-    //TODO: comprendre pourquoi le programme est lent
+    //TODO : EN GENERAL
+    //TODO : comprendre pourquoi le programme est lent
     // (surement en rapport avec la vitesse de lecture des messages dans l'animation ou le delai dans readAllmessages)
-    //TODO: Regarder que toutes les fonctionnalités demandées sont présentent
+    //TODO : Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -68,8 +69,8 @@ public final class Main extends Application {
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
 
         StatusLineController lineController = new StatusLineController();
-        //TODO: comprendre pourquoi ca marche pas,
-        // les valeurs de aircraftCountProperty et messageCountProperty ne changent pas
+
+
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
         LongProperty messageCountProperty = lineController.messageCountProperty();
 

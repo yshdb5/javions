@@ -79,8 +79,6 @@ public final class AircraftTableController
                 tableView.getSelectionModel().select(newValue);
                 if(newValue.equals(selectedAircraftState.get()))
                 {
-                    //TODO: verifier si c'est bien le bon endroit pour mettre le scrollTo
-                    // pour afficher l'avion selectioné en premier dans le tableau
                     tableView.scrollTo(newValue);
                 }
             }
@@ -126,6 +124,8 @@ public final class AircraftTableController
                         MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
 
+
+    // TODO corriger comme indiqué sur ED pour augmenter la vitesse
     private TableColumn<ObservableAircraftState, String> createNumColumn(
             String name, Function<ObservableAircraftState, Double> valueFactory, int fractionDigits,
             double unit) {
@@ -139,7 +139,6 @@ public final class AircraftTableController
                 numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()), unit))));
 
         column.setPrefWidth(NUM_COLUMN_WIDTH);
-        //TODO: verifier ce qu'il voulair dire par attacher le style numeric directement aux colonnes
         column.getStyleClass().add("numeric");
         column.setComparator((o1, o2) -> {
             if (o1.isEmpty() || o2.isEmpty())

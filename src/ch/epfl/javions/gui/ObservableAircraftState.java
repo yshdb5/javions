@@ -267,7 +267,6 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     }
 
     private void updateTrajectory() {
-        //TODO: verifier si c'est la bonne implementation de la methode.
         double actualAlt = getAltitude();
         GeoPos actualPos = getPosition();
         if (actualPos == null) return;
