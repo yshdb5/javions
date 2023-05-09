@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.http.WebSocket;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -69,7 +68,6 @@ public final class Main extends Application {
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
 
         StatusLineController lineController = new StatusLineController();
-
 
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
         LongProperty messageCountProperty = lineController.messageCountProperty();

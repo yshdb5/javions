@@ -35,17 +35,13 @@ public final class StatusLineController
         borderPane.getStylesheets().add("/status.css");
 
         Text textL = new Text();
-        textL.textProperty().bind(Bindings.createStringBinding(() -> "Aéronefs visibles : " + aircraftCountProperty.get(), aircraftCountProperty));
+        textL.textProperty().bind(Bindings.createStringBinding(() ->
+                "Aéronefs visibles : " + aircraftCountProperty.get(), aircraftCountProperty));
         Text textR = new Text();
-        textR.textProperty().bind(Bindings.createStringBinding(() -> "Aéronefs visibles : " + messageCountProperty.get(), messageCountProperty));
+        textR.textProperty().bind(Bindings.createStringBinding(() ->
+                "Messages reçus : " + messageCountProperty.get(), messageCountProperty));
 
         borderPane.setLeft(textL);
         borderPane.setRight(textR);
-    }
-
-    private Text configureText(String s){
-        Text text = new Text();
-        text.textProperty().bind(Bindings.createStringBinding(() -> s));
-        return text;
     }
 }
