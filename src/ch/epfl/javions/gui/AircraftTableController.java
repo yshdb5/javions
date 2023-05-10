@@ -108,21 +108,29 @@ public final class AircraftTableController
                 createTextColumn("Indicatif", CALLSIGN_COLUMN_WIDTH,
                         f -> ( f.callSignProperty().map(CallSign::string))),
                 createTextColumn("Immatriculation", REGISTRATION_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().registration().string()))),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
+                                f.getAircraftData().registration().string()))),
                 createTextColumn("Modele", MODEL_COLUMN_WIDTH,
-                        f -> (new  ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().model()))),
+                        f -> (new  ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
+                                f.getAircraftData().model()))),
                 createTextColumn("Type", TYPE_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().typeDesignator().string()))),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
+                                f.getAircraftData().typeDesignator().string()))),
                 createTextColumn("Description", DESCRIPTION_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().description().string()))),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
+                                f.getAircraftData().description().string()))),
 
-                createNumColumn("Longitude (°)", f -> Bindings.createDoubleBinding(() ->  f.getPosition().longitude(),f.positionProperty()),
+                createNumColumn("Longitude (°)",
+                        f -> Bindings.createDoubleBinding(() -> f.getPosition().longitude(),f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
-                createNumColumn("Latitude (°)", f -> Bindings.createDoubleBinding(() ->  f.getPosition().latitude(),f.positionProperty()),
+                createNumColumn("Latitude (°)",
+                        f -> Bindings.createDoubleBinding(() -> f.getPosition().latitude(),f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
-                createNumColumn("Altitude (m)", f -> DoubleExpression.doubleExpression(f.altitudeProperty()),
+                createNumColumn("Altitude (m)",
+                        f -> DoubleExpression.doubleExpression(f.altitudeProperty()),
                         MIN_FRACTION_DIGITS, Units.Length.METER),
-                createNumColumn("Vitesse (km/h)", f -> DoubleExpression.doubleExpression(f.velocityProperty()),
+                createNumColumn("Vitesse (km/h)",
+                        f -> DoubleExpression.doubleExpression(f.velocityProperty()),
                         MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
 
@@ -160,8 +168,7 @@ public final class AircraftTableController
             String name, int width, Function<ObservableAircraftState, ObservableValue<String>> valueFactory) {
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
-        column.setCellValueFactory(f ->
-                valueFactory.apply(f.getValue()));
+        column.setCellValueFactory(f -> valueFactory.apply(f.getValue()));
         column.setPrefWidth(width);
 
         return column;
