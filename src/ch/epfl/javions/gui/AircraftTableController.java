@@ -1,8 +1,14 @@
 package ch.epfl.javions.gui;
 
 import ch.epfl.javions.Units;
+import ch.epfl.javions.adsb.CallSign;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableObjectValue;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.scene.control.TableColumn;
@@ -98,42 +104,40 @@ public final class AircraftTableController
     private List<TableColumn<ObservableAircraftState, String>> columns(){
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
-                        f -> f.getIcaoAddress().string()),
+                        f -> (new ReadOnlyStringWrapper(f.getIcaoAddress().string()))),
                 createTextColumn("Indicatif", CALLSIGN_COLUMN_WIDTH,
-                        f -> f.getCallSign() == null ? "" : f.getCallSign().string()),
+                        f -> ( f.callSignProperty().map(CallSign::string))),
                 createTextColumn("Immatriculation", REGISTRATION_COLUMN_WIDTH,
-                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().registration().string()),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().registration().string()))),
                 createTextColumn("Modele", MODEL_COLUMN_WIDTH,
-                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().model()),
+                        f -> (new  ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().model()))),
                 createTextColumn("Type", TYPE_COLUMN_WIDTH,
-                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().typeDesignator().string()),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().typeDesignator().string()))),
                 createTextColumn("Description", DESCRIPTION_COLUMN_WIDTH,
-                        f -> f.getAircraftData() == null ? "" : f.getAircraftData().description().string()),
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" : f.getAircraftData().description().string()))),
 
-                createNumColumn("Longitude (°)", f -> f.getPosition().longitude(),
+                createNumColumn("Longitude (°)", f -> Bindings.createDoubleBinding(() ->  f.getPosition().longitude(),f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
-                createNumColumn("Latitude (°)", f -> f.getPosition().latitude(),
+                createNumColumn("Latitude (°)", f -> Bindings.createDoubleBinding(() ->  f.getPosition().latitude(),f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
-                createNumColumn("Altitude (m)", ObservableAircraftState::getAltitude,
+                createNumColumn("Altitude (m)", f -> DoubleExpression.doubleExpression(f.altitudeProperty()),
                         MIN_FRACTION_DIGITS, Units.Length.METER),
-                createNumColumn("Vitesse (km/h)", ObservableAircraftState::getVelocity,
+                createNumColumn("Vitesse (km/h)", f -> DoubleExpression.doubleExpression(f.velocityProperty()),
                         MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
 
 
-    //TODO corriger comme indiqué sur ED pour augmenter la vitesse et afficher les informations en live
-    // et pas seulement quand scroll sur les lignes
     private TableColumn<ObservableAircraftState, String> createNumColumn(
-            String name, Function<ObservableAircraftState, Double> valueFactory, int fractionDigits,
+            String name, Function<ObservableAircraftState, DoubleExpression> valueFactory, int fractionDigits,
             double unit) {
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
 
         NumberFormat numFormat = configureFormat(fractionDigits);
 
-        column.setCellValueFactory(f -> new ReadOnlyStringWrapper(
-                Double.isNaN(valueFactory.apply(f.getValue())) ? "" :
-                numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()), unit))));
+        column.setCellValueFactory(f ->
+                valueFactory.apply(f.getValue()).map(v -> Double.isNaN(v.doubleValue())? "" :
+                        numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()).doubleValue(), unit))));
 
         column.setPrefWidth(NUM_COLUMN_WIDTH);
         column.getStyleClass().add("numeric");
@@ -152,14 +156,12 @@ public final class AircraftTableController
         return column;
     }
 
-    //TODO corriger comme indiqué sur ED pour augmenter la vitesse et afficher les informations en live
-    // et pas seulement quand scroll sur les lignes
     private TableColumn<ObservableAircraftState, String> createTextColumn(
-            String name, int width, Function<ObservableAircraftState, String> valueFactory) {
+            String name, int width, Function<ObservableAircraftState, ObservableValue<String>> valueFactory) {
 
         TableColumn<ObservableAircraftState, String> column = new TableColumn<>(name);
         column.setCellValueFactory(f ->
-                new ReadOnlyStringWrapper(valueFactory.apply(f.getValue())));
+                valueFactory.apply(f.getValue()));
         column.setPrefWidth(width);
 
         return column;
