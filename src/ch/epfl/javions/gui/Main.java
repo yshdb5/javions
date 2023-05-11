@@ -42,9 +42,9 @@ public final class Main extends Application {
     }
 
     //TODO : EN GENERAL
-    //TODO : comprendre pourquoi le programme est lent
-    // (surement en rapport avec la vitesse de lecture des messages dans l'animation ou le delai dans readAllmessages)
-    //TODO : Regarder que toutes les fonctionnalités demandées sont présentent
+    // Verifier l'implémentation de Thread.sleep() dans readAllmessages
+    // Verifier comment bien gérer la fin du flot de données
+    // Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
