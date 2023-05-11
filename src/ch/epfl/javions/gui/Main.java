@@ -25,6 +25,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -44,6 +45,8 @@ public final class Main extends Application {
     //TODO : EN GENERAL
     // Verifier l'implémentation de Thread.sleep() dans readAllmessages
     // Verifier comment bien gérer la fin du flot de données
+    // Verifier pourquoi certains avions ont une vitesse affichée dans le tableau mais
+    // un point d'interrogation sur la carte, ex: EI-AZA,D-AIBC, D-AIEJ, EI-DCO, ...
     // Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
@@ -66,7 +69,7 @@ public final class Main extends Application {
                 new AircraftController(mapParameters, observableAircraftSet, aircraftStateProperty);
         AircraftTableController tableController =
                 new AircraftTableController(observableAircraftSet, aircraftStateProperty);
-        tableController.setOnDoubleClick(state -> baseMap.centerOn(state.positionProperty().get()));
+        tableController.setOnDoubleClick(state -> baseMap.centerOn(state.getPosition()));
 
         StatusLineController lineController = new StatusLineController();
         lineController.aircraftCountProperty().bind(Bindings.size(observableAircraftSet));
@@ -91,7 +94,7 @@ public final class Main extends Application {
             {
                 try {
                     AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
-                    while (true) {
+                    while (System.in.available() > 0) {
                         messageQueue.add(demodulator.nextMessage());
                     }
                 } catch (IOException e) {
@@ -126,7 +129,7 @@ public final class Main extends Application {
     }
 
     private void readAllMessages(String fileName){
-        String f = getClass().getResource(fileName).getFile();
+        String f = Objects.requireNonNull(getClass().getResource(fileName)).getFile();
         f = URLDecoder.decode(f, UTF_8);
 
         try (DataInputStream stream = new DataInputStream(
@@ -139,7 +142,7 @@ public final class Main extends Application {
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 //TODO: verifier comment bien faire ca
-                while (System.nanoTime() < timeStampNs + startTime) Thread.sleep(1);
+                while (System.nanoTime() < startTime + timeStampNs) Thread.sleep(1);
                 messageQueue.add(new RawMessage(timeStampNs, message));
             }
         }catch (IOException | InterruptedException e) {
