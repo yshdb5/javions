@@ -43,12 +43,12 @@ public final class Main extends Application {
         launch(args);
     }
 
-    //TODO : EN GENERAL
-    // Verifier l'implémentation de Thread.sleep() dans readAllmessages
-    // Verifier comment bien gérer la fin du flot de données
-    // Verifier pourquoi certains avions ont une vitesse affichée dans le tableau mais
-    // un point d'interrogation sur la carte, ex: EI-AZA,D-AIBC, D-AIEJ, EI-DCO, ...
-    // Regarder que toutes les fonctionnalités demandées sont présentent
+    // TODO : EN GENERAL
+    // TODO :Verifier l'implémentation de Thread.sleep() dans readAllmessages (normalement c'est bon)
+    // TODO :Verifier comment bien gérer la fin du flot de données
+    // TODO :Verifier pourquoi certains avions ont une vitesse affichée dans le tableau mais
+    // TODO :un point d'interrogation sur la carte, ex: EI-AZA,D-AIBC, D-AIEJ, EI-DCO, ...
+    // TODO :Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -142,7 +142,6 @@ public final class Main extends Application {
                 int bytesRead = stream.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
-                //TODO: verifier comment bien faire ca
                 long timeLapseMs = Duration.ofNanos((startTime + timeStampNs) - System.nanoTime()).toMillis();
                 if (timeLapseMs > 0) Thread.sleep(timeLapseMs);
                 messageQueue.add(new RawMessage(timeStampNs, message));
