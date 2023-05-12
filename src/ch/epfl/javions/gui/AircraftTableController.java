@@ -25,15 +25,15 @@ import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_SUBSEQUEN
 
 public final class AircraftTableController
 {
-    public static final int NUM_COLUMN_WIDTH = 85;
-    public static final int ICAO_COLUMN_WIDTH = 60;
-    public static final int DESCRIPTION_COLUMN_WIDTH = 70;
-    public static final int CALLSIGN_COLUMN_WIDTH = 70;
-    public static final int REGISTRATION_COLUMN_WIDTH = 90;
-    public static final int MODEL_COLUMN_WIDTH = 230;
-    public static final int TYPE_COLUMN_WIDTH = 50;
-    public static final int MAX_FRACTION_DIGITS = 4;
-    public static final int MIN_FRACTION_DIGITS = 0;
+    private static final int NUM_COLUMN_WIDTH = 85;
+    private static final int ICAO_COLUMN_WIDTH = 60;
+    private static final int DESCRIPTION_COLUMN_WIDTH = 70;
+    private static final int CALLSIGN_COLUMN_WIDTH = 70;
+    private static final int REGISTRATION_COLUMN_WIDTH = 90;
+    private static final int MODEL_COLUMN_WIDTH = 230;
+    private static final int TYPE_COLUMN_WIDTH = 50;
+    private static final int MAX_FRACTION_DIGITS = 4;
+    private static final int MIN_FRACTION_DIGITS = 0;
     private final ObservableSet<ObservableAircraftState> statesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftState;
     private final TableView<ObservableAircraftState> tableView;

@@ -25,7 +25,6 @@ public final class BaseMapController {
     private final MapParameters mapParameters;
     private final Canvas canvas;
     private final Pane pane;
-    private GraphicsContext graphicsContext;
     private boolean redrawNeeded;
 
     /**
@@ -70,7 +69,7 @@ public final class BaseMapController {
         if (!redrawNeeded) return;
         redrawNeeded = false;
 
-        graphicsContext = canvas.getGraphicsContext2D();
+        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         int x0 = getTileIndex(mapParameters.getMinX());

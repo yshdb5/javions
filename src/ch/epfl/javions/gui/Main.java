@@ -24,6 +24,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,13 +32,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Main extends Application {
-    public static final int MIN_WIDTH = 800;
-    public static final int MIN_HEIGHT = 600;
-    public static final int INITIAL_ZOOM = 8;
-    public static final int X = 33_530;
-    public static final int Y = 23_070;
-    private final ConcurrentLinkedQueue<RawMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    private static final int MIN_WIDTH = 800;
+    private static final int MIN_HEIGHT = 600;
+    private static final int INITIAL_ZOOM = 8;
+    private static final int X = 33_530;
+    private static final int Y = 23_070;
     private final long startTime = System.nanoTime();
+    private final ConcurrentLinkedQueue<RawMessage> messageQueue = new ConcurrentLinkedQueue<>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -142,7 +143,8 @@ public final class Main extends Application {
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
                 //TODO: verifier comment bien faire ca
-                while (System.nanoTime() < startTime + timeStampNs) Thread.sleep(1);
+                long timeLapseMs = Duration.ofNanos((startTime + timeStampNs) - System.nanoTime()).toMillis();
+                if (timeLapseMs > 0) Thread.sleep(timeLapseMs);
                 messageQueue.add(new RawMessage(timeStampNs, message));
             }
         }catch (IOException | InterruptedException e) {

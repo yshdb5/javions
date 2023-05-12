@@ -30,8 +30,8 @@ import java.util.List;
  */
 
 public final class AircraftController {
-    public static final int MAX_ALTITUDE = 12000;
-    public static final double POWER_FACTOR = 1d / 3d;
+    private static final int MAX_ALTITUDE = 12000;
+    private static final double POWER_FACTOR = 1d / 3d;
     private final MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
