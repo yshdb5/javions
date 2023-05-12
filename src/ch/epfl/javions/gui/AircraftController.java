@@ -123,7 +123,6 @@ public final class AircraftController {
                         change -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
             }
         });
-
         return trajectoryGroup;
     }
 
@@ -177,14 +176,13 @@ public final class AircraftController {
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
-        txt.textProperty().bind(
-                Bindings.format("%s \n %s km/h\u2002%s m",
-                        chooseIdentifier(aircraftState),
+        txt.textProperty().bind(Bindings.format("%s \n %s km/h\u2002%s m", chooseIdentifier(aircraftState),
                         (aircraftState.velocityProperty() != null && !Double.isNaN(aircraftState.getVelocity())) ?
                                 aircraftState.velocityProperty().map(v ->
                                     (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
-                        (aircraftState.altitudeProperty() != null ) ?
-                                aircraftState.altitudeProperty().asString("%.0f") : "?"));
+                        (aircraftState.altitudeProperty() != null && !Double.isNaN(aircraftState.getVelocity()) ?
+                                aircraftState.altitudeProperty().asString("%.0f") : "?")));
+
         rect.widthProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
         rect.heightProperty().bind(

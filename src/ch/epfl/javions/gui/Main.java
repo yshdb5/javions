@@ -89,7 +89,7 @@ public final class Main extends Application {
         primaryStage.setScene(new Scene(splitPane));
         primaryStage.show();
 
-        new Thread(() -> {
+        Thread thread = new Thread(() -> {
             List<String> args = getParameters().getRaw();
             if(args.isEmpty())
             {
@@ -106,7 +106,9 @@ public final class Main extends Application {
             {
                 readAllMessages(args.get(0));
             }
-        }).start();
+        });
+        thread.setDaemon(true);
+        thread.start();
 
         new AnimationTimer() {
             @Override
