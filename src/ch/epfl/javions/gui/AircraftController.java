@@ -2,6 +2,8 @@ package ch.epfl.javions.gui;
 import ch.epfl.javions.adsb.CallSign;
 import ch.epfl.javions.aircraft.*;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -176,12 +178,16 @@ public final class AircraftController {
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
+
+        //TODO faire une méthode pour rendre le Binding plus clair à chaque fois que l'on fait ? ... : "?";
         txt.textProperty().bind(Bindings.format("%s \n %s km/h\u2002%s m", chooseIdentifier(aircraftState),
-                        (aircraftState.velocityProperty() != null && !Double.isNaN(aircraftState.getVelocity())) ?
-                                aircraftState.velocityProperty().map(v ->
-                                    (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
-                        (aircraftState.altitudeProperty() != null && !Double.isNaN(aircraftState.getVelocity()) ?
-                                aircraftState.altitudeProperty().asString("%.0f") : "?")));
+                aircraftState.velocityProperty() != null ?
+                        aircraftState.velocityProperty().map(v ->
+                                (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
+                aircraftState.altitudeProperty() != null ?
+                        aircraftState.altitudeProperty().asString("%.0f") : "?"));
+        //à revoir
+        //txt.textProperty().bind(formatAircraftState(aircraftState));
 
         rect.widthProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
@@ -237,4 +243,26 @@ public final class AircraftController {
         return AircraftIcon.iconFor(typeDesignator, aircraftDescription,
                 state.getCategory(), wakeTurbulenceCategory);
     }
+
+    /*private StringProperty formatAircraftState(ObservableAircraftState aircraftState) {
+        StringProperty formattedState = new SimpleStringProperty();
+
+        String identifier = chooseIdentifier(aircraftState);
+
+        String velocity = "?";
+        if (aircraftState.velocityProperty() != null) {
+            int velocityInKmPerHour = (int) Math.rint(Units.convertTo(aircraftState.velocityProperty().doubleValue(), Units.Speed.KILOMETER_PER_HOUR));
+            velocity = String.valueOf(velocityInKmPerHour);
+        }
+
+        String altitude = "?";
+        if (aircraftState.altitudeProperty() != null) {
+            altitude = aircraftState.altitudeProperty().asString("%.0f").get();
+        }
+
+        formattedState.set(String.format("%s \n %s km/h\u2002%s m", identifier, velocity, altitude));
+
+        return formattedState;
+    }
+*/
 }

@@ -44,11 +44,7 @@ public final class Main extends Application {
     }
 
     // TODO : EN GENERAL
-    // TODO :Verifier l'implémentation de Thread.sleep() dans readAllmessages (normalement c'est bon)
     // TODO :Verifier comment bien gérer la fin du flot de données
-    // TODO :Verifier pourquoi certains avions ont une vitesse affichée dans le tableau mais
-    // TODO :un point d'interrogation sur la carte, ex: EI-AZA,D-AIBC, D-AIEJ, EI-DCO, ...
-    // TODO :Regarder que toutes les fonctionnalités demandées sont présentent
 
     @Override
     public void start(Stage primaryStage) throws Exception {
