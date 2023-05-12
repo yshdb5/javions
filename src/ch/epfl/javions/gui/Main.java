@@ -59,8 +59,8 @@ public final class Main extends Application {
         URL url = getClass().getResource("/aircraft.zip");
         assert url != null;
         Path path = Path.of(url.toURI());
-
         AircraftDatabase database = new AircraftDatabase(path.toString());
+
         AircraftStateManager stateManager = new AircraftStateManager(database);
         ObservableSet<ObservableAircraftState> observableAircraftSet = stateManager.states();
         ObjectProperty<ObservableAircraftState> aircraftStateProperty = new SimpleObjectProperty<>();
