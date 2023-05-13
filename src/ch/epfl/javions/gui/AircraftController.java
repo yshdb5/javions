@@ -1,9 +1,11 @@
 package ch.epfl.javions.gui;
 import ch.epfl.javions.adsb.CallSign;
 import ch.epfl.javions.aircraft.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.Observable;
+import javafx.beans.binding.DoubleExpression;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -20,7 +22,6 @@ import javafx.scene.text.Text;
 import ch.epfl.javions.Units;
 import ch.epfl.javions.WebMercator;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.shape.Line;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,16 +179,8 @@ public final class AircraftController {
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
-
         //TODO faire une méthode pour rendre le Binding plus clair à chaque fois que l'on fait ? ... : "?";
-        txt.textProperty().bind(Bindings.format("%s \n %s km/h\u2002%s m", chooseIdentifier(aircraftState),
-                aircraftState.velocityProperty() != null ?
-                        aircraftState.velocityProperty().map(v ->
-                                (int) Math.rint(Units.convertTo(v.doubleValue(), Units.Speed.KILOMETER_PER_HOUR))) : "?",
-                aircraftState.altitudeProperty() != null ?
-                        aircraftState.altitudeProperty().asString("%.0f") : "?"));
-        //à revoir
-        //txt.textProperty().bind(formatAircraftState(aircraftState));
+        txt.textProperty().bind(aircraftInfos(aircraftState));
 
         rect.widthProperty().bind(
                 txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
@@ -203,6 +196,13 @@ public final class AircraftController {
         return labelGroup;
     }
 
+    private StringExpression aircraftInfos(ObservableAircraftState aircraftState) {
+        return Bindings.format("%s \n %s km/h\u2002%s m",
+                chooseIdentifier(aircraftState),
+                giveValueOf(aircraftState.velocityProperty(), Units.Speed.KILOMETER_PER_HOUR),
+                giveValueOf(aircraftState.altitudeProperty(), Units.Length.METER));
+    }
+
     private String chooseIdentifier(ObservableAircraftState aircraftState){
         CallSign callSign = aircraftState.getCallSign();
         AircraftData data = aircraftState.getAircraftData();
@@ -211,6 +211,11 @@ public final class AircraftController {
         else if (data != null && data.registration() != null) return data.registration().string();
         else return icaoAddress.string();
     }
+
+    private ObservableValue<Integer> giveValueOf(ReadOnlyDoubleProperty value, double unit){
+        return value.map(v -> (int) Math.rint(Units.convertTo(v.doubleValue(), unit)));
+    }
+
     private SVGPath icon(ObservableAircraftState aircraftState){
         AircraftIcon icon = getIcon(aircraftState);
         ObjectProperty<AircraftIcon> iconProperty =  new SimpleObjectProperty<>(icon);
@@ -243,26 +248,4 @@ public final class AircraftController {
         return AircraftIcon.iconFor(typeDesignator, aircraftDescription,
                 state.getCategory(), wakeTurbulenceCategory);
     }
-
-    /*private StringProperty formatAircraftState(ObservableAircraftState aircraftState) {
-        StringProperty formattedState = new SimpleStringProperty();
-
-        String identifier = chooseIdentifier(aircraftState);
-
-        String velocity = "?";
-        if (aircraftState.velocityProperty() != null) {
-            int velocityInKmPerHour = (int) Math.rint(Units.convertTo(aircraftState.velocityProperty().doubleValue(), Units.Speed.KILOMETER_PER_HOUR));
-            velocity = String.valueOf(velocityInKmPerHour);
-        }
-
-        String altitude = "?";
-        if (aircraftState.altitudeProperty() != null) {
-            altitude = aircraftState.altitudeProperty().asString("%.0f").get();
-        }
-
-        formattedState.set(String.format("%s \n %s km/h\u2002%s m", identifier, velocity, altitude));
-
-        return formattedState;
-    }
-*/
 }

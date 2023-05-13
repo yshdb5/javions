@@ -37,7 +37,6 @@ public final class Main extends Application {
     private static final int INITIAL_ZOOM = 8;
     private static final int X = 33_530;
     private static final int Y = 23_070;
-    private final long startTime = System.nanoTime();
     private final ConcurrentLinkedQueue<RawMessage> messageQueue = new ConcurrentLinkedQueue<>();
     public static void main(String[] args) {
         launch(args);
@@ -128,6 +127,7 @@ public final class Main extends Application {
     }
 
     private void readAllMessages(String fileName){
+        long startTime = System.nanoTime();
         String f = Objects.requireNonNull(getClass().getResource(fileName)).getFile();
         f = URLDecoder.decode(f, UTF_8);
 
