@@ -8,24 +8,44 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
+/**
+ * final StatusLineController class : manages the status line.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class StatusLineController
 {
     private BorderPane borderPane;
     private final IntegerProperty aircraftCountProperty;
     private final LongProperty messageCountProperty;
+
+    /**
+     * StatusLineController's default constructor.
+     */
     public StatusLineController(){
         aircraftCountProperty = new SimpleIntegerProperty();
         messageCountProperty = new SimpleLongProperty();
         createPane();
     }
+
+    /**
+     * @return the pane of the status line.
+     */
     public BorderPane pane(){
         return borderPane;
     }
 
+    /**
+     * @return the ( modifiable ) property containing the number of aircraft currently visible
+     */
     public IntegerProperty aircraftCountProperty(){
         return aircraftCountProperty;
     }
 
+    /**
+     * @return the (modifiable) property containing the number of messages
+     * received since the beginning of the program execution.
+     */
     public LongProperty messageCountProperty(){
         return messageCountProperty;
     }

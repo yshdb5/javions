@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * final AircraftStateManager class : is intended to keep the states of a set
+ * Final AircraftStateManager class : is intended to keep the states of a set
  * of aircraft up to date based on messages received from them.
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

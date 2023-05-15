@@ -45,6 +45,18 @@ public final class Main extends Application {
     // TODO : EN GENERAL
     // TODO :Verifier comment bien gérer la fin du flot de données
 
+
+    /**
+     * Starts the application by building the scene graph corresponding to the graphical interface,
+     * starting the execution thread in charge of getting the messages, and starting the "animation timer"
+     * in charge of updating the aircraft states according to the received messages.
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws Exception if something goes wrong.
+     * @throws IOException in case of input/output error.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Path tileCache = Path.of("tile-cache");
@@ -106,6 +118,13 @@ public final class Main extends Application {
         thread.start();
 
         new AnimationTimer() {
+            /**
+             * This method will be called once per frame.
+             * @param now
+             *            The timestamp of the current frame given in nanoseconds. This
+             *            value will be the same for all {@code AnimationTimers} called
+             *            during one frame.
+             */
             @Override
             public void handle(long now) {
                 try {
@@ -126,6 +145,10 @@ public final class Main extends Application {
         }.start();
     }
 
+    /**
+     * Reads all messages from a file and adds them to the message queue.
+     * @param fileName the name of the file to read.
+     */
     private void readAllMessages(String fileName){
         long startTime = System.nanoTime();
         String f = Objects.requireNonNull(getClass().getResource(fileName)).getFile();

@@ -23,8 +23,7 @@ import java.util.function.Function;
 
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS;
 
-public final class AircraftTableController
-{
+public final class AircraftTableController {
     private static final int NUM_COLUMN_WIDTH = 85;
     private static final int ICAO_COLUMN_WIDTH = 60;
     private static final int DESCRIPTION_COLUMN_WIDTH = 70;
@@ -38,9 +37,14 @@ public final class AircraftTableController
     private final ObjectProperty<ObservableAircraftState> selectedAircraftState;
     private final TableView<ObservableAircraftState> tableView;
 
+    /**
+     * AircraftTableController constructor.
+     *
+     * @param statesAccumulatorList the set (observable but not modifiable) of aircraft states that should appear on the view.
+     * @param selectedAircraftState the property (observable) of the selected aircraft state.
+     */
     public AircraftTableController(ObservableSet<ObservableAircraftState> statesAccumulatorList,
-                                   ObjectProperty<ObservableAircraftState> selectedAircraftState)
-    {
+                                   ObjectProperty<ObservableAircraftState> selectedAircraftState) {
         this.statesAccumulatorList = statesAccumulatorList;
         this.selectedAircraftState = selectedAircraftState;
         this.tableView = new TableView<>();
@@ -48,26 +52,32 @@ public final class AircraftTableController
         setListeners();
     }
 
-    public TableView<ObservableAircraftState> pane()
-    {
+    /**
+     * Creates a column with a text value.
+     *
+     * @return the column.
+     */
+    public TableView<ObservableAircraftState> pane() {
         return tableView;
     }
 
-    public void setOnDoubleClick(Consumer<ObservableAircraftState> consumer)
-    {
+    /**
+     * Calls the accept method of the consumer when a double click is done on the table and
+     * an aircraft is currently selected, passing it as argument the state of this aircraft.
+     *
+     * @param consumer the consumer to be called when the user double-clicks on a row.
+     */
+    public void setOnDoubleClick(Consumer<ObservableAircraftState> consumer) {
         tableView.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY))
-            {
-                if (selectedAircraftState.get() != null)
-                {
+            if (event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY)) {
+                if (selectedAircraftState.get() != null) {
                     consumer.accept(selectedAircraftState.get());
                 }
             }
         });
     }
 
-    private void setListeners()
-    {
+    private void setListeners() {
         statesAccumulatorList.addListener((SetChangeListener<ObservableAircraftState>)
                 change -> {
                     if (change.wasAdded()) {
@@ -79,39 +89,37 @@ public final class AircraftTableController
                 });
 
         selectedAircraftState.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem()))
-            {
+            if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem())) {
                 tableView.getSelectionModel().select(newValue);
                 tableView.scrollTo(newValue);
             }
         });
 
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null)
-            {
+            if (newValue != null) {
                 selectedAircraftState.set(newValue);
             }
         });
     }
 
-    private void tableConfiguration(){
+    private void tableConfiguration() {
         tableView.getStylesheets().add("/table.css");
         tableView.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS);
         tableView.setTableMenuButtonVisible(true);
         tableView.getColumns().addAll(columns());
     }
 
-    private List<TableColumn<ObservableAircraftState, String>> columns(){
+    private List<TableColumn<ObservableAircraftState, String>> columns() {
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
                         f -> (new ReadOnlyStringWrapper(f.getIcaoAddress().string()))),
                 createTextColumn("Indicatif", CALLSIGN_COLUMN_WIDTH,
-                        f -> ( f.callSignProperty().map(CallSign::string))),
+                        f -> (f.callSignProperty().map(CallSign::string))),
                 createTextColumn("Immatriculation", REGISTRATION_COLUMN_WIDTH,
                         f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
                                 f.getAircraftData().registration().string()))),
                 createTextColumn("Modele", MODEL_COLUMN_WIDTH,
-                        f -> (new  ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
+                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
                                 f.getAircraftData().model()))),
                 createTextColumn("Type", TYPE_COLUMN_WIDTH,
                         f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
@@ -121,10 +129,10 @@ public final class AircraftTableController
                                 f.getAircraftData().description().string()))),
 
                 createNumColumn("Longitude (°)",
-                        f -> Bindings.createDoubleBinding(() -> f.getPosition().longitude(),f.positionProperty()),
+                        f -> Bindings.createDoubleBinding(() -> f.getPosition().longitude(), f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
                 createNumColumn("Latitude (°)",
-                        f -> Bindings.createDoubleBinding(() -> f.getPosition().latitude(),f.positionProperty()),
+                        f -> Bindings.createDoubleBinding(() -> f.getPosition().latitude(), f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
                 createNumColumn("Altitude (m)",
                         f -> DoubleExpression.doubleExpression(f.altitudeProperty()),
@@ -144,7 +152,7 @@ public final class AircraftTableController
         NumberFormat numFormat = configureFormat(fractionDigits);
 
         column.setCellValueFactory(f ->
-                valueFactory.apply(f.getValue()).map(v -> Double.isNaN(v.doubleValue())? "" :
+                valueFactory.apply(f.getValue()).map(v -> Double.isNaN(v.doubleValue()) ? "" :
                         numFormat.format(Units.convertTo(valueFactory.apply(f.getValue()).doubleValue(), unit))));
 
         column.setPrefWidth(NUM_COLUMN_WIDTH);
@@ -174,7 +182,7 @@ public final class AircraftTableController
         return column;
     }
 
-    private NumberFormat configureFormat(int maxFractionDigits){
+    private NumberFormat configureFormat(int maxFractionDigits) {
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(maxFractionDigits);
         numberFormat.setMinimumFractionDigits(MIN_FRACTION_DIGITS);
