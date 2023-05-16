@@ -94,26 +94,24 @@ public final class Main extends Application {
 
         Thread thread = new Thread(() -> {
             List<String> args = getParameters().getRaw();
-            if(args.isEmpty())
-            {
-                try {
+            try {
+                if (args.isEmpty()) {
                     AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
                     while (System.in.available() > 0) {
                         messageQueue.add(demodulator.nextMessage());
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } else {
+                    readAllMessages(args.get(0));
                 }
-            }
-            else
-            {
-                readAllMessages(args.get(0));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
             }
         });
         thread.setDaemon(true);
         thread.start();
 
         new AnimationTimer() {
+            long lastPurge;
             /**
              * This method will be called once per frame.
              * @param now The timestamp of the current frame given in nanoseconds. This
@@ -123,7 +121,7 @@ public final class Main extends Application {
             @Override
             public void handle(long now) {
                 try {
-                    for (int i = 0; i < 100; i++) {
+                    while (!messageQueue.isEmpty()){
                         RawMessage rawMessage = messageQueue.poll();
                         if (rawMessage == null) return;
                         Message message = MessageParser.parse(rawMessage);
@@ -131,8 +129,8 @@ public final class Main extends Application {
                             stateManager.updateWithMessage(message);
                             messageCountProperty.set(messageCountProperty.get() + 1);
                         }
-                        stateManager.purge();
                     }
+                    if (now - lastPurge >= Duration.ofSeconds(1).toNanos()) stateManager.purge();
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
@@ -144,7 +142,7 @@ public final class Main extends Application {
      * Reads all messages from a file and adds them to the message queue.
      * @param fileName the name of the file to read.
      */
-    private void readAllMessages(String fileName){
+    private void readAllMessages(String fileName) throws IOException{
         long startTime = System.nanoTime();
         String f = Objects.requireNonNull(getClass().getResource(fileName)).getFile();
         f = URLDecoder.decode(f, UTF_8);
@@ -162,7 +160,7 @@ public final class Main extends Application {
                 if (timeLapseMs > 0) Thread.sleep(timeLapseMs);
                 messageQueue.add(new RawMessage(timeStampNs, message));
             }
-        }catch (IOException | InterruptedException e) {
+        }catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

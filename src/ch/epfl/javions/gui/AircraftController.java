@@ -1,7 +1,6 @@
 package ch.epfl.javions.gui;
 import ch.epfl.javions.adsb.CallSign;
 import ch.epfl.javions.aircraft.*;
-import javafx.beans.Observable;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.*;
@@ -179,7 +178,6 @@ public final class AircraftController {
         Text txt = new Text();
         Rectangle rect = new Rectangle();
 
-        //TODO faire une méthode pour rendre le Binding plus clair à chaque fois que l'on fait ? ... : "?";
         txt.textProperty().bind(aircraftInfos(aircraftState));
 
         rect.widthProperty().bind(
@@ -197,7 +195,7 @@ public final class AircraftController {
     }
 
     private StringExpression aircraftInfos(ObservableAircraftState aircraftState) {
-        return Bindings.format("%s \n %s km/h\u2002%s m",
+        return Bindings.format("%s \n%s km/h\u2002%s m",
                 chooseIdentifier(aircraftState),
                 giveValueOf(aircraftState.velocityProperty(), Units.Speed.KILOMETER_PER_HOUR),
                 giveValueOf(aircraftState.altitudeProperty(), Units.Length.METER));
@@ -212,8 +210,10 @@ public final class AircraftController {
         else return icaoAddress.string();
     }
 
-    private ObservableValue<Integer> giveValueOf(ReadOnlyDoubleProperty value, double unit){
-        return value.map(v -> (int) Math.rint(Units.convertTo(v.doubleValue(), unit)));
+    private ObservableValue<String> giveValueOf(DoubleExpression numExpression, double unit){
+        return numExpression.map(v ->
+                Double.isNaN(numExpression.doubleValue()) ? "?" :
+                        "%.0f".formatted(Units.convertTo(numExpression.doubleValue(), unit)));
     }
 
     private SVGPath icon(ObservableAircraftState aircraftState){

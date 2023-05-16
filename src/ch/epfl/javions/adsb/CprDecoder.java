@@ -1,6 +1,5 @@
 package ch.epfl.javions.adsb;
 
-
 import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.Preconditions;
 import ch.epfl.javions.Units;
@@ -19,8 +18,7 @@ public final class CprDecoder {
     private static final double DELTA0 = (1.0) / Z0;
     private static final double DELTA1 = (1.0) / Z1;
 
-    private CprDecoder() {
-    }
+    private CprDecoder() {}
 
     /**
      * @param x0         global longitude of an even message
@@ -58,21 +56,11 @@ public final class CprDecoder {
         if (zoneNumber00 != zoneNumber01) return null;
 
         int zoneNumber1 = zoneNumber00 - 1;
-
         int zoneLambda = (int) Math.rint(x0 * zoneNumber1 - x1 * zoneNumber00);
-        int zoneLambda0 = (zoneLambda < 0) ? zoneLambda + zoneNumber00 : zoneLambda;
-        int zoneLambda1 = (zoneLambda < 0) ? zoneLambda + zoneNumber1 : zoneLambda;
 
-        double deltaLambda0 = calculateDeltaLambda(zoneNumber00);
-        double deltaLambda1 = calculateDeltaLambda(zoneNumber1);
-
-        double longitude0Turn = calculateLongitudeTurn(zoneNumber00, x0, deltaLambda0, zoneLambda0);
-        double longitude1Turn = calculateLongitudeTurn(zoneNumber00, x1, deltaLambda1, zoneLambda1);
-
-        int longitude0T32 = convertTurnToT32(longitude0Turn);
-        int longitude1T32 = convertTurnToT32(longitude1Turn);
-
-        return (mostRecent == 0) ? new GeoPos(longitude0T32, latitude0T32) : new GeoPos(longitude1T32, latitude1T32);
+        return (mostRecent == 0) ?
+                geoPosOf(x0, zoneLambda, zoneNumber00, latitude0T32, zoneNumber00) :
+                geoPosOf(x1, zoneLambda, zoneNumber1, latitude1T32, zoneNumber00);
     }
 
     private static double aOf(double latitude_TURN) {
@@ -102,5 +90,14 @@ public final class CprDecoder {
         return (zoneNumber0 == 1) ?
                 recenterPosition(x) :
                 recenterPosition(deltaLambda * (zoneLambda + x));
+    }
+
+    private static GeoPos geoPosOf(double x, int zoneLambda, int zoneNumber, int latitudeT32, int zoneNumber00){
+        int zoneL = (zoneLambda < 0) ? zoneLambda + zoneNumber : zoneLambda;
+        double deltaLambda = calculateDeltaLambda(zoneNumber);
+        double longitudeTurn = calculateLongitudeTurn(zoneNumber00, x, deltaLambda, zoneL);
+        int longitudeT32 = convertTurnToT32(longitudeTurn);
+
+        return new GeoPos(longitudeT32, latitudeT32);
     }
 }
