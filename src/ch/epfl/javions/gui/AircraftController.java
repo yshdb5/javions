@@ -218,7 +218,7 @@ public final class AircraftController {
 
     private SVGPath icon(ObservableAircraftState aircraftState){
         AircraftIcon icon = getIcon(aircraftState);
-        ObjectProperty<AircraftIcon> iconProperty =  new SimpleObjectProperty<>(icon);
+        ObjectProperty<AircraftIcon> iconProperty = new SimpleObjectProperty<>(icon);
 
         SVGPath iconPath = new SVGPath();
         iconPath.getStyleClass().add("aircraft");

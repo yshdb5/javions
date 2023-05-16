@@ -42,10 +42,6 @@ public final class Main extends Application {
         launch(args);
     }
 
-    // TODO : EN GENERAL
-    // TODO :Verifier comment bien gérer la fin du flot de données
-
-
     /**
      * Starts the application by building the scene graph corresponding to the graphical interface,
      * starting the execution thread in charge of getting the messages, and starting the "animation timer"
@@ -120,15 +116,14 @@ public final class Main extends Application {
         new AnimationTimer() {
             /**
              * This method will be called once per frame.
-             * @param now
-             *            The timestamp of the current frame given in nanoseconds. This
+             * @param now The timestamp of the current frame given in nanoseconds. This
              *            value will be the same for all {@code AnimationTimers} called
              *            during one frame.
              */
             @Override
             public void handle(long now) {
                 try {
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < 100; i++) {
                         RawMessage rawMessage = messageQueue.poll();
                         if (rawMessage == null) return;
                         Message message = MessageParser.parse(rawMessage);
