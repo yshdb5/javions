@@ -49,12 +49,12 @@ public final class MapParameters {
      */
 
     public void changeZoomLevel(int deltaZoom) {
-        int oldZoom = zoom.get();
-        zoom.set(Math2.clamp(MIN_ZOOM, zoom.get() + deltaZoom, MAX_ZOOM));
-        int newZoom = zoom.get();
+        int oldZoom = getZoom();
+        zoom.set(Math2.clamp(MIN_ZOOM, oldZoom + deltaZoom, MAX_ZOOM));
+        int newZoom = getZoom();
         if (oldZoom != newZoom) {
-            minX.set(Math.scalb(minX.get(), deltaZoom));
-            minY.set(Math.scalb(minY.get(), deltaZoom));
+            minX.set(Math.scalb(getMinX(), deltaZoom));
+            minY.set(Math.scalb(getMinY(), deltaZoom));
         }
     }
 
