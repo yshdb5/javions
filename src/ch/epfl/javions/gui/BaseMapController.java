@@ -53,7 +53,7 @@ public final class BaseMapController {
     }
 
     /**
-     * moves the visible portion of the map so that it is centered at the position given
+     * Moves the visible portion of the map so that it is centered at the position given.
      * @param pos a point on the surface of the Earth
      */
     public void centerOn(GeoPos pos) {
@@ -64,6 +64,13 @@ public final class BaseMapController {
         double deltaY = y - (mapParameters.getMinY() + canvas.getHeight() / 2);
         mapParameters.scroll(deltaX, deltaY);
     }
+
+    /**
+     * Forces a redraw of the map if the redrawNeeded flag is set to true.
+     * This method will clear the canvas and redraw tiles within the visible
+     * range of the map. The tiles are fetched from the TileManager and drawn
+     * onto the canvas.
+     */
 
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
@@ -94,10 +101,22 @@ public final class BaseMapController {
         }
     }
 
+    /**
+     * Signals that a redraw is required during the next pulse.
+     * A pulse is a moment when all changes on the scene graph state
+     * are processed. Requesting a pulse triggers processing of
+     * these changes during which a redraw of the map can be initiated.
+     */
     private void redrawOnNextPulse() {
         redrawNeeded = true;
         Platform.requestNextPulse();
     }
+
+    /**
+     * Creates event handlers for scrolling and mouse dragging.
+     * The scrolling event handler allows zooming in and out of the map,
+     * while the mouse dragging event handler allows the map to be panned.
+     */
 
     private void creatEventHandlers()
     {
@@ -134,10 +153,21 @@ public final class BaseMapController {
         });
     }
 
+    /**
+     * Binds the dimensions of the canvas to those of the pane.
+     * This ensures that the canvas always fits the pane when its size changes.
+     */
+
     private void bindPaneToCanvas() {
         canvas.widthProperty().bind(pane.widthProperty());
         canvas.heightProperty().bind(pane.heightProperty());
     }
+
+    /**
+     * Adds listeners to the properties of the mapParameters and canvas.
+     * These listeners trigger a redraw of the map when any of the observed
+     * properties changes.
+     */
 
     private void addListeners() {
         canvas.sceneProperty().addListener((p, oldScene, newScene) -> {
@@ -152,6 +182,14 @@ public final class BaseMapController {
         canvas.widthProperty().addListener(e -> redrawOnNextPulse());
         canvas.heightProperty().addListener(e -> redrawOnNextPulse());
     }
+
+    /**
+     * Calculates and returns the tile index for a given position.
+     * The tile index determines the tile that contains the given position.
+     *
+     * @param pos the position.
+     * @return the index of the tile containing the position.
+     */
 
     private int getTileIndex(double pos) {
         return (int) Math.floor(pos / (TILE_WIDTH));

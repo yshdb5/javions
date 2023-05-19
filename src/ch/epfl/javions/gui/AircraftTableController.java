@@ -23,6 +23,12 @@ import java.util.function.Function;
 
 import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS;
 
+/**
+ * Final class AircraftTableController : manage the aircraft table.
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
+
 public final class AircraftTableController {
     private static final int NUM_COLUMN_WIDTH = 85;
     private static final int ICAO_COLUMN_WIDTH = 60;
@@ -54,6 +60,9 @@ public final class AircraftTableController {
 
     /**
      * Creates a column with a text value.
+     * This method creates and returns the TableView instance containing
+     * ObservableAircraftStates that represents the aircraft table in the pane.
+     * @return TableView<ObservableAircraftState> instance.
      *
      * @return the column.
      */
@@ -77,6 +86,11 @@ public final class AircraftTableController {
         });
     }
 
+    /**
+     * Registers listeners on the observable set of aircraft states and the selected
+     * aircraft state property. These listeners respond to changes in the aircraft
+     * states set and the selected aircraft state.
+     */
     private void setListeners() {
         statesAccumulatorList.addListener((SetChangeListener<ObservableAircraftState>)
                 change -> {
@@ -102,12 +116,24 @@ public final class AircraftTableController {
         });
     }
 
+    /**
+     * Configures the TableView instance by setting its style, column resize policy,
+     * visibility of table menu button, and adding table columns.
+     */
+
     private void tableConfiguration() {
         tableView.getStylesheets().add("/table.css");
         tableView.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS);
         tableView.setTableMenuButtonVisible(true);
         tableView.getColumns().addAll(columns());
     }
+
+    /**
+     * Creates and returns a list of table columns, each of which represents
+     * a property of the ObservableAircraftState object.
+     *
+     * @return List of TableColumn<ObservableAircraftState, String> instances.
+     */
 
     private List<TableColumn<ObservableAircraftState, String>> columns() {
         return List.of(
@@ -143,6 +169,17 @@ public final class AircraftTableController {
     }
 
 
+    /**
+     * Creates and returns a TableColumn instance for a numeric property
+     * of the ObservableAircraftState object.
+     *
+     * @param name Name of the column.
+     * @param valueFactory Function to extract the numeric value from the ObservableAircraftState.
+     * @param fractionDigits Number of digits after the decimal point to display.
+     * @param unit Unit of the numeric value.
+     * @return TableColumn<ObservableAircraftState, String> instance.
+     */
+
     private TableColumn<ObservableAircraftState, String> createNumColumn(
             String name, Function<ObservableAircraftState, DoubleExpression> valueFactory, int fractionDigits,
             double unit) {
@@ -172,6 +209,16 @@ public final class AircraftTableController {
         return column;
     }
 
+    /**
+     * Creates and returns a TableColumn instance for a textual property
+     * of the ObservableAircraftState object.
+     *
+     * @param name Name of the column.
+     * @param width Preferred width of the column.
+     * @param valueFactory Function to extract the text value from the ObservableAircraftState.
+     * @return TableColumn<ObservableAircraftState, String> instance.
+     */
+
     private TableColumn<ObservableAircraftState, String> createTextColumn(
             String name, int width, Function<ObservableAircraftState, ObservableValue<String>> valueFactory) {
 
@@ -181,6 +228,14 @@ public final class AircraftTableController {
 
         return column;
     }
+
+    /**
+     * Configures and returns a NumberFormat instance that formats numbers
+     * with a specified maximum number of fraction digits.
+     *
+     * @param maxFractionDigits Maximum number of fraction digits.
+     * @return NumberFormat instance.
+     */
 
     private NumberFormat configureFormat(int maxFractionDigits) {
         NumberFormat numberFormat = NumberFormat.getInstance();

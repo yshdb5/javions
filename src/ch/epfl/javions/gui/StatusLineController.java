@@ -50,6 +50,12 @@ public final class StatusLineController
         return messageCountProperty;
     }
 
+    /**
+     * Creates the pane for the status line, with two Text objects: one for the number of
+     * visible aircraft, and one for the number of received messages. These text objects
+     * are bound to the respective properties, so they update automatically.
+     */
+
     private void createPane(){
         borderPane = new BorderPane();
         borderPane.getStylesheets().add("/status.css");

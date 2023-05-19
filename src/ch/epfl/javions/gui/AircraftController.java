@@ -67,6 +67,9 @@ public final class AircraftController {
 
     public Pane pane() {return pane;}
 
+    /**
+     * Adds listeners to the set of aircraft states. Updates the view when states are added or removed.
+     */
     private void setListeners()
     {
         unmodifiableStatesAccumulatorList.addListener((SetChangeListener<ObservableAircraftState>)
@@ -79,6 +82,13 @@ public final class AircraftController {
                                 e.getId().equals(change.getElementRemoved().getIcaoAddress().string()));
                 });
     }
+
+    /**
+     * Adds a new aircraft to the display.
+     *
+     * @param aircraftState the state of the aircraft to be added
+     */
+
     private void annotatedAircraft(ObservableAircraftState aircraftState)
     {
         Group annotatedAircraftGroup = new Group(trajectory(aircraftState), iconLabel(aircraftState));
@@ -89,6 +99,14 @@ public final class AircraftController {
         annotatedAircraftGroup.viewOrderProperty().bind(aircraftState.altitudeProperty().negate());
         pane.getChildren().add(annotatedAircraftGroup);
     }
+
+    /**
+     * Creates a group of graphical elements representing the aircraft's label and icon.
+     *
+     * @param aircraftState the state of the aircraft to represent
+     * @return a group of graphical elements representing the aircraft
+     */
+
 
     private Group iconLabel(ObservableAircraftState aircraftState)
     {
@@ -104,6 +122,16 @@ public final class AircraftController {
 
         return iconLabelGroup;
     }
+
+    /**
+     * Creates a trajectory Group for a given ObservableAircraftState.
+     * The Group is positioned and made visible based on properties of the ObservableAircraftState
+     * and the map parameters. The trajectory is redrawn when any of these properties change.
+     *
+     * @param aircraftState the ObservableAircraftState to create a trajectory for
+     * @return a Group representing the aircraft's trajectory
+     */
+
     private Group trajectory(ObservableAircraftState aircraftState){
         Group trajectoryGroup = new Group();
         trajectoryGroup.getStyleClass().add("trajectory");
@@ -127,6 +155,14 @@ public final class AircraftController {
         });
         return trajectoryGroup;
     }
+
+    /**
+     * Redraws the trajectory of an aircraft within a specified Group.
+     * The trajectory is represented by a series of lines drawn between the current and previous positions of the aircraft.
+     *
+     * @param trajectory The observable list of positions for the aircraft
+     * @param trajectoryGroup The group in which the trajectory is drawn
+     */
 
     private void redrawTrajectory(ObservableList<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
         if (trajectory.size() < 2) return;
@@ -170,10 +206,28 @@ public final class AircraftController {
         trajectoryGroup.getChildren().addAll(lineList);
     }
 
+    /**
+     * Calculates a color value based on an aircraft's altitude.
+     * The color is determined by a mathematical formula involving the aircraft's altitude.
+     *
+     * @param altitude the altitude of the aircraft
+     * @return a double representing the color value
+     */
+
     private double calculateColor (double altitude)
     {
         return Math.pow(altitude/ MAX_ALTITUDE, POWER_FACTOR);
     }
+
+    /**
+     * Creates a label Group for a given ObservableAircraftState.
+     * The label contains information about the aircraft and is made visible based on the map's zoom level
+     * and whether the aircraft state matches the selected aircraft state.
+     *
+     * @param aircraftState the ObservableAircraftState to create a label for
+     * @return a Group representing the label
+     */
+
     private Group label(ObservableAircraftState aircraftState){
         Text txt = new Text();
         Rectangle rect = new Rectangle();
@@ -194,12 +248,28 @@ public final class AircraftController {
         return labelGroup;
     }
 
+    /**
+     * Formats information about an ObservableAircraftState into a StringExpression.
+     * The formatted string includes the aircraft identifier, speed in km/h, and altitude in meters.
+     *
+     * @param aircraftState the ObservableAircraftState to format information for
+     * @return a StringExpression containing the formatted information
+     */
+
     private StringExpression aircraftInfos(ObservableAircraftState aircraftState) {
         return Bindings.format("%s \n%s km/h\u2002%s m",
                 chooseIdentifier(aircraftState),
                 giveValueOf(aircraftState.velocityProperty(), Units.Speed.KILOMETER_PER_HOUR),
                 giveValueOf(aircraftState.altitudeProperty(), Units.Length.METER));
     }
+
+    /**
+     * Chooses an identifier for an ObservableAircraftState.
+     * The identifier is chosen based on the availability of a call sign, aircraft data, or ICAO address.
+     *
+     * @param aircraftState the ObservableAircraftState to choose an identifier for
+     * @return a String representing the chosen identifier
+     */
 
     private String chooseIdentifier(ObservableAircraftState aircraftState){
         CallSign callSign = aircraftState.getCallSign();
@@ -210,11 +280,28 @@ public final class AircraftController {
         else return icaoAddress.string();
     }
 
+    /**
+     * Returns a formatted string of a given numerical property and unit.
+     * If the property's current value is NaN, returns "?".
+     *
+     * @param numExpression the property to format
+     * @param unit the unit of the property
+     * @return a ObservableValue<String> containing the formatted property value
+     */
+
     private ObservableValue<String> giveValueOf(DoubleExpression numExpression, double unit){
         return numExpression.map(v ->
                 Double.isNaN(numExpression.doubleValue()) ? "?" :
                         "%.0f".formatted(Units.convertTo(numExpression.doubleValue(), unit)));
     }
+
+    /**
+     * Creates an SVGPath icon for a given ObservableAircraftState.
+     * The icon is positioned and styled based on properties of the ObservableAircraftState and the selected aircraft state.
+     *
+     * @param aircraftState the ObservableAircraftState to create an icon for
+     * @return an SVGPath representing the icon
+     */
 
     private SVGPath icon(ObservableAircraftState aircraftState){
         AircraftIcon icon = getIcon(aircraftState);
@@ -234,6 +321,16 @@ public final class AircraftController {
 
         return iconPath;
     }
+
+
+    /**
+     * Retrieves the appropriate AircraftIcon for a given ObservableAircraftState.
+     * The icon is determined based on aircraft data, such as type designator, description,
+     * wake turbulence category, and the category of the aircraft state.
+     *
+     * @param state the ObservableAircraftState to retrieve an icon for
+     * @return an AircraftIcon corresponding to the given aircraft state
+     */
 
     private AircraftIcon getIcon(ObservableAircraftState state)
     {

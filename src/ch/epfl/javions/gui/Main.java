@@ -129,7 +129,8 @@ public final class Main extends Application {
 
     /**
      * Reads all messages from a file and adds them to the message queue.
-     * @param fileName the name of the file to read.
+     * @param fileName the name of the file from which to read messages.
+     * @throws IOException if an input or output exception occurred
      */
     private void readAllMessages(String fileName) throws IOException{
         long startTime = System.nanoTime();
@@ -157,7 +158,8 @@ public final class Main extends Application {
     }
 
     /**
-     * Reads all messages from the standard input and adds them to the message queue.
+     * Reads all messages from the standard input (System.in) and adds them to the message queue.
+     * @throws IOException if an input or output exception occurred
      */
     private void readFromSystemIn() throws IOException {
         AdsbDemodulator demodulator = new AdsbDemodulator(System.in);

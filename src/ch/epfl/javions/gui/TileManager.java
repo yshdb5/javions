@@ -12,7 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Final TileManager class : represents an OSM tile manager.
+ * This class is a tile manager for OpenStreetMap (OSM).
+ * It handles the loading of tiles from the server or from a disk cache.
+ * It also uses an in-memory cache to reduce the latency of repeated requests.
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
@@ -49,10 +51,14 @@ public final class TileManager {
     }
 
     /**
-     * Takes as argument the identity of a tile and returns its image
-     * @param tileId the identity of a tile.
-     * @return the image of the tile's identity given.
-     * @throws IOException in case of input/output error.
+     * This method takes the identity of a tile and returns its image.
+     * First, it checks if the image is in the cache.
+     * If not, it checks if the image file exists on the disk.
+     * If it doesn't, it downloads the image from the server.
+     *
+     * @param tileId the identity of the tile.
+     * @return the image of the tile.
+     * @throws IOException if an I/O error occurs.
      */
     public Image imageForTileAt(TileId tileId) throws IOException {
         Path path = pathOf(tileId);
@@ -66,9 +72,17 @@ public final class TileManager {
         }
     }
 
+    /**
+     * This method constructs the path of a tile image file based on its identity.
+     *
+     * @param tileId the identity of the tile.
+     * @return the path of the tile image file.
+     */
+
     private Path pathOf(TileId tileId) {
         return cachePath.resolve(tileId.zoom + "/" + tileId.x + "/" + tileId.y + ".png");
     }
+
 
     private Image loadImageFromFile(TileId tileId, Path path) throws IOException {
         try (InputStream i = Files.newInputStream(path)) {
@@ -78,6 +92,15 @@ public final class TileManager {
         }
     }
 
+    /**
+     * This method loads a tile image from a file.
+     * It opens the file, reads the image, puts the image into the cache, and then returns it.
+     *
+     * @param tileId the identity of the tile.
+     * @param path the path of the tile image file.
+     * @return the image of the tile.
+     * @throws IOException if an I/O error occurs.
+     */
     private Image loadImageFromServer(TileId tileId, Path path) throws IOException {
         URL u = new URL("https://" + serverName + "/" + tileId.zoom + "/" + tileId.x + "/" + tileId.y + ".png");
         URLConnection c = u.openConnection();

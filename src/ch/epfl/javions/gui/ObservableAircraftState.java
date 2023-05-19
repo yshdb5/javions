@@ -266,6 +266,12 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         return unmodifiableTrajectory;
     }
 
+    /**
+     * This method is used to update the trajectory of the aircraft every time the position or altitude is changed.
+     * The method checks if the actual position and altitude are not null and if the timestamp of the last message is different than the last trajectory timestamp.
+     * If all the conditions are met, a new AirbornePos is added to the trajectory.
+     * Otherwise, the last position in the trajectory is replaced with the new one.
+     */
     private void updateTrajectory() {
         double actualAlt = getAltitude();
         GeoPos actualPos = getPosition();
