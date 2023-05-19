@@ -22,14 +22,10 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class Main extends Application {
     private static final int MIN_WIDTH = 800;
@@ -37,7 +33,7 @@ public final class Main extends Application {
     private static final int INITIAL_ZOOM = 8;
     private static final int X = 33_530;
     private static final int Y = 23_070;
-    private final ConcurrentLinkedQueue<RawMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
     public static void main(String[] args) {
         launch(args);
     }
@@ -120,13 +116,8 @@ public final class Main extends Application {
             public void handle(long now) {
                 try {
                     while (!messageQueue.isEmpty()){
-                        RawMessage rawMessage = messageQueue.poll();
-                        if (rawMessage == null) return;
-                        Message message = MessageParser.parse(rawMessage);
-                        if (message != null) {
-                            stateManager.updateWithMessage(message);
-                            messageCountProperty.set(messageCountProperty.get() + 1);
-                        }
+                        stateManager.updateWithMessage(messageQueue.poll());
+                        messageCountProperty.set(messageCountProperty.get() + 1);
                     }
                     if (now - lastPurge >= Duration.ofSeconds(1).toNanos()) stateManager.purge();
                 } catch (IOException e) {
@@ -142,21 +133,23 @@ public final class Main extends Application {
      */
     private void readAllMessages(String fileName) throws IOException{
         long startTime = System.nanoTime();
-        String f = Objects.requireNonNull(getClass().getResource(fileName)).getFile();
-        f = URLDecoder.decode(f, UTF_8);
 
         try (DataInputStream stream = new DataInputStream(
-                new BufferedInputStream(new FileInputStream(f)))){
-
+                new BufferedInputStream(new FileInputStream(fileName)))){
             byte[] bytes = new byte[RawMessage.LENGTH];
+
             while (stream.available() > 0) {
+
                 long timeStampNs = stream.readLong();
                 int bytesRead = stream.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
                 ByteString message = new ByteString(bytes);
+
                 long timeLapseMs = Duration.ofNanos((startTime + timeStampNs) - System.nanoTime()).toMillis();
                 if (timeLapseMs > 0) Thread.sleep(timeLapseMs);
-                messageQueue.add(new RawMessage(timeStampNs, message));
+
+                Message parsedMessage = MessageParser.parse(new RawMessage(timeStampNs, message));
+                if (parsedMessage != null) messageQueue.add(parsedMessage);
             }
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -169,7 +162,11 @@ public final class Main extends Application {
     private void readFromSystemIn() throws IOException {
         AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
         while (System.in.available() > 0) {
-            messageQueue.add(demodulator.nextMessage());
+            RawMessage rawMessage = demodulator.nextMessage();
+            if(rawMessage != null){
+                Message message = MessageParser.parse(rawMessage);
+                if(message != null) messageQueue.add(message);
+            }
         }
     }
 }
