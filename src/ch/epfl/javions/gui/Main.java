@@ -96,11 +96,9 @@ public final class Main extends Application {
             List<String> args = getParameters().getRaw();
             try {
                 if (args.isEmpty()) {
-                    AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
-                    while (System.in.available() > 0) {
-                        messageQueue.add(demodulator.nextMessage());
+                    readFromSystemIn();
                     }
-                } else {
+                else {
                     readAllMessages(args.get(0));
                 }
             } catch (IOException e) {
@@ -162,6 +160,16 @@ public final class Main extends Application {
             }
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Reads all messages from the standard input and adds them to the message queue.
+     */
+    private void readFromSystemIn() throws IOException {
+        AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
+        while (System.in.available() > 0) {
+            messageQueue.add(demodulator.nextMessage());
         }
     }
 }
