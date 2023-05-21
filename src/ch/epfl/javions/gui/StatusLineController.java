@@ -1,10 +1,7 @@
 package ch.epfl.javions.gui;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
