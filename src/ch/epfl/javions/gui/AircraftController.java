@@ -107,7 +107,6 @@ public final class AircraftController {
      * @return a group of graphical elements representing the aircraft
      */
 
-
     private Group iconLabel(ObservableAircraftState aircraftState)
     {
         Group iconLabelGroup = new Group(label(aircraftState), icon(aircraftState));
@@ -321,7 +320,6 @@ public final class AircraftController {
 
         return iconPath;
     }
-
 
     /**
      * Retrieves the appropriate AircraftIcon for a given ObservableAircraftState.
