@@ -83,7 +83,15 @@ public final class TileManager {
         return cachePath.resolve(tileId.zoom + "/" + tileId.x + "/" + tileId.y + ".png");
     }
 
-
+    /**
+     * This method loads a tile image from a file.
+     * It opens the file, reads the image, puts the image into the cache, and then returns it.
+     *
+     * @param tileId the identity of the tile.
+     * @param path the path of the tile image file.
+     * @return the image of the tile.
+     * @throws IOException if an I/O error occurs.
+     */
     private Image loadImageFromFile(TileId tileId, Path path) throws IOException {
         try (InputStream i = Files.newInputStream(path)) {
             Image image = new Image(i);
@@ -93,8 +101,9 @@ public final class TileManager {
     }
 
     /**
-     * This method loads a tile image from a file.
-     * It opens the file, reads the image, puts the image into the cache, and then returns it.
+     * This method loads a tile image from the server.
+     * It opens a connection to the server, reads the image,
+     * writes it to the disk cache, puts the image into the cache, and then returns it.
      *
      * @param tileId the identity of the tile.
      * @param path the path of the tile image file.

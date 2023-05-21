@@ -39,8 +39,8 @@ public final class MapParameters {
      */
 
     public void scroll(double deltaX, double deltaY) {
-        minX.set(minX.get() + deltaX);
-        minY.set(minY.get() + deltaY);
+        minX.set(getMinX()+ deltaX);
+        minY.set(getMinY() + deltaY);
     }
 
     /**
