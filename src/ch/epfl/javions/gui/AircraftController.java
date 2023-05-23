@@ -34,6 +34,8 @@ import java.util.List;
 public final class AircraftController {
     private static final int MAX_ALTITUDE = 12000;
     private static final double POWER_FACTOR = 1d / 3d;
+    private static final int MAX_VISIBLE_ZOOM = 11;
+    private static final int MIN_TRAJECTORIES = 2;
     private final MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
@@ -93,10 +95,9 @@ public final class AircraftController {
     {
         Group annotatedAircraftGroup = new Group(trajectory(aircraftState), iconLabel(aircraftState));
 
-        String id = aircraftState.getIcaoAddress().string();
-        annotatedAircraftGroup.setId(id);
-
+        annotatedAircraftGroup.setId( aircraftState.getIcaoAddress().string());
         annotatedAircraftGroup.viewOrderProperty().bind(aircraftState.altitudeProperty().negate());
+
         pane.getChildren().add(annotatedAircraftGroup);
     }
 
@@ -137,9 +138,9 @@ public final class AircraftController {
 
         trajectoryGroup.visibleProperty().bind(Bindings.equal(aircraftState, selectedAircraftStateProperty));
 
-        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinX(),
+        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() -> - mapParameters.getMinX(),
                 mapParameters.minXProperty()));
-        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinY(),
+        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> - mapParameters.getMinY(),
                 mapParameters.minYProperty()));
 
         trajectoryGroup.visibleProperty().addListener((object, oldVisible, newVisible) ->
@@ -164,7 +165,7 @@ public final class AircraftController {
      */
 
     private void redrawTrajectory(ObservableList<ObservableAircraftState.AirbornePos> trajectory, Group trajectoryGroup){
-        if (trajectory.size() < 2) return;
+        if (trajectory.size() < MIN_TRAJECTORIES) return;
         trajectoryGroup.getChildren().clear();
         List<Line> lineList = new ArrayList<>();
 
@@ -241,7 +242,7 @@ public final class AircraftController {
         Group labelGroup = new Group(rect, txt);
         labelGroup.getStyleClass().add("label");
 
-        labelGroup.visibleProperty().bind(Bindings.lessThanOrEqual(11, mapParameters.zoomProperty()).
+        labelGroup.visibleProperty().bind(Bindings.lessThanOrEqual(MAX_VISIBLE_ZOOM, mapParameters.zoomProperty()).
                 or(selectedAircraftStateProperty.isEqualTo(aircraftState)));
 
         return labelGroup;
