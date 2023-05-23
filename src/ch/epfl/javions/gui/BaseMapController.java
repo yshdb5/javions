@@ -79,15 +79,15 @@ public final class BaseMapController {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        int x0 = getTileIndex(mapParameters.getMinX());
-        int y0 = getTileIndex(mapParameters.getMinY());
-        int zoom = mapParameters.getZoom();
-
         double minX = mapParameters.getMinX();
         double minY = mapParameters.getMinY();
 
-        double maxX = getTileIndex(mapParameters.getMinX() + canvas.getWidth());
-        double maxY = getTileIndex(mapParameters.getMinY() + canvas.getHeight());
+        int x0 = getTileIndex(minX);
+        int y0 = getTileIndex(minY);
+        int zoom = mapParameters.getZoom();
+
+        double maxX = getTileIndex(minX + canvas.getWidth());
+        double maxY = getTileIndex(minY + canvas.getHeight());
 
         for(int x = x0; x <= maxX; x++) {
             for (int y = y0; y <= maxY; y++) {
