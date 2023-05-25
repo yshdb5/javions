@@ -45,9 +45,12 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     /** Contains the trajectory of the aircraft. */
     private final ObservableList<AirbornePos> trajectory;
 
-    /** An observable list not modifiable, of the positions in space that the aircraft has occupied since the first message received.*/
+    /**
+     * An observable list, unmodifiable,
+     *  of the positions in space that the aircraft has occupied since the first message received.
+     */
     private final ObservableList<AirbornePos> unmodifiableTrajectory;
-    private double lastTrajTimeStamp;
+    private double lastTrajectoryTimeStamp;
 
     /**
      * ObservableAircraftState constructor
@@ -66,25 +69,46 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         trackOrHeading = new SimpleDoubleProperty();
         trajectory = FXCollections.observableArrayList();
         unmodifiableTrajectory = FXCollections.unmodifiableObservableList(trajectory);
-        lastTrajTimeStamp = -1;
+        lastTrajectoryTimeStamp = -1;
     }
 
-    public ReadOnlyLongProperty lastMessageTimeStampNs() {
+    /**
+     * Read-only lastMessageTimeStamp access method.
+     * @return the timestamp in nanoseconds.
+     */
+    public ReadOnlyLongProperty lastMessageTimeStampProperty() {
         return lastMessageTimeStampNs;
     }
 
+
+    /**
+     * Read-only category access method.
+     * @return the category.
+     */
     public ReadOnlyIntegerProperty categoryProperty() {
         return category;
     }
 
+    /**
+     * Read-only callsign access method.
+     * @return the callsign.
+     */
     public ReadOnlyObjectProperty<CallSign> callSignProperty() {
         return callSign;
     }
 
+    /**
+     * Read-only position access method.
+     * @return the position.
+     */
     public ReadOnlyObjectProperty<GeoPos> positionProperty() {
         return position;
     }
 
+    /**
+     * Read-only trajectory access method.
+     * @return the trajectory.
+     */
     public ReadOnlyListProperty<AirbornePos> trajectoryProperty() {
         return (ReadOnlyListProperty) unmodifiableTrajectory;
     }
@@ -268,7 +292,8 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * This method is used to update the trajectory of the aircraft every time the position or altitude is changed.
-     * The method checks if the actual position and altitude are not null and if the timestamp of the last message is different than the last trajectory timestamp.
+     * The method checks if the actual position and altitude are not null and if the timestamp of the last message
+     * is different from the last trajectory timestamp.
      * If all the conditions are met, a new AirbornePos is added to the trajectory.
      * Otherwise, the last position in the trajectory is replaced with the new one.
      */
@@ -280,10 +305,10 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
         double lastTimeStamp = getLastMessageTimeStampNs();
 
-        if (trajectory.isEmpty() || lastTimeStamp != lastTrajTimeStamp)
+        if (trajectory.isEmpty() || lastTimeStamp != lastTrajectoryTimeStamp)
         {
             trajectory.add(new AirbornePos(actualPos, actualAlt));
-            lastTrajTimeStamp = lastTimeStamp;
+            lastTrajectoryTimeStamp = lastTimeStamp;
         }
         else {
             trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAlt));

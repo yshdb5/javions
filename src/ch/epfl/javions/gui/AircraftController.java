@@ -36,6 +36,7 @@ public final class AircraftController {
     private static final double POWER_FACTOR = 1d / 3d;
     private static final int MAX_VISIBLE_ZOOM = 11;
     private static final int MIN_TRAJECTORIES = 2;
+    private static final int OFFSET = 4;
     private final MapParameters mapParameters;
     private final ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList;
     private final ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty;
@@ -235,9 +236,9 @@ public final class AircraftController {
         txt.textProperty().bind(aircraftInfos(aircraftState));
 
         rect.widthProperty().bind(
-                txt.layoutBoundsProperty().map(b -> b.getWidth() + 4));
+                txt.layoutBoundsProperty().map(b -> b.getWidth() + OFFSET));
         rect.heightProperty().bind(
-                txt.layoutBoundsProperty().map(b -> b.getHeight() + 4));
+                txt.layoutBoundsProperty().map(b -> b.getHeight() + OFFSET));
 
         Group labelGroup = new Group(rect, txt);
         labelGroup.getStyleClass().add("label");
@@ -304,8 +305,7 @@ public final class AircraftController {
      */
 
     private SVGPath icon(ObservableAircraftState aircraftState){
-        AircraftIcon icon = getIcon(aircraftState);
-        ObjectProperty<AircraftIcon> iconProperty = new SimpleObjectProperty<>(icon);
+        ObjectProperty<AircraftIcon> iconProperty = new SimpleObjectProperty<>(getIcon(aircraftState));
 
         SVGPath iconPath = new SVGPath();
         iconPath.getStyleClass().add("aircraft");
@@ -318,6 +318,10 @@ public final class AircraftController {
                 ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
 
         iconPath.setOnMouseClicked(e -> selectedAircraftStateProperty.set(aircraftState));
+
+        //TODO: verifier comment mieux faire ca ici et dans le label
+        aircraftState.categoryProperty().addListener((observable, oldValue, newValue) ->
+            iconProperty.set(getIcon(aircraftState)));
 
         return iconPath;
     }
