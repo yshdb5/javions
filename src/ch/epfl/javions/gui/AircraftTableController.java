@@ -101,9 +101,10 @@ public final class AircraftTableController {
 
         selectedAircraftState.addListener((observable, oldValue, newValue) -> {
             if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem())) {
-                tableView.getSelectionModel().select(newValue);
                 tableView.scrollTo(newValue);
             }
+
+            tableView.getSelectionModel().select(newValue);
         });
 
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -158,11 +159,9 @@ public final class AircraftTableController {
                         f -> Bindings.createDoubleBinding(() -> f.getPosition().latitude(), f.positionProperty()),
                         MAX_FRACTION_DIGITS, Units.Angle.DEGREE),
                 createNumColumn("Altitude (m)",
-                        f -> DoubleExpression.doubleExpression(f.altitudeProperty()),
-                        MIN_FRACTION_DIGITS, Units.Length.METER),
+                        ObservableAircraftState::altitudeProperty, MIN_FRACTION_DIGITS, Units.Length.METER),
                 createNumColumn("Vitesse (km/h)",
-                        f -> DoubleExpression.doubleExpression(f.velocityProperty()),
-                        MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
+                        ObservableAircraftState::velocityProperty, MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
 
 
