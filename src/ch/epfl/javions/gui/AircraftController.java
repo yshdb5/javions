@@ -273,14 +273,13 @@ public final class AircraftController {
      */
 
     private ObservableValue<String> getIdentifier(ObservableAircraftState aircraftState){
-        CallSign callSign = aircraftState.getCallSign();
+        ReadOnlyObjectProperty<CallSign> callSign = aircraftState.callSignProperty();
         AircraftData data = aircraftState.getAircraftData();
         IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
-        return new SimpleStringProperty().map(v -> {
-            if (callSign != null) return callSign.string();
-            else if (data != null && data.registration() != null) return data.registration().string();
-            else return icaoAddress.string();
-        });
+        return new SimpleStringProperty().bind(
+                Bindings.when(data.and(data.registration()).isNotNull())).then(data.registration().string())
+                        .otherwise(Bindings.when(callSign.isNotNull()).then(callSign.get().string())
+                                .otherwise(icaoAddress.string()));
     }
 
     /**
