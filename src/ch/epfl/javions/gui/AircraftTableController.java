@@ -62,7 +62,6 @@ public final class AircraftTableController {
      * ObservableAircraftStates that represents the aircraft table in the pane.
      * @return TableView<ObservableAircraftState> instance.
      *
-     * @return the column.
      */
     public TableView<ObservableAircraftState> pane() {
         return tableView;

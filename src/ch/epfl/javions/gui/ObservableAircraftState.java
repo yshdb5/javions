@@ -80,7 +80,6 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         return lastMessageTimeStampNs;
     }
 
-
     /**
      * Read-only category access method.
      * @return the category.
@@ -103,14 +102,6 @@ public final class ObservableAircraftState implements AircraftStateSetter {
      */
     public ReadOnlyObjectProperty<GeoPos> positionProperty() {
         return position;
-    }
-
-    /**
-     * Read-only trajectory access method.
-     * @return the trajectory.
-     */
-    public ReadOnlyListProperty<AirbornePos> trajectoryProperty() {
-        return (ReadOnlyListProperty) unmodifiableTrajectory;
     }
 
     /**

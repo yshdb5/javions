@@ -1,6 +1,7 @@
 package ch.epfl.javions.gui;
 import ch.epfl.javions.adsb.CallSign;
 import ch.epfl.javions.aircraft.*;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.*;
@@ -144,14 +145,19 @@ public final class AircraftController {
         trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> - mapParameters.getMinY(),
                 mapParameters.minYProperty()));
 
+        InvalidationListener redrawTrajectoryListener = l -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup);
+
         trajectoryGroup.visibleProperty().addListener((object, oldVisible, newVisible) ->
         {
             if (newVisible)
             {
                 redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup);
-                mapParameters.zoomProperty().addListener(zoom -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
-                aircraftState.getTrajectory().addListener((ListChangeListener<ObservableAircraftState.AirbornePos>)
-                        change -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup));
+                mapParameters.zoomProperty().addListener(redrawTrajectoryListener);
+                aircraftState.getTrajectory().addListener(redrawTrajectoryListener);
+            } else {
+                trajectoryGroup.getChildren().clear();
+                mapParameters.zoomProperty().removeListener(redrawTrajectoryListener);
+                aircraftState.getTrajectory().removeListener(redrawTrajectoryListener);
             }
         });
         return trajectoryGroup;
