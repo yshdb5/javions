@@ -276,10 +276,9 @@ public final class AircraftController {
         ReadOnlyObjectProperty<CallSign> callSign = aircraftState.callSignProperty();
         AircraftData data = aircraftState.getAircraftData();
         IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
-        return new SimpleStringProperty().bind(
-                Bindings.when(data.and(data.registration()).isNotNull())).then(data.registration().string())
-                        .otherwise(Bindings.when(callSign.isNotNull()).then(callSign.get().string())
-                                .otherwise(icaoAddress.string()));
+        return (data != null) ? new SimpleStringProperty(data.registration().string()) :
+                Bindings.when(callSign.isNotNull()).then(Bindings.convert(callSign.map(CallSign::string)))
+                                .otherwise(icaoAddress.string());
     }
 
     /**
