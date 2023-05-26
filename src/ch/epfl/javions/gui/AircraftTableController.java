@@ -100,17 +100,14 @@ public final class AircraftTableController {
                 });
 
         selectedAircraftState.addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem())) {
+            if (newValue != null && !newValue.equals(tableView.getSelectionModel().getSelectedItem()))
                 tableView.scrollTo(newValue);
-            }
 
             tableView.getSelectionModel().select(newValue);
         });
 
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                selectedAircraftState.set(newValue);
-            }
+            if (newValue != null) selectedAircraftState.set(newValue);
         });
     }
 
@@ -163,7 +160,6 @@ public final class AircraftTableController {
                 createNumColumn("Vitesse (km/h)",
                         ObservableAircraftState::velocityProperty, MIN_FRACTION_DIGITS, Units.Speed.KILOMETER_PER_HOUR));
     }
-
 
     /**
      * Creates and returns a TableColumn instance for a numeric property

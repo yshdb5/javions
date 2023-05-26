@@ -341,11 +341,11 @@ public final class AircraftController {
     private AircraftIcon getIcon(ObservableAircraftState state)
     {
         AircraftData data = state.getAircraftData();
-        AircraftTypeDesignator typeDesignator = (data != null)?
+        AircraftTypeDesignator typeDesignator = (data != null) ?
                 data.typeDesignator() : new AircraftTypeDesignator("");
-        AircraftDescription aircraftDescription = (data != null)?
+        AircraftDescription aircraftDescription = (data != null) ?
                 data.description() : new AircraftDescription("");
-        WakeTurbulenceCategory wakeTurbulenceCategory = (data != null)?
+        WakeTurbulenceCategory wakeTurbulenceCategory = (data != null) ?
                 data.wakeTurbulenceCategory() : WakeTurbulenceCategory.of("");
 
         return AircraftIcon.iconFor(typeDesignator, aircraftDescription,
