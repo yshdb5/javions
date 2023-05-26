@@ -259,7 +259,7 @@ public final class AircraftController {
 
     private StringExpression aircraftInfos(ObservableAircraftState aircraftState) {
         return Bindings.format("%s \n%s km/h\u2002%s m",
-                chooseIdentifier(aircraftState),
+                getIdentifier(aircraftState),
                 giveValueOf(aircraftState.velocityProperty(), Units.Speed.KILOMETER_PER_HOUR),
                 giveValueOf(aircraftState.altitudeProperty(), Units.Length.METER));
     }
@@ -272,13 +272,15 @@ public final class AircraftController {
      * @return a String representing the chosen identifier
      */
 
-    private String chooseIdentifier(ObservableAircraftState aircraftState){
+    private ObservableValue<String> getIdentifier(ObservableAircraftState aircraftState){
         CallSign callSign = aircraftState.getCallSign();
         AircraftData data = aircraftState.getAircraftData();
         IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
-        if (callSign != null) return callSign.string();
-        else if (data != null && data.registration() != null) return data.registration().string();
-        else return icaoAddress.string();
+        return new SimpleStringProperty().map(v -> {
+            if (callSign != null) return callSign.string();
+            else if (data != null && data.registration() != null) return data.registration().string();
+            else return icaoAddress.string();
+        });
     }
 
     /**
@@ -305,23 +307,19 @@ public final class AircraftController {
      */
 
     private SVGPath icon(ObservableAircraftState aircraftState){
-        ObjectProperty<AircraftIcon> iconProperty = new SimpleObjectProperty<>(getIcon(aircraftState));
+        ObservableValue<AircraftIcon> iconProperty = aircraftState.categoryProperty().map(c -> getIcon(aircraftState));
 
         SVGPath iconPath = new SVGPath();
         iconPath.getStyleClass().add("aircraft");
 
         iconPath.contentProperty().bind(iconProperty.map(AircraftIcon::svgPath));
-        iconPath.rotateProperty().bind(Bindings.createDoubleBinding(() -> iconProperty.get().canRotate() ?
+        iconPath.rotateProperty().bind(Bindings.createDoubleBinding(() -> iconProperty.getValue().canRotate() ?
                 Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0,
                 iconProperty, aircraftState.trackOrHeadingProperty()));
         iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c ->
                 ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
 
         iconPath.setOnMouseClicked(e -> selectedAircraftStateProperty.set(aircraftState));
-
-        //TODO: verifier comment mieux faire ca ici et dans le label
-        aircraftState.categoryProperty().addListener((observable, oldValue, newValue) ->
-            iconProperty.set(getIcon(aircraftState)));
 
         return iconPath;
     }

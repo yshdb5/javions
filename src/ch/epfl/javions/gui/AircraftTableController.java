@@ -6,8 +6,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableObjectValue;
-import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
