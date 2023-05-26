@@ -277,7 +277,8 @@ public final class AircraftController {
         AircraftData data = aircraftState.getAircraftData();
         IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
         return (data != null) ? new SimpleStringProperty(data.registration().string()) :
-                Bindings.when(callSign.isNotNull()).then(Bindings.convert(callSign.map(CallSign::string)))
+                Bindings.when(callSign.isNotNull())
+                        .then(Bindings.convert(callSign.map(CallSign::string)))
                                 .otherwise(icaoAddress.string());
     }
 
