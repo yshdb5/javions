@@ -41,6 +41,11 @@ public final class Main extends Application {
     private static final int Y = 23_070;
     private final ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
 
+    /**
+     * This method simply calls the launch method with the command line arguments.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
