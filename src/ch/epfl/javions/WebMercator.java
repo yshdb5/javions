@@ -37,7 +37,7 @@ public final class WebMercator {
         return calculateCoordinate(-Math2.asinh(Math.tan(latitude)), zoomLevel);
     }
 
-    private static double calculateCoordinate(double value, int zoomLevel){
+    private static double calculateCoordinate(double value, int zoomLevel) {
         return Math.scalb(Units.convertTo(value, Units.Angle.TURN) + OFFSET, POWER + zoomLevel);
     }
 }

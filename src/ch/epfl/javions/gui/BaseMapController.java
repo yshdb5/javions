@@ -15,10 +15,10 @@ import java.io.IOException;
 
 /**
  * Final BaseMapController class : manages the display and interaction with the background map.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class BaseMapController {
     private static final int TILE_WIDTH = 256;
     private final TileManager tileManager;
@@ -29,7 +29,8 @@ public final class BaseMapController {
 
     /**
      * BaseMapController's constructor.
-     * @param tileManager the tile manager to be used to get the tiles from the map.
+     *
+     * @param tileManager   the tile manager to be used to get the tiles from the map.
      * @param mapParameters the parameters of the visible portion of the map.
      */
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
@@ -47,13 +48,13 @@ public final class BaseMapController {
     /**
      * @return the JavaFX panel displaying the background map
      */
-
     public Pane pane() {
         return pane;
     }
 
     /**
      * Moves the visible portion of the map so that it is centered at the position given.
+     *
      * @param pos a point on the surface of the Earth
      */
     public void centerOn(GeoPos pos) {
@@ -71,7 +72,6 @@ public final class BaseMapController {
      * range of the map. The tiles are fetched from the TileManager and drawn
      * onto the canvas.
      */
-
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
         redrawNeeded = false;
@@ -89,14 +89,14 @@ public final class BaseMapController {
         double maxX = getTileIndex(minX + canvas.getWidth());
         double maxY = getTileIndex(minY + canvas.getHeight());
 
-        for(int x = x0; x <= maxX; x++) {
+        for (int x = x0; x <= maxX; x++) {
             for (int y = y0; y <= maxY; y++) {
-                try{
-                    if(!TileManager.TileId.isValid(zoom, x, y)) continue;
+                try {
+                    if (!TileManager.TileId.isValid(zoom, x, y)) continue;
                     graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)),
-                            x*TILE_WIDTH - minX, y*TILE_WIDTH - minY);
+                            x * TILE_WIDTH - minX, y * TILE_WIDTH - minY);
+                } catch (IOException ignored) {
                 }
-                catch (IOException ignored) {}
             }
         }
     }
@@ -117,9 +117,7 @@ public final class BaseMapController {
      * The scrolling event handler allows zooming in and out of the map,
      * while the mouse dragging event handler allows the map to be panned.
      */
-
-    private void creatEventHandlers()
-    {
+    private void creatEventHandlers() {
         LongProperty minScrollTime = new SimpleLongProperty();
 
         pane.setOnScroll(e -> {
@@ -146,7 +144,7 @@ public final class BaseMapController {
             lastY.set(e.getY());
         });
         pane.setOnMouseDragged(e -> {
-            mapParameters.scroll(lastX.get() - e.getX(),lastY.get() - e.getY());
+            mapParameters.scroll(lastX.get() - e.getX(), lastY.get() - e.getY());
 
             lastX.set(e.getX());
             lastY.set(e.getY());
@@ -157,7 +155,6 @@ public final class BaseMapController {
      * Binds the dimensions of the canvas to those of the pane.
      * This ensures that the canvas always fits the pane when its size changes.
      */
-
     private void bindPaneToCanvas() {
         canvas.widthProperty().bind(pane.widthProperty());
         canvas.heightProperty().bind(pane.heightProperty());
@@ -168,7 +165,6 @@ public final class BaseMapController {
      * These listeners trigger a redraw of the map when any of the observed
      * properties changes.
      */
-
     private void addListeners() {
         canvas.sceneProperty().addListener((p, oldScene, newScene) -> {
             assert oldScene == null;
@@ -190,7 +186,6 @@ public final class BaseMapController {
      * @param pos the position.
      * @return the index of the tile containing the position.
      */
-
     private int getTileIndex(double pos) {
         return (int) Math.floor(pos / (TILE_WIDTH));
     }

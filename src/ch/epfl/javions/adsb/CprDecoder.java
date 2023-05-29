@@ -18,7 +18,8 @@ public final class CprDecoder {
     private static final double DELTA0 = (1.0) / Z0;
     private static final double DELTA1 = (1.0) / Z1;
 
-    private CprDecoder() {}
+    private CprDecoder() {
+    }
 
     /**
      * @param x0         global longitude of an even message
@@ -92,7 +93,7 @@ public final class CprDecoder {
                 recenterPosition(deltaLambda * (zoneLambda + x));
     }
 
-    private static GeoPos geoPosOf(double x, int zoneLambda, int zoneNumber, int latitudeT32, int zoneNumber00){
+    private static GeoPos geoPosOf(double x, int zoneLambda, int zoneNumber, int latitudeT32, int zoneNumber00) {
         int zoneL = (zoneLambda < 0) ? zoneLambda + zoneNumber : zoneLambda;
         double deltaLambda = calculateDeltaLambda(zoneNumber);
         double longitudeTurn = calculateLongitudeTurn(zoneNumber00, x, deltaLambda, zoneL);

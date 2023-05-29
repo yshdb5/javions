@@ -76,8 +76,7 @@ public final class PowerComputer {
         return evenSum * evenSum + oddSum * oddSum;
     }
 
-    private void incrementHead()
-    {
+    private void incrementHead() {
         head = (head + 1) % VALUES_IN_SAMPLE;
     }
 }

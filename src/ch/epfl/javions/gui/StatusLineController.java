@@ -1,17 +1,20 @@
 package ch.epfl.javions.gui;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 /**
- * final StatusLineController class : manages the status line.
+ * Final StatusLineController class : manages the status line.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-public final class StatusLineController
-{
+public final class StatusLineController {
     private BorderPane borderPane;
     private final IntegerProperty aircraftCountProperty;
     private final LongProperty messageCountProperty;
@@ -19,7 +22,7 @@ public final class StatusLineController
     /**
      * StatusLineController's default constructor.
      */
-    public StatusLineController(){
+    public StatusLineController() {
         aircraftCountProperty = new SimpleIntegerProperty();
         messageCountProperty = new SimpleLongProperty();
         createPane();
@@ -28,14 +31,14 @@ public final class StatusLineController
     /**
      * @return the pane of the status line.
      */
-    public BorderPane pane(){
+    public BorderPane pane() {
         return borderPane;
     }
 
     /**
      * @return the ( modifiable ) property containing the number of aircraft currently visible
      */
-    public IntegerProperty aircraftCountProperty(){
+    public IntegerProperty aircraftCountProperty() {
         return aircraftCountProperty;
     }
 
@@ -43,7 +46,7 @@ public final class StatusLineController
      * @return the (modifiable) property containing the number of messages
      * received since the beginning of the program execution.
      */
-    public LongProperty messageCountProperty(){
+    public LongProperty messageCountProperty() {
         return messageCountProperty;
     }
 
@@ -52,8 +55,7 @@ public final class StatusLineController
      * visible aircraft, and one for the number of received messages. These text objects
      * are bound to the respective properties, so they update automatically.
      */
-
-    private void createPane(){
+    private void createPane() {
         borderPane = new BorderPane();
         borderPane.getStylesheets().add("/status.css");
 

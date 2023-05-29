@@ -13,7 +13,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author Gabriel Taieb (360560)
  */
 
-
 public final class AircraftDatabase {
     private final static int CSV_ADDRESS_START = 4;
     private final static String SEPARATOR = ",";
@@ -26,7 +25,7 @@ public final class AircraftDatabase {
      * @throws NullPointerException if the file is null
      */
     public AircraftDatabase(String fileName) {
-        this.fileName = Objects.requireNonNull(fileName);;
+        this.fileName = Objects.requireNonNull(fileName);
     }
 
     /**

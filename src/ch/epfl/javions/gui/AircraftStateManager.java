@@ -15,6 +15,7 @@ import java.util.Map;
 /**
  * Final AircraftStateManager class : is intended to keep the states of a set
  * of aircraft up to date based on messages received from them.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
@@ -29,9 +30,9 @@ public final class AircraftStateManager {
 
     /**
      * AircraftStateManager's constructor.
+     *
      * @param database the database containing the fixed characteristics of aircraft.
      */
-
     public AircraftStateManager(AircraftDatabase database) {
         this.database = database;
         accumulatorMap = new HashMap<>();
@@ -43,7 +44,6 @@ public final class AircraftStateManager {
     /**
      * @return the observable, but not modifiable, set of observable states of the aircraft whose position is known.
      */
-
     public ObservableSet<ObservableAircraftState> states() {
         return unmodifiableStatesAccumulatorList;
     }
@@ -51,10 +51,10 @@ public final class AircraftStateManager {
 
     /**
      * Takes a message to update the state of the aircraft that sent it.
+     *
      * @param message the message we want to update the state of the aircraft
      * @throws IOException in case of input/output error.
      */
-
     public void updateWithMessage(Message message) throws IOException {
         IcaoAddress address = message.icaoAddress();
 
@@ -68,7 +68,6 @@ public final class AircraftStateManager {
 
         lastMessage = message;
     }
-
     /**
      * Removes from the set of observable states all those corresponding to aircraft
      * for which no message has been received in the minute preceding the reception
@@ -81,6 +80,10 @@ public final class AircraftStateManager {
                 shouldRemove(entry.getValue().stateSetter().getLastMessageTimeStampNs()));
     }
 
+    /**
+     * @param lastTimeStampNs the time stamp of the last message received
+     * @return true if the aircraft should be removed from the observable states and the accumulator map.
+     */
     private boolean shouldRemove(long lastTimeStampNs) {
         return (lastMessage.timeStampNs() - lastTimeStampNs) > MAX_TIME_INTERVAL_NS;
     }

@@ -9,6 +9,7 @@ package ch.epfl.javions;
 
 public record GeoPos(int longitudeT32, int latitudeT32) {
     private final static double LAT_T32_BOUND = Math.scalb(1d, 30);
+
     /**
      * Compact constructor of GeoPos
      * Checks if the latitude given is valid

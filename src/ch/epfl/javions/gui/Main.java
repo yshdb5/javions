@@ -27,6 +27,12 @@ import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * The main class of the application.
+ *
+ * @author Yshai  (356356)
+ * @author Gabriel Taieb (360560)
+ */
 public final class Main extends Application {
     private static final int MIN_WIDTH = 800;
     private static final int MIN_HEIGHT = 600;
@@ -34,6 +40,7 @@ public final class Main extends Application {
     private static final int X = 33_530;
     private static final int Y = 23_070;
     private final ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -42,11 +49,12 @@ public final class Main extends Application {
      * Starts the application by building the scene graph corresponding to the graphical interface,
      * starting the execution thread in charge of getting the messages, and starting the "animation timer"
      * in charge of updating the aircraft states according to the received messages.
+     *
      * @param primaryStage the primary stage for this application, onto which
-     * the application scene can be set.
-     * Applications may create other stages, if needed, but they will not be
-     * primary stages.
-     * @throws Exception if something goes wrong.
+     *                     the application scene can be set.
+     *                     Applications may create other stages, if needed, but they will not be
+     *                     primary stages.
+     * @throws Exception   if something goes wrong.
      * @throws IOException in case of input/output error.
      */
     @Override
@@ -77,7 +85,7 @@ public final class Main extends Application {
 
         StackPane stackPane = new StackPane(baseMap.pane(), aircraftController.pane());
         BorderPane borderPane = new BorderPane(
-                tableController.pane(), lineController.pane(), null, null,  null);
+                tableController.pane(), lineController.pane(), null, null, null);
 
         SplitPane splitPane = new SplitPane(stackPane, borderPane);
         splitPane.orientationProperty().set(Orientation.VERTICAL);
@@ -93,8 +101,7 @@ public final class Main extends Application {
             try {
                 if (args.isEmpty()) {
                     readFromSystemIn();
-                    }
-                else {
+                } else {
                     readAllMessages(args.get(0));
                 }
             } catch (IOException e) {
@@ -106,6 +113,7 @@ public final class Main extends Application {
 
         new AnimationTimer() {
             long lastPurge;
+
             /**
              * This method will be called once per frame.
              * @param now The timestamp of the current frame given in nanoseconds. This
@@ -115,7 +123,7 @@ public final class Main extends Application {
             @Override
             public void handle(long now) {
                 try {
-                    while (!messageQueue.isEmpty()){
+                    while (!messageQueue.isEmpty()) {
                         stateManager.updateWithMessage(messageQueue.poll());
                         messageCountProperty.set(messageCountProperty.get() + 1);
                     }
@@ -129,14 +137,15 @@ public final class Main extends Application {
 
     /**
      * Reads all messages from a file and adds them to the message queue.
+     *
      * @param fileName the name of the file from which to read messages.
      * @throws IOException if an input or output exception occurred
      */
-    private void readAllMessages(String fileName) throws IOException{
+    private void readAllMessages(String fileName) throws IOException {
         long startTime = System.nanoTime();
 
         try (DataInputStream stream = new DataInputStream(
-                new BufferedInputStream(new FileInputStream(fileName)))){
+                new BufferedInputStream(new FileInputStream(fileName)))) {
             byte[] bytes = new byte[RawMessage.LENGTH];
 
             while (stream.available() > 0) {
@@ -152,22 +161,23 @@ public final class Main extends Application {
                 Message parsedMessage = MessageParser.parse(new RawMessage(timeStampNs, message));
                 if (parsedMessage != null) messageQueue.add(parsedMessage);
             }
-        }catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Reads all messages from the standard input (System.in) and adds them to the message queue.
+     *
      * @throws IOException if an input or output exception occurred
      */
     private void readFromSystemIn() throws IOException {
         AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
         while (System.in.available() > 0) {
             RawMessage rawMessage = demodulator.nextMessage();
-            if(rawMessage != null){
+            if (rawMessage != null) {
                 Message message = MessageParser.parse(rawMessage);
-                if(message != null) messageQueue.add(message);
+                if (message != null) messageQueue.add(message);
             }
         }
     }

@@ -3,7 +3,9 @@ package ch.epfl.javions.gui;
 
 import javafx.scene.image.Image;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -15,17 +17,18 @@ import java.util.Map;
  * This class is a tile manager for OpenStreetMap (OSM).
  * It handles the loading of tiles from the server or from a disk cache.
  * It also uses an in-memory cache to reduce the latency of repeated requests.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class TileManager {
 
     /**
      * Final TileManager record : represents the identity of an OSM tile.
+     *
      * @param zoom the zoom level of the tile.
-     * @param x the X index of the tile.
-     * @param y the Y index of the tile.
+     * @param x    the X index of the tile.
+     * @param y    the Y index of the tile.
      */
     public record TileId(int zoom, int x, int y) {
         public static boolean isValid(int zoom, int x, int y) {
@@ -33,6 +36,7 @@ public final class TileManager {
             return (0 <= x && x < maxIndex) && (0 <= y && y < maxIndex);
         }
     }
+
     private final static int MAX_CAPACITY = 100;
     private final static float DEFAULT_LOAD_FACTOR = 0.75f;
     private final Path cachePath;
@@ -41,13 +45,15 @@ public final class TileManager {
 
     /**
      * TileManager's constructor.
-     * @param filePath the path to the folder containing the disk cache.
+     *
+     * @param filePath   the path to the folder containing the disk cache.
      * @param serverName the name of the tile server.
      */
     public TileManager(Path filePath, String serverName) {
         this.cachePath = filePath;
         this.serverName = serverName;
-        this.cacheMap = new LinkedHashMap<>(MAX_CAPACITY, DEFAULT_LOAD_FACTOR, true) {};
+        this.cacheMap = new LinkedHashMap<>(MAX_CAPACITY, DEFAULT_LOAD_FACTOR, true) {
+        };
     }
 
     /**
@@ -78,7 +84,6 @@ public final class TileManager {
      * @param tileId the identity of the tile.
      * @return the path of the tile image file.
      */
-
     private Path pathOf(TileId tileId) {
         return cachePath.resolve(tileId.zoom + "/" + tileId.x + "/" + tileId.y + ".png");
     }
@@ -88,7 +93,7 @@ public final class TileManager {
      * It opens the file, reads the image, puts the image into the cache, and then returns it.
      *
      * @param tileId the identity of the tile.
-     * @param path the path of the tile image file.
+     * @param path   the path of the tile image file.
      * @return the image of the tile.
      * @throws IOException if an I/O error occurs.
      */
@@ -106,7 +111,7 @@ public final class TileManager {
      * writes it to the disk cache, puts the image into the cache, and then returns it.
      *
      * @param tileId the identity of the tile.
-     * @param path the path of the tile image file.
+     * @param path   the path of the tile image file.
      * @return the image of the tile.
      * @throws IOException if an I/O error occurs.
      */

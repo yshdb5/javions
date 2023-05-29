@@ -28,8 +28,6 @@ public final class AdsbDemodulator {
     private static final byte[] message = new byte[RawMessage.LENGTH];
     private final PowerWindow powerWindow;
 
-
-
     /**
      * return a demodulator obtaining the bytes containing the samples of the stream passed in argument
      *
@@ -42,7 +40,6 @@ public final class AdsbDemodulator {
     }
 
     /**
-     *
      * @return the next ADS-B message in the sample stream passed to the constructor,
      * or null if the end of the sample stream has been reached
      * @throws IOException in case of an input/output error.

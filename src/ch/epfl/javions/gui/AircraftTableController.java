@@ -2,9 +2,11 @@ package ch.epfl.javions.gui;
 
 import ch.epfl.javions.Units;
 import ch.epfl.javions.adsb.CallSign;
+import ch.epfl.javions.aircraft.AircraftData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleExpression;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableSet;
@@ -23,10 +25,10 @@ import static javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY_SUBSEQUEN
 
 /**
  * Final class AircraftTableController : manage the aircraft table.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class AircraftTableController {
     private static final int NUM_COLUMN_WIDTH = 85;
     private static final int ICAO_COLUMN_WIDTH = 60;
@@ -60,8 +62,8 @@ public final class AircraftTableController {
      * Creates a column with a text value.
      * This method creates and returns the TableView instance containing
      * ObservableAircraftStates that represents the aircraft table in the pane.
-     * @return TableView<ObservableAircraftState> instance.
      *
+     * @return TableView<ObservableAircraftState> instance.
      */
     public TableView<ObservableAircraftState> pane() {
         return tableView;
@@ -115,7 +117,6 @@ public final class AircraftTableController {
      * Configures the TableView instance by setting its style, column resize policy,
      * visibility of table menu button, and adding table columns.
      */
-
     private void tableConfiguration() {
         tableView.getStylesheets().add("/table.css");
         tableView.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY_SUBSEQUENT_COLUMNS);
@@ -129,7 +130,6 @@ public final class AircraftTableController {
      *
      * @return List of TableColumn<ObservableAircraftState, String> instances.
      */
-
     private List<TableColumn<ObservableAircraftState, String>> columns() {
         return List.of(
                 createTextColumn("OACI", ICAO_COLUMN_WIDTH,
@@ -137,17 +137,13 @@ public final class AircraftTableController {
                 createTextColumn("Indicatif", CALLSIGN_COLUMN_WIDTH,
                         f -> (f.callSignProperty().map(CallSign::string))),
                 createTextColumn("Immatriculation", REGISTRATION_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
-                                f.getAircraftData().registration().string()))),
+                        f -> (new ReadOnlyObjectWrapper<>(f.getAircraftData()).map(d -> d.registration().string()))),
                 createTextColumn("Modele", MODEL_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
-                                f.getAircraftData().model()))),
+                        f -> (new ReadOnlyObjectWrapper<>(f.getAircraftData()).map(AircraftData::model))),
                 createTextColumn("Type", TYPE_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
-                                f.getAircraftData().typeDesignator().string()))),
+                        f -> (new ReadOnlyObjectWrapper<>(f.getAircraftData()).map(d -> d.typeDesignator().string()))),
                 createTextColumn("Description", DESCRIPTION_COLUMN_WIDTH,
-                        f -> (new ReadOnlyStringWrapper(f.getAircraftData() == null ? "" :
-                                f.getAircraftData().description().string()))),
+                        f -> (new ReadOnlyObjectWrapper<>(f.getAircraftData()).map(d -> d.description().string()))),
 
                 createNumColumn("Longitude (°)",
                         f -> Bindings.createDoubleBinding(() -> f.getPosition().longitude(), f.positionProperty()),
@@ -165,13 +161,12 @@ public final class AircraftTableController {
      * Creates and returns a TableColumn instance for a numeric property
      * of the ObservableAircraftState object.
      *
-     * @param name Name of the column.
-     * @param valueFactory Function to extract the numeric value from the ObservableAircraftState.
+     * @param name           Name of the column.
+     * @param valueFactory   Function to extract the numeric value from the ObservableAircraftState.
      * @param fractionDigits Number of digits after the decimal point to display.
-     * @param unit Unit of the numeric value.
+     * @param unit           Unit of the numeric value.
      * @return TableColumn<ObservableAircraftState, String> instance.
      */
-
     private TableColumn<ObservableAircraftState, String> createNumColumn(
             String name, Function<ObservableAircraftState, DoubleExpression> valueFactory, int fractionDigits,
             double unit) {
@@ -197,7 +192,6 @@ public final class AircraftTableController {
                 }
             }
         });
-
         return column;
     }
 
@@ -205,12 +199,11 @@ public final class AircraftTableController {
      * Creates and returns a TableColumn instance for a textual property
      * of the ObservableAircraftState object.
      *
-     * @param name Name of the column.
-     * @param width Preferred width of the column.
+     * @param name         Name of the column.
+     * @param width        Preferred width of the column.
      * @param valueFactory Function to extract the text value from the ObservableAircraftState.
      * @return TableColumn<ObservableAircraftState, String> instance.
      */
-
     private TableColumn<ObservableAircraftState, String> createTextColumn(
             String name, int width, Function<ObservableAircraftState, ObservableValue<String>> valueFactory) {
 
@@ -228,7 +221,6 @@ public final class AircraftTableController {
      * @param maxFractionDigits Maximum number of fraction digits.
      * @return NumberFormat instance.
      */
-
     private NumberFormat configureFormat(int maxFractionDigits) {
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(maxFractionDigits);

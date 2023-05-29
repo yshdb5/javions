@@ -10,51 +10,74 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
- * final class ObservableAircraftState : represents the state of an aircraft.
+ * Final class ObservableAircraftState : represents the state of an aircraft.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class ObservableAircraftState implements AircraftStateSetter {
 
+    /**
+     * Contains the ICAO address of the aircraft.
+     */
     private final IcaoAddress icaoAddress;
 
+    /**
+     * Contains the fixed characteristics of the aircraft.
+     */
     private final AircraftData aircraftData;
 
-    /** Contains the time stamp of the last message received from the aircraft, in nanoseconds.*/
+    /**
+     * Contains the time stamp of the last message received from the aircraft, in nanoseconds.
+     */
     private final LongProperty lastMessageTimeStampNs;
 
-    /** Contains the category of the aircraft.*/
+    /**
+     * Contains the category of the aircraft.
+     */
     private final IntegerProperty category;
 
-    /** Contains the call sign of the aircraft.*/
+    /**
+     * Contains the call sign of the aircraft.
+     */
     private final ObjectProperty<CallSign> callSign;
 
-    /** Contains the position of the aircraft on the surface of the Earth (longitude and latitude, in radians). */
+    /**
+     * Contains the position of the aircraft on the surface of the Earth (longitude and latitude, in radians).
+     */
     private final ObjectProperty<GeoPos> position;
 
-    /** Contains the altitude of the aircraft, in meters. */
+    /**
+     * Contains the altitude of the aircraft, in meters.
+     */
     private final DoubleProperty altitude;
 
-    /** Contains the speed of the aircraft, in meters per second. */
+    /**
+     * Contains the speed of the aircraft, in meters per second.
+     */
     private final DoubleProperty velocity;
 
-    /** Contains the track or heading of the aircraft, in radians.*/
+    /**
+     * Contains the track or heading of the aircraft, in radians.
+     */
     private final DoubleProperty trackOrHeading;
 
-    /** Contains the trajectory of the aircraft. */
+    /**
+     * Contains the trajectory of the aircraft.
+     */
     private final ObservableList<AirbornePos> trajectory;
 
     /**
      * An observable list, unmodifiable,
-     *  of the positions in space that the aircraft has occupied since the first message received.
+     * of the positions in space that the aircraft has occupied since the first message received.
      */
     private final ObservableList<AirbornePos> unmodifiableTrajectory;
     private double lastTrajectoryTimeStamp;
 
     /**
      * ObservableAircraftState constructor
-     * @param icaoAddress the ICAO address of the aircraft whose state is to be represented
+     *
+     * @param icaoAddress  the ICAO address of the aircraft whose state is to be represented
      * @param aircraftData the fixed characteristics of the aircraft
      */
     public ObservableAircraftState(IcaoAddress icaoAddress, AircraftData aircraftData) {
@@ -74,6 +97,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only lastMessageTimeStamp access method.
+     *
      * @return the timestamp in nanoseconds.
      */
     public ReadOnlyLongProperty lastMessageTimeStampProperty() {
@@ -82,6 +106,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only category access method.
+     *
      * @return the category.
      */
     public ReadOnlyIntegerProperty categoryProperty() {
@@ -90,6 +115,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only callsign access method.
+     *
      * @return the callsign.
      */
     public ReadOnlyObjectProperty<CallSign> callSignProperty() {
@@ -98,6 +124,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only position access method.
+     *
      * @return the position.
      */
     public ReadOnlyObjectProperty<GeoPos> positionProperty() {
@@ -106,6 +133,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only altitude access method.
+     *
      * @return the altitude.
      */
     public ReadOnlyDoubleProperty altitudeProperty() {
@@ -114,6 +142,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only velocity access method.
+     *
      * @return the velocity.
      */
     public ReadOnlyDoubleProperty velocityProperty() {
@@ -122,38 +151,43 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Read-only trackOrHeading access method.
+     *
      * @return the trackOrHeading.
      */
-
     public ReadOnlyDoubleProperty trackOrHeadingProperty() {
         return trackOrHeading;
     }
 
     /**
      * Method to access the value contained in the icao address.
+     *
      * @return the value of the icao address.
      */
-
-    public IcaoAddress getIcaoAddress() {return icaoAddress;}
+    public IcaoAddress getIcaoAddress() {
+        return icaoAddress;
+    }
 
     /**
      * Method to access the value contained in the aircraft data.
+     *
      * @return the value of the aircraft data.
      */
-
-    public AircraftData getAircraftData() {return aircraftData;}
+    public AircraftData getAircraftData() {
+        return aircraftData;
+    }
 
     /**
      * Method to access the value contained in the timestamp.
+     *
      * @return the value of the last message timestamp.
      */
-
     public long getLastMessageTimeStampNs() {
         return lastMessageTimeStampNs.get();
     }
 
     /**
      * Modify the value contained in the time stamp.
+     *
      * @param timeStampNs the new time stamp in nanoseconds.
      */
     @Override
@@ -163,6 +197,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's category.
+     *
      * @return the value of the aircraft's category.
      */
 
@@ -172,9 +207,9 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Modify the value contained in the category.
+     *
      * @param category the new category.
      */
-
     @Override
     public void setCategory(int category) {
         this.category.set(category);
@@ -182,13 +217,16 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's callsign.
+     *
      * @return the value of the aircraft's callsign.
      */
-
-    public CallSign getCallSign() {return callSign.get();}
+    public CallSign getCallSign() {
+        return callSign.get();
+    }
 
     /**
      * Modify the value contained in the callsign.
+     *
      * @param callSign the new aircraft designator value.
      */
     @Override
@@ -198,6 +236,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's position.
+     *
      * @return the value of the aircraft's position
      */
     public GeoPos getPosition() {
@@ -206,11 +245,12 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Modify the value contained in the position.
+     *
      * @param position the new position of the aircraft.
      */
     @Override
     public void setPosition(GeoPos position) {
-        if (position != null){
+        if (position != null) {
             this.position.set(position);
             updateTrajectory();
         }
@@ -218,15 +258,16 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's altitude.
+     *
      * @return the value of the aircraft's altitude.
      */
-
     public double getAltitude() {
         return altitude.get();
     }
 
     /**
      * Modify the value contained in the altitude.
+     *
      * @param altitude the new altitude of the aircraft.
      */
     @Override
@@ -237,15 +278,16 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's velocity.
+     *
      * @return the value of the aircraft's velocity.
      */
-
     public double getVelocity() {
         return velocity.get();
     }
 
     /**
      * Modify the value contained in the velocity.
+     *
      * @param velocity the new speed of the aircraft.
      */
     @Override
@@ -255,15 +297,16 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value contained in the aircraft's track or heading.
+     *
      * @return the value of the aircraft's track or heading.
      */
-
     public double getTrackOrHeading() {
         return trackOrHeading.get();
     }
 
     /**
      * Modify the value contained in the direction of the aircraft.
+     *
      * @param trackOrHeading the new direction of the aircraft.
      */
     @Override
@@ -274,9 +317,9 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
     /**
      * Method to access the value of the positions in space that the aircraft has occupied since the first message received.
+     *
      * @return the value the observable list of positions.
      */
-
     public ObservableList<AirbornePos> getTrajectory() {
         return unmodifiableTrajectory;
     }
@@ -296,20 +339,20 @@ public final class ObservableAircraftState implements AircraftStateSetter {
 
         double lastTimeStamp = getLastMessageTimeStampNs();
 
-        if (trajectory.isEmpty() || lastTimeStamp != lastTrajectoryTimeStamp)
-        {
+        if (trajectory.isEmpty() || lastTimeStamp != lastTrajectoryTimeStamp) {
             trajectory.add(new AirbornePos(actualPos, actualAlt));
             lastTrajectoryTimeStamp = lastTimeStamp;
-        }
-        else {
+        } else {
             trajectory.set(trajectory.size() - 1, new AirbornePos(actualPos, actualAlt));
         }
     }
 
     /**
      * Public record, AirbornePos, used to represent these positions in space.
+     *
      * @param pos
      * @param altitude
      */
-    public record AirbornePos(GeoPos pos, double altitude) {}
+    public record AirbornePos(GeoPos pos, double altitude) {
+    }
 }

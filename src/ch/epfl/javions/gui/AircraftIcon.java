@@ -10,12 +10,12 @@ import java.util.Map;
 import static ch.epfl.javions.aircraft.WakeTurbulenceCategory.HEAVY;
 
 /**
- * public AircraftIcon enumerate type : represents the different aircraft icons available.
+ * Public AircraftIcon enumerate type : represents the different aircraft icons available.
  * of aircraft up to date based on messages received from them.
+ *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public enum AircraftIcon {
     AIRLINER("""
             M 0.01 14.75 c -0.26 0 -0.74 -0.71 -0.86 -1.41 l -3.33 0.86 L -4.5
@@ -411,9 +411,10 @@ public enum AircraftIcon {
 
     /**
      * determine the icon to use for an aircraft
-     * @param typeDesignator the aircraft's designator.
-     * @param typeDescription the aircraft's description.
-     * @param category the aircraft's category.
+     *
+     * @param typeDesignator         the aircraft's designator.
+     * @param typeDescription        the aircraft's description.
+     * @param category               the aircraft's category.
      * @param wakeTurbulenceCategory teh aircraft's turbulence category.
      * @return the icon corresponding best to the aircraft whose characteristics are those give
      */
