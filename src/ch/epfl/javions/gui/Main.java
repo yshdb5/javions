@@ -124,6 +124,7 @@ public final class Main extends Application {
              * @param now The timestamp of the current frame given in nanoseconds. This
              *            value will be the same for all {@code AnimationTimers} called
              *            during one frame.
+             * @throws UncheckedIOException in case of input/output error.
              */
             @Override
             public void handle(long now) {
@@ -144,7 +145,7 @@ public final class Main extends Application {
      * Reads all messages from a file and adds them to the message queue.
      *
      * @param fileName the name of the file from which to read messages.
-     * @throws IOException if an input or output exception occurred
+     * @throws IOException if the thread is interrupted while sleeping.
      */
     private void readAllMessages(String fileName) throws IOException {
         long startTime = System.nanoTime();
@@ -161,13 +162,14 @@ public final class Main extends Application {
                 ByteString message = new ByteString(bytes);
 
                 long timeLapseMs = Duration.ofNanos((startTime + timeStampNs) - System.nanoTime()).toMillis();
-                if (timeLapseMs > 0) Thread.sleep(timeLapseMs);
+                if (timeLapseMs > 0)//noinspection BusyWait
+                    Thread.sleep(timeLapseMs);
 
                 Message parsedMessage = MessageParser.parse(new RawMessage(timeStampNs, message));
                 if (parsedMessage != null) messageQueue.add(parsedMessage);
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
     }
 
