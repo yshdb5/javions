@@ -3,10 +3,8 @@ package ch.epfl.javions.gui;
 import ch.epfl.javions.GeoPos;
 import ch.epfl.javions.WebMercator;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.*;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -36,9 +34,9 @@ public final class BaseMapController {
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
         this.tileManager = tileManager;
         this.mapParameters = mapParameters;
-        this.canvas = new Canvas();
+        canvas = new Canvas();
+        pane = new Pane(canvas);
         redrawNeeded = false;
-        this.pane = new Pane(canvas);
 
         bindPaneToCanvas();
         addListeners();
