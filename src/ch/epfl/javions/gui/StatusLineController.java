@@ -5,6 +5,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
@@ -36,7 +37,7 @@ public final class StatusLineController {
     }
 
     /**
-     * @return the ( modifiable ) property containing the number of aircraft currently visible
+     * @return the (modifiable) property containing the number of aircraft currently visible
      */
     public IntegerProperty aircraftCountProperty() {
         return aircraftCountProperty;
@@ -59,14 +60,22 @@ public final class StatusLineController {
         borderPane = new BorderPane();
         borderPane.getStylesheets().add("/status.css");
 
-        Text textL = new Text();
-        textL.textProperty().bind(Bindings.createStringBinding(() ->
-                "Aéronefs visibles : " + aircraftCountProperty.get(), aircraftCountProperty));
-        Text textR = new Text();
-        textR.textProperty().bind(Bindings.createStringBinding(() ->
-                "Messages reçus : " + messageCountProperty.get(), messageCountProperty));
+        borderPane.setLeft(configureText("Aéronefs visibles : ", aircraftCountProperty));
+        borderPane.setRight(configureText("Messages reçus : ", messageCountProperty));
+    }
 
-        borderPane.setLeft(textL);
-        borderPane.setRight(textR);
+    /**
+     * Creates a Text object with the given name and value, and binds the text property
+     * to the value property, so that the text is updated automatically.
+     *
+     * @param name  the name of the property
+     * @param value the value of the property
+     * @return the created Text object
+     */
+    private Text configureText(String name, ObservableValue<? extends Number> value)
+    {
+        Text text = new Text();
+        text.textProperty().bind(Bindings.createStringBinding(() -> name + value.getValue(), value));
+        return text;
     }
 }

@@ -32,7 +32,6 @@ public final class MapParameters {
         this.minY = new SimpleDoubleProperty(minY);
     }
 
-
     /**
      * Translates the top-left corner of the displayed map portion of this vector.
      *

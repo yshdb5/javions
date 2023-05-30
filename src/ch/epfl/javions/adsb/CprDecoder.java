@@ -63,35 +63,74 @@ public final class CprDecoder {
                 geoPosOf(x1, zoneLambda, zoneNumber1, latitude1T32, zoneNumber00);
     }
 
+    /**
+     * @param latitude_TURN latitude in TURN.
+     * @return the value of for this latitude.
+     */
     private static double aOf(double latitude_TURN) {
         double angle_rad = Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN)) * Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN));
         return 1 - ((1 - Math.cos(Units.Angle.TURN * DELTA0)) / (angle_rad));
     }
 
+    /**
+     * @param A the value of the "a" value.
+     * @return the zone number for this value of "a".
+     */
     private static int zoneNumberOf(double A) {
         if (Math.abs(A) > 1) return 1;
         else return (int) Math.floor(Units.Angle.TURN / Math.acos(A));
     }
 
+    /**
+     * @param latitudeOrLongitude_TURN latitude or longitude in TURN.
+     * @return the recentered value of latitude or longitude.
+     */
     private static double recenterPosition(double latitudeOrLongitude_TURN) {
         if (latitudeOrLongitude_TURN >= 0.5) return latitudeOrLongitude_TURN - 1;
         else return latitudeOrLongitude_TURN;
     }
 
+    /**
+     * @param latitudeOrLongitude_TURN latitude or longitude in TURN.
+     * @return the value of latitude or longitude in T32.
+     */
     private static int convertTurnToT32(double latitudeOrLongitude_TURN) {
         return (int) Math.rint(Units.convert(latitudeOrLongitude_TURN, Units.Angle.TURN, Units.Angle.T32));
     }
 
+    /**
+     * @param zoneNumber the zone number.
+     * @return the value of delta lambda for this zone number.
+     */
     private static double calculateDeltaLambda(int zoneNumber) {
         return ((double) 1) / zoneNumber;
     }
 
+    /**
+     * Calculates the value of the longitude in turn.
+     *
+     * @param zoneNumber0 the zone number of the most recent message.
+     * @param x           the global longitude of the most recent message.
+     * @param deltaLambda the value of delta lambda.
+     * @param zoneLambda  the zone lambda.
+     * @return the value of longitude turn.
+     */
     private static double calculateLongitudeTurn(int zoneNumber0, double x, double deltaLambda, int zoneLambda) {
         return (zoneNumber0 == 1) ?
                 recenterPosition(x) :
                 recenterPosition(deltaLambda * (zoneLambda + x));
     }
 
+    /**
+     * Calculates the geographical position corresponding to the given normalized local positions.
+     *
+     * @param x             the global longitude of the most recent message.
+     * @param zoneLambda    the zone lambda.
+     * @param zoneNumber    the zone number.
+     * @param latitudeT32   the latitude in T32.
+     * @param zoneNumber00  the zone number of the oldest message.
+     * @return the geographical position corresponding to the given normalized local positions.
+     */
     private static GeoPos geoPosOf(double x, int zoneLambda, int zoneNumber, int latitudeT32, int zoneNumber00) {
         int zoneL = (zoneLambda < 0) ? zoneLambda + zoneNumber : zoneLambda;
         double deltaLambda = calculateDeltaLambda(zoneNumber);

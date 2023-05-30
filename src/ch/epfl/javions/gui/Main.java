@@ -59,8 +59,8 @@ public final class Main extends Application {
      *                     the application scene can be set.
      *                     Applications may create other stages, if needed, but they will not be
      *                     primary stages.
-     * @throws Exception   if something goes wrong.
-     * @throws IOException in case of input/output error.
+     * @throws Exception            if something goes wrong.
+     * @throws UncheckedIOException in case of input/output error.
      */
     @Override
     public void start(Stage primaryStage) throws Exception {

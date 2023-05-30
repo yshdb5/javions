@@ -1,6 +1,5 @@
 package ch.epfl.javions.gui;
 
-
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
@@ -14,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * This class is a tile manager for OpenStreetMap (OSM).
+ * This class is a tile manager for the map from OpenStreetMap (OSM).
  * It handles the loading of tiles from the server or from a disk cache.
  * It also uses an in-memory cache to reduce the latency of repeated requests.
  *

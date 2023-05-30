@@ -72,6 +72,10 @@ public final class ObservableAircraftState implements AircraftStateSetter {
      * of the positions in space that the aircraft has occupied since the first message received.
      */
     private final ObservableList<AirbornePos> unmodifiableTrajectory;
+
+    /**
+     * Contains the time stamp of the last position in the trajectory, in nanoseconds.
+     */
     private double lastTrajectoryTimeStamp;
 
     /**

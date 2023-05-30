@@ -47,7 +47,6 @@ public final class ColorRamp {
         interval = ((double) 1) / (colorList.size() - 1);
     }
 
-
     /**
      * @param index the index of the colour.
      * @return the color corresponding to the index mixed with the colour of the next index.

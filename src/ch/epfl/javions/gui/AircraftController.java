@@ -49,8 +49,9 @@ public final class AircraftController {
     /**
      * AircraftController's constructor.
      *
-     * @param mapParameters                     the parameters of the portion of the map visible on the screen
-     * @param unmodifiableStatesAccumulatorList the set (observable but not modifiable) of aircraft states that must appear on the view
+     * @param mapParameters                     the parameters of the portion of the map visible on the screen.
+     * @param unmodifiableStatesAccumulatorList the set (observable but not modifiable) of aircraft states
+     *                                          that must appear on the view.
      * @param selectedAircraftStateProperty     a JavaFX property containing the state of the selected aircraft,
      *                                          whose content can be null when no aircraft is selected.
      */
@@ -138,12 +139,13 @@ public final class AircraftController {
 
         trajectoryGroup.visibleProperty().bind(Bindings.equal(aircraftState, selectedAircraftStateProperty));
 
-        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinX(),
+        trajectoryGroup.layoutXProperty().bind(Bindings.createDoubleBinding(() -> - mapParameters.getMinX(),
                 mapParameters.minXProperty()));
-        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> -mapParameters.getMinY(),
+        trajectoryGroup.layoutYProperty().bind(Bindings.createDoubleBinding(() -> - mapParameters.getMinY(),
                 mapParameters.minYProperty()));
 
-        InvalidationListener redrawTrajectoryListener = l -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup);
+        InvalidationListener redrawTrajectoryListener =
+                l -> redrawTrajectory(aircraftState.getTrajectory(), trajectoryGroup);
 
         trajectoryGroup.visibleProperty().addListener((object, oldVisible, newVisible) ->
         {

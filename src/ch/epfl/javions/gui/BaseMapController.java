@@ -71,6 +71,7 @@ public final class BaseMapController {
      * This method will clear the canvas and redraw tiles within the visible
      * range of the map. The tiles are fetched from the TileManager and drawn
      * onto the canvas.
+     *
      */
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
