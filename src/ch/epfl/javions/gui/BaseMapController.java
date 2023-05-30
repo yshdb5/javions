@@ -23,6 +23,7 @@ public final class BaseMapController {
     private final MapParameters mapParameters;
     private final Canvas canvas;
     private final Pane pane;
+    private Point2D lastMousePos;
     private boolean redrawNeeded;
 
     /**
@@ -37,6 +38,7 @@ public final class BaseMapController {
         canvas = new Canvas();
         pane = new Pane(canvas);
         redrawNeeded = false;
+        lastMousePos = null;
 
         bindPaneToCanvas();
         addListeners();
@@ -134,18 +136,12 @@ public final class BaseMapController {
             mapParameters.scroll(-x, -y);
         });
 
-        DoubleProperty lastX = new SimpleDoubleProperty();
-        DoubleProperty lastY = new SimpleDoubleProperty();
+        pane.setOnMousePressed(e -> lastMousePos = new Point2D(e.getX(), e.getY()));
 
-        pane.setOnMousePressed(e -> {
-            lastX.set(e.getX());
-            lastY.set(e.getY());
-        });
         pane.setOnMouseDragged(e -> {
-            mapParameters.scroll(lastX.get() - e.getX(), lastY.get() - e.getY());
+            mapParameters.scroll(lastMousePos.getX() - e.getX(), lastMousePos.getY() - e.getY());
 
-            lastX.set(e.getX());
-            lastY.set(e.getY());
+            lastMousePos = new Point2D(e.getX(), e.getY());
         });
     }
 
