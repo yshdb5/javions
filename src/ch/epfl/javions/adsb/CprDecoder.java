@@ -47,7 +47,6 @@ public final class CprDecoder {
         if ((mostRecent == 0) && !GeoPos.isValidLatitudeT32(latitude0T32)
                 || (mostRecent == 1) && !GeoPos.isValidLatitudeT32(latitude1T32)) return null;
 
-
         double a0 = aOf(latitude0Turn);
         double a1 = aOf(latitude1Turn);
 
