@@ -58,8 +58,8 @@ public final class AircraftStateManager {
     public void updateWithMessage(Message message) throws IOException {
         IcaoAddress address = message.icaoAddress();
 
-        accumulatorMap.putIfAbsent(address,
-                new AircraftStateAccumulator<>(new ObservableAircraftState(address, database.get(address))));
+        accumulatorMap.putIfAbsent(address, new AircraftStateAccumulator<>(
+                new ObservableAircraftState(address, database.get(address))));
         accumulatorMap.get(address).update(message);
 
         ObservableAircraftState aircraftState = accumulatorMap.get(address).stateSetter();
