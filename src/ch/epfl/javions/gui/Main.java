@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Supplier;
 
 /**
  * The main class of the application.
@@ -104,11 +105,8 @@ public final class Main extends Application {
         Thread thread = new Thread(() -> {
             List<String> args = getParameters().getRaw();
             try {
-                if (args.isEmpty()) {
-                    readFromSystemIn();
-                } else {
-                    readAllMessages(args.get(0));
-                }
+                if (args.isEmpty()) readFromSystemIn();
+                else readAllMessages(args.get(0));
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
@@ -155,7 +153,6 @@ public final class Main extends Application {
             byte[] bytes = new byte[RawMessage.LENGTH];
 
             while (stream.available() > 0) {
-
                 long timeStampNs = stream.readLong();
                 int bytesRead = stream.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
@@ -180,12 +177,17 @@ public final class Main extends Application {
      */
     private void readFromSystemIn() throws IOException {
         AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
-        while (System.in.available() > 0) {
-            RawMessage rawMessage = demodulator.nextMessage();
-            if (rawMessage != null) {
-                Message message = MessageParser.parse(rawMessage);
-                if (message != null) messageQueue.add(message);
+        try {
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                RawMessage rawMessage = demodulator.nextMessage();
+                if (rawMessage != null) {
+                    Message message = MessageParser.parse(rawMessage);
+                    if (message != null) messageQueue.add(message);
+                }
             }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 }
