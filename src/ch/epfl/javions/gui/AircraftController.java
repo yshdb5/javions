@@ -207,7 +207,6 @@ public final class AircraftController {
 
             lineList.add(line);
         }
-
         trajectoryGroup.getChildren().addAll(lineList);
     }
 

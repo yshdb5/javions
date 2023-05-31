@@ -1,5 +1,6 @@
 package ch.epfl.javions.gui;
 
+import ch.epfl.javions.Math2;
 import javafx.scene.image.Image;
 
 import java.io.ByteArrayInputStream;
@@ -51,8 +52,7 @@ public final class TileManager {
     public TileManager(Path filePath, String serverName) {
         this.cachePath = filePath;
         this.serverName = serverName;
-        this.cacheMap = new LinkedHashMap<>(MAX_CAPACITY, DEFAULT_LOAD_FACTOR, true) {
-        };
+        this.cacheMap = new LinkedHashMap<>(MAX_CAPACITY, DEFAULT_LOAD_FACTOR, true) {};
     }
 
     /**
