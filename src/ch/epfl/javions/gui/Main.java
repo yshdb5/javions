@@ -26,7 +26,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.Supplier;
 
 /**
  * The main class of the application.
@@ -60,8 +59,7 @@ public final class Main extends Application {
      *                     the application scene can be set.
      *                     Applications may create other stages, if needed, but they will not be
      *                     primary stages.
-     * @throws Exception            if something goes wrong.
-     * @throws UncheckedIOException in case of input/output error.
+     * @throws Exception   if the URL is not formatted correctly or in case of input/output error.
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -96,11 +94,7 @@ public final class Main extends Application {
         SplitPane splitPane = new SplitPane(stackPane, borderPane);
         splitPane.orientationProperty().set(Orientation.VERTICAL);
 
-        primaryStage.setTitle("Javions");
-        primaryStage.setMinWidth(MIN_WIDTH);
-        primaryStage.setMinHeight(MIN_HEIGHT);
-        primaryStage.setScene(new Scene(splitPane));
-        primaryStage.show();
+        setStage(primaryStage, splitPane);
 
         Thread thread = new Thread(() -> {
             List<String> args = getParameters().getRaw();
@@ -189,5 +183,20 @@ public final class Main extends Application {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    /**
+     * Configures and sets the given stage with the given split pane.
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     *                     the application scene can be set.
+     * @param splitPane    the split pane to set on the stage.
+     */
+    private void setStage(Stage primaryStage, SplitPane splitPane) {
+        primaryStage.setTitle("Javions");
+        primaryStage.setMinWidth(MIN_WIDTH);
+        primaryStage.setMinHeight(MIN_HEIGHT);
+        primaryStage.setScene(new Scene(splitPane));
+        primaryStage.show();
     }
 }
