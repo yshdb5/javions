@@ -137,7 +137,7 @@ public final class Main extends Application {
      * Reads all messages from a file and adds them to the message queue.
      *
      * @param fileName the name of the file from which to read messages.
-     * @throws IOException if the thread is interrupted while sleeping.
+     * @throws IOException in case of input/output error.
      */
     private void readAllMessages(String fileName) throws IOException {
         long startTime = System.nanoTime();
@@ -146,7 +146,8 @@ public final class Main extends Application {
                 new BufferedInputStream(new FileInputStream(fileName)))) {
             byte[] bytes = new byte[RawMessage.LENGTH];
 
-            while (stream.available() > 0) {
+            //noinspection InfiniteLoopStatement
+            while (true) {
                 long timeStampNs = stream.readLong();
                 int bytesRead = stream.readNBytes(bytes, 0, bytes.length);
                 assert bytesRead == RawMessage.LENGTH;
@@ -159,9 +160,8 @@ public final class Main extends Application {
                 Message parsedMessage = MessageParser.parse(new RawMessage(timeStampNs, message));
                 if (parsedMessage != null) messageQueue.add(parsedMessage);
             }
-        } catch (InterruptedException e) {
-            throw new IOException(e);
         }
+        catch (EOFException | InterruptedException ignored) {}
     }
 
     /**
@@ -171,7 +171,6 @@ public final class Main extends Application {
      */
     private void readFromSystemIn() throws IOException {
         AdsbDemodulator demodulator = new AdsbDemodulator(System.in);
-        try {
             //noinspection InfiniteLoopStatement
             while (true) {
                 RawMessage rawMessage = demodulator.nextMessage();
@@ -180,9 +179,6 @@ public final class Main extends Application {
                     if (message != null) messageQueue.add(message);
                 }
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
     /**
