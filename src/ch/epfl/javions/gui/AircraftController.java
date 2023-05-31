@@ -274,6 +274,7 @@ public final class AircraftController {
         ReadOnlyObjectProperty<CallSign> callSign = aircraftState.callSignProperty();
         AircraftData data = aircraftState.getAircraftData();
         IcaoAddress icaoAddress = aircraftState.getIcaoAddress();
+
         return (data != null) ? new SimpleStringProperty(data.registration().string()) :
                 Bindings.when(callSign.isNotNull())
                         .then(Bindings.convert(callSign.map(CallSign::string)))
@@ -308,9 +309,11 @@ public final class AircraftController {
         iconPath.getStyleClass().add("aircraft");
 
         iconPath.contentProperty().bind(iconProperty.map(AircraftIcon::svgPath));
+
         iconPath.rotateProperty().bind(Bindings.createDoubleBinding(() -> iconProperty.getValue().canRotate() ?
                         Units.convertTo(aircraftState.getTrackOrHeading(), Units.Angle.DEGREE) : 0,
                 iconProperty, aircraftState.trackOrHeadingProperty()));
+
         iconPath.fillProperty().bind(aircraftState.altitudeProperty().map(c ->
                 ColorRamp.PLASMA.at(calculateColor(c.doubleValue()))));
 
@@ -329,6 +332,7 @@ public final class AircraftController {
      */
     private AircraftIcon getIcon(ObservableAircraftState state) {
         AircraftData data = state.getAircraftData();
+
         AircraftTypeDesignator typeDesignator = (data != null) ?
                 data.typeDesignator() : new AircraftTypeDesignator("");
         AircraftDescription aircraftDescription = (data != null) ?
