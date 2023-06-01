@@ -8,7 +8,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 import java.util.Objects;
 
 /**
- * record AirbornePositionMessage : represents an ADS-B flight position message
+ * Record AirbornePositionMessage : represents an ADS-B flight position message.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

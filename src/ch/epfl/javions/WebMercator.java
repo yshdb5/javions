@@ -6,11 +6,9 @@ package ch.epfl.javions;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class WebMercator {
     private static final double OFFSET = 0.5;
     private static final int POWER = 8;
-
     private WebMercator() {
     }
 
@@ -32,11 +30,17 @@ public final class WebMercator {
      * @param latitude  given latitude (in radians)
      * @return the y coordinate that corresponds to the latitude on the zoom
      */
-
     public static double y(int zoomLevel, double latitude) {
         return calculateCoordinate(-Math2.asinh(Math.tan(latitude)), zoomLevel);
     }
 
+    /**
+     * static method that calculates the longitude thanks to the formula given
+     *
+     * @param value     value used to calculate the longitude or latitude.
+     * @param zoomLevel zoom level on the map
+     * @return the longitude that corresponds to the x coordinate on the zoom
+     */
     private static double calculateCoordinate(double value, int zoomLevel) {
         return Math.scalb(Units.convertTo(value, Units.Angle.TURN) + OFFSET, POWER + zoomLevel);
     }

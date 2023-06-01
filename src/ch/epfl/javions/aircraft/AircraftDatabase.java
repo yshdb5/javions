@@ -7,7 +7,7 @@ import java.util.zip.ZipFile;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * final class AircraftDatabase : represents the database of aircraft.
+ * Final class AircraftDatabase : represents the database of aircraft.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -19,7 +19,7 @@ public final class AircraftDatabase {
     private final String fileName;
 
     /**
-     * the constructor : checks that its argument is not null and stores it in an attribute of the class
+     * The constructor : checks that its argument is not null and stores it in an attribute of the class.
      *
      * @param fileName the file that contains the data
      * @throws NullPointerException if the file is null

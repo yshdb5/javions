@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * final class PowerComputer : represents an object able to calculate the power samples of the signal
- * from the signed samples produced by a sample decoder
+ * Final class PowerComputer : represents an object able to calculate the power samples of the signal
+ * from the signed samples produced by a sample decoder.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -23,7 +23,7 @@ public final class PowerComputer {
 
     /**
      * PowerComputer's constructor
-     * creates the array that contains the samples
+     * creates the array that contains the samples.
      *
      * @param stream    the stream
      * @param batchSize the batch size
@@ -37,8 +37,8 @@ public final class PowerComputer {
     }
 
     /**
-     * reads from the sample decoder the number of samples needed to calculate a batch
-     * of power sample and then computes them
+     * Reads from the sample decoder the number of samples needed to calculate a batch
+     * of power sample and then computes them.
      *
      * @param batch a batch of length 1 << 16
      * @return the number of power samples placed in the array
@@ -62,6 +62,11 @@ public final class PowerComputer {
         return count;
     }
 
+    /**
+     * Calculates the power of the last eight samples.
+     *
+     * @return the power of the last eight samples
+     */
     private int calculatedPower() {
         int evenSum = 0;
         int oddSum = 0;
@@ -76,6 +81,9 @@ public final class PowerComputer {
         return evenSum * evenSum + oddSum * oddSum;
     }
 
+    /**
+     * Increments the head of the array.
+     */
     private void incrementHead() {
         head = (head + 1) % VALUES_IN_SAMPLE;
     }

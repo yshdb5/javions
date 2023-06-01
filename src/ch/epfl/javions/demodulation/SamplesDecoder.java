@@ -7,7 +7,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 /**
- * final class SampleDecoder: represents an object capable of transforming the bytes coming from
+ * Final class SampleDecoder: represents an object capable of transforming the bytes coming from the
  * AirSpy into signed 12-bit samples .
  *
  * @author Yshai  (356356)
@@ -20,15 +20,14 @@ public final class SamplesDecoder {
     private final int batchSize;
 
     /**
-     * returns a sample decoder using the given input stream to get the bytes from
-     * the Airspy radio and producing the samples in batches of given size
+     * Returns a sample decoder using the given input stream to get the bytes from
+     * the AirSpy radio and producing the samples in batches of given size.
      *
      * @param stream    the given input stream
      * @param batchSize the number of samples to be produced during each conversion
      * @throws IllegalArgumentException if bachSize <=0
      * @throws NullPointerException     if the stream is null
      */
-
     public SamplesDecoder(InputStream stream, int batchSize) {
         Preconditions.checkArgument(batchSize > 0);
         Objects.requireNonNull(stream);
@@ -40,8 +39,8 @@ public final class SamplesDecoder {
     }
 
     /**
-     * reads from the stream passed to the constructor the number of bytes corresponding to a batch,
-     * then converts these bytes into signed samples
+     * Reads from the stream passed to the constructor the number of bytes corresponding to a batch,
+     * then converts these bytes into signed samples.
      *
      * @param batch the batch we want to read
      * @return the number of converted samples

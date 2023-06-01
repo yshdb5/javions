@@ -3,7 +3,7 @@ package ch.epfl.javions;
 import java.util.Objects;
 
 /**
- * class Bits : contains methods to extract a subset of the 64 bits of a long type value
+ * Class Bits : contains methods to extract a subset of the 64 bits of a long type value.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -14,9 +14,9 @@ public final class Bits {
     }
 
     /**
-     * extracts UInt
-     * extracts from the 64-bit value vector the size-bit range
-     * starting at the start index bit which it interprets as an unsigned value
+     * Extracts UInt
+     * Extracts from the 64-bit value vector the size-bit range
+     * starting at the start index bit which it interprets as an unsigned value.
      *
      * @param value the 64 - bit value
      * @param start the start index
@@ -34,7 +34,7 @@ public final class Bits {
     }
 
     /**
-     * tests if the bit value is 1 on a long.
+     * Tests if the bit value is 1 on a long.
      *
      * @param value the long value we want to test
      * @param index the index we want to test

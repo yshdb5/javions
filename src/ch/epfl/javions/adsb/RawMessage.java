@@ -9,7 +9,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 import java.util.HexFormat;
 
 /**
- * record RawMessage : represents an ADS-B message whose ME attribute has not yet been analyzed
+ * Record RawMessage : represents an ADS-B message whose ME attribute has not yet been analyzed.
  *
  * @param timeStampNs the time stamp of the message, expressed in nanoseconds
  *                    from the time of the very first calculated power sample,
@@ -23,7 +23,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * LENGTH : constant of value 14
      */
     public static final int LENGTH = 14;
-    public static final int DF_INDEX = 0;
+    private static final int DF_INDEX = 0;
     private static final int PAYLOAD_START = 4;
     private static final int PAYLOAD_LENGTH = 10;
     private static final int EXPECTED_DF = 17;
@@ -59,7 +59,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     }
 
     /**
-     * @param byte0
+     * @param byte0 the first byte of a message
      * @return the size of a message whose first byte is the given
      */
     public static int size(byte byte0) {
@@ -69,7 +69,7 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
     }
 
     /**
-     * @param payload
+     * @param payload the ME attribute of a message
      * @return the type code of the ME attribute passed as an argument.
      */
 

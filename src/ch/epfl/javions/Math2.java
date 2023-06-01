@@ -1,7 +1,7 @@
 package ch.epfl.javions;
 
 /**
- * class Math2 : define computing functions.
+ * Class Math2 : define computing functions.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -13,7 +13,7 @@ public final class Math2 {
     }
 
     /**
-     * limits the v - value to the interval from min to max
+     * Limits the v - value to the interval from min to max.
      *
      * @param min lower range
      * @param v   v-value
@@ -28,7 +28,7 @@ public final class Math2 {
     }
 
     /**
-     * Allows you to calculate the reciprocal hyperbolic sine
+     * Allows you to calculate the reciprocal hyperbolic sin.
      *
      * @param x x is a real value
      * @return applies the reciprocal hyperbolic sine formula to x

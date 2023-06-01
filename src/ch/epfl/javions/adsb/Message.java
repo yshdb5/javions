@@ -4,7 +4,7 @@ package ch.epfl.javions.adsb;
 import ch.epfl.javions.aircraft.IcaoAddress;
 
 /**
- * interface Message : implemented by all classes representing " analysed " ADS-B messages
+ * Interface Message : implemented by all classes representing " analysed " ADS-B messages.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

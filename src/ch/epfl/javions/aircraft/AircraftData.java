@@ -3,7 +3,13 @@ package ch.epfl.javions.aircraft;
 import java.util.Objects;
 
 /**
- * record AircraftData : collects fix data of an aircraft
+ * Record AircraftData : collects fix data of an aircraft.
+ *
+ * @param registration           the aircraft registration.
+ * @param typeDesignator         the aircraft type designator.
+ * @param model                  the aircraft model.
+ * @param description            the aircraft description.
+ * @param wakeTurbulenceCategory the wake turbulence category of the aircraft.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -11,14 +17,9 @@ import java.util.Objects;
 public record AircraftData(AircraftRegistration registration, AircraftTypeDesignator typeDesignator, String model,
                            AircraftDescription description, WakeTurbulenceCategory wakeTurbulenceCategory) {
     /**
-     * throws an exception if one of the arguments is Null using requireNonNull
+     * Throws an exception if one of the arguments is Null using requireNonNull
      *
-     * @param registration           the aircraft registration
-     * @param typeDesignator         the aircraft type Designator
-     * @param model                  the aircraft model
-     * @param description            the aircraft description
-     * @param wakeTurbulenceCategory the turbulence category of the aircraft
-     * @throws NullPointerException checks that the parameters are not null
+     * @throws NullPointerException  if one of the parameters are null.
      */
     public AircraftData {
         Objects.requireNonNull(registration);

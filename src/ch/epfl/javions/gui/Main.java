@@ -39,6 +39,7 @@ public final class Main extends Application {
     private static final int INITIAL_ZOOM = 8;
     private static final int X = 33_530;
     private static final int Y = 23_070;
+    private static final long PURGE_PERIOD = Duration.ofSeconds(1).toNanos();
     private final ConcurrentLinkedQueue<Message> messageQueue = new ConcurrentLinkedQueue<>();
 
     /**
@@ -125,7 +126,10 @@ public final class Main extends Application {
                         stateManager.updateWithMessage(messageQueue.poll());
                         messageCountProperty.set(messageCountProperty.get() + 1);
                     }
-                    if (now - lastPurge >= Duration.ofSeconds(1).toNanos()) stateManager.purge();
+                    if (now - lastPurge >= PURGE_PERIOD) {
+                        stateManager.purge();
+                        lastPurge = now;
+                    }
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }

@@ -7,7 +7,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 import java.util.Objects;
 
 /**
- * record AircraftIdentificationMessage : represents an ADS-B message of identification and category
+ * Record AircraftIdentificationMessage : represents an ADS-B message of identification and category.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

@@ -7,8 +7,8 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * class AircraftStateAccumulator : represents an object accumulating ADS-B messages from a single aircraft
- * to determine its status over time
+ * Class AircraftStateAccumulator : represents an object accumulating ADS-B messages from a single aircraft
+ * to determine its status over time.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -21,8 +21,8 @@ public final class AircraftStateAccumulator<T extends AircraftStateSetter> {
     private AirbornePositionMessage lastOddMessage;
 
     /**
-     * AircraftStateAccumulator's constructor
-     * returns an aircraft state accumulator associated with the given modifiable state
+     * AircraftStateAccumulator's constructor.
+     * Returns an aircraft state accumulator associated with the given modifiable state.
      *
      * @param stateSetter a modifiable state
      * @throws NullPointerException if the modifiable state is null
@@ -42,7 +42,7 @@ public final class AircraftStateAccumulator<T extends AircraftStateSetter> {
     }
 
     /**
-     * updates the modifiable state according to the given message
+     * Updates the modifiable state according to the given message.
      *
      * @param message that allows to modify the aircraft state
      */

@@ -1,7 +1,7 @@
 package ch.epfl.javions;
 
 /**
- * final class Crc24.
+ * Final class Crc24.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -42,6 +42,13 @@ public final class Crc24 {
         return crc;
     }
 
+    /**
+     * Uses the bitwise method to calculate a CRC24
+     *
+     * @param generator the generator used to calculate a CRC24
+     * @param bytes     the bytes use to calculate the crc24
+     * @return the CRC24 of the given bytes array
+     */
     private static int crc_bitwise(int generator, byte[] bytes) {
         int[] tab = {0, generator};
         int crc = 0;
@@ -62,6 +69,12 @@ public final class Crc24 {
         return crc;
     }
 
+    /**
+     * Builds the table used to calculate a CRC24
+     *
+     * @param generator the generator used to calculate the CRC24
+     * @return the table used to calculate the CRC24
+     */
     private static int[] buildTable(int generator) {
         int[] table = new int[TABLE_SIZE];
 

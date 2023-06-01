@@ -8,7 +8,7 @@ import ch.epfl.javions.aircraft.IcaoAddress;
 import java.util.Objects;
 
 /**
- * record AirborneVelocityMessage : represents a speed message in flight of the type
+ * Record AirborneVelocityMessage : represents a speed message in flight of the type.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -36,7 +36,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
 
     /**
-     * AirborneVelocityMessage's constructor
+     * AirborneVelocityMessage's constructor.
      *
      * @param timeStampNs    the time stamp of the message, in nanoseconds
      * @param icaoAddress    the ICAO address of the sender of the message

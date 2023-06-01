@@ -1,7 +1,7 @@
 package ch.epfl.javions;
 
 /**
- * class Units : define the different units used.
+ * Class Units : define the different units used.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -9,7 +9,7 @@ package ch.epfl.javions;
 
 public final class Units {
     /**
-     * constants that define the IS prefixes
+     * Constants that define the IS prefixes
      */
     public static final double CENTI = 1e-2;
     public static final double KILO = 1e3;
@@ -18,7 +18,7 @@ public final class Units {
     }
 
     /**
-     * converts the given value, expressed in the unit FromUnit, into the unit toUnit
+     * Converts the given value, expressed in the unit FromUnit, into the unit toUnit.
      *
      * @param value    the value
      * @param fromUnit the starting unit
@@ -30,19 +30,18 @@ public final class Units {
     }
 
     /**
-     * same thing as to convert when toUnit is the base unit.
+     * Same thing as to convert when toUnit is the base unit.
      *
      * @param value    the value
      * @param fromUnit the starting unit
      * @return the value in the toUnit unit
      */
-
     public static double convertFrom(double value, double fromUnit) {
         return (value * fromUnit);
     }
 
     /**
-     * same thing as to convert when fromUnit is the base unit.
+     * Same thing as to convert when fromUnit is the base unit.
      *
      * @param value the value
      * @return the value in the toUnit unit
@@ -52,7 +51,7 @@ public final class Units {
     }
 
     /**
-     * class Angle : angle units
+     * Class Angle : angle units.
      *
      * @author Yshai  (356356)
      * @author Gabriel Taieb (360560)
@@ -67,12 +66,11 @@ public final class Units {
         public static final double DEGREE = TURN / 360;
         public static final double T32 = TURN / Math.scalb(1, 32);
 
-        private Angle() {
-        }
+        private Angle() {}
     }
 
     /**
-     * class Length : length units
+     * Class Length : length units.
      *
      * @author Yshai  (356356)
      * @author Gabriel Taieb (360560)
@@ -82,7 +80,6 @@ public final class Units {
          * series of attributes (constants) defining the units of length
          * the base unit is the meter (of value 1), the other units are defined in relation to this unit
          */
-
         public static final double METER = 1;
         public static final double CENTIMETER = CENTI * METER;
         public static final double INCH = 2.54 * CENTIMETER;
@@ -94,12 +91,17 @@ public final class Units {
         }
     }
 
+    /**
+     * Class Time : time units.
+     *
+     * @author Yshai  (356356)
+     * @author Gabriel Taieb (360560)
+     */
     public static class Time {
         /**
          * series of attributes (constants) defining the units of time
          * the base unit is the second (of value 1), the other units are defined in relation to this unit
          */
-
         public static final double SECOND = 1;
         public static final double MINUTE = 60 * SECOND;
         public static final double HOUR = 60 * MINUTE;
@@ -108,6 +110,12 @@ public final class Units {
         }
     }
 
+    /**
+     * Class Length : speed units.
+     *
+     * @author Yshai  (356356)
+     * @author Gabriel Taieb (360560)
+     */
     public static class Speed {
         /**
          * attributes (constants) defining the units of speed

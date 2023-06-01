@@ -7,13 +7,12 @@ import java.io.InputStream;
 import java.util.Objects;
 
 /**
- * final class PowerWindow : represents a window of fixed size over a sequence of power samples
- * produced by a power computer
+ * Final class PowerWindow : represents a window of fixed size over a sequence of power samples
+ * produced by a power computer.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class PowerWindow {
     private final static int BATCH_SIZE = 1 << 16;
     private final int windowSize;
@@ -26,14 +25,13 @@ public final class PowerWindow {
 
     /**
      * PowerWindow's constructor, returns a window of given size on the sequence of power samples
-     * computed from the bytes provided by the given input stream
+     * computed from the bytes provided by the given input stream.
      *
      * @param stream     the input stream use to compute the power samples
      * @param windowSize the size of the window
      * @throws IOException              if there is an input/output error
      * @throws IllegalArgumentException if the window's size isn't between O (excluded) and 2 power 16 (included)
      */
-
     public PowerWindow(InputStream stream, int windowSize) throws IOException {
         Preconditions.checkArgument((windowSize > 0) && (windowSize <= BATCH_SIZE));
 
@@ -82,7 +80,7 @@ public final class PowerWindow {
     }
 
     /**
-     * advances the window of a sample
+     * Advances the window of a sample.
      *
      * @throws IOException in case of input/output error
      */
@@ -101,7 +99,7 @@ public final class PowerWindow {
     }
 
     /**
-     * advances the window by the given number of samples
+     * Advances the window by the given number of samples.
      *
      * @param offset the given number of samples
      * @throws IOException              in case of output/input error

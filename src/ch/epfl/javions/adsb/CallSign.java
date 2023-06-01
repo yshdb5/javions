@@ -5,17 +5,22 @@ import ch.epfl.javions.Preconditions;
 import java.util.regex.Pattern;
 
 /**
- * record CallSign : represents the call sign od an aircraft
+ * Record CallSign : represents the call sign od an aircraft
+ *
+ * @param string : the call sign of the aircraft.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
 public record CallSign(String string) {
+    /**
+     * Pattern of a call sign.
+     */
     private static final Pattern callSignPattern = Pattern.compile("[A-Z0-9 ]{0,8}");
 
     /**
-     * compact constructor : valids the string given in argument, checks if it corresponds to a call sign pattern
-     * the string can be empty
+     * Compact constructor : validates the string given in argument, checks if it corresponds to a call sign pattern
+     * the string can be empty.
      *
      * @throws IllegalArgumentException if it doesn't correspond to a call sign pattern
      */

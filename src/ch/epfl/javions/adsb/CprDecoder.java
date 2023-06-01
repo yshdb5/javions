@@ -5,8 +5,8 @@ import ch.epfl.javions.Preconditions;
 import ch.epfl.javions.Units;
 
 /**
- * class CprDecoder : contains methods to extract a subset of the 64 bits of a long type value
- * represents a CPR position decoder
+ * Class CprDecoder : contains methods to extract a subset of the 64 bits of a long type value
+ * represents a CPR position decoder.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)

@@ -6,9 +6,7 @@ import java.util.HexFormat;
 import java.util.Objects;
 
 /**
- * class ByteString: represents a sequence of byte.
- * immutable class
- * unsigned bytes
+ * Class ByteString: represents a sequence of byte.
  *
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
@@ -21,7 +19,7 @@ public final class ByteString {
 
     /**
      * Constructor of ByteString, returns a string of bytes whose content is the one
-     * of the array passed as argument
+     * of the array passed as argument.
      * clones bytes (immutable)
      *
      * @param bytes the bytes we want to clone
@@ -32,7 +30,7 @@ public final class ByteString {
 
 
     /**
-     * ByteString of a Hexadecimal String
+     * ByteString of a Hexadecimal String.
      *
      * @param hexString the hexadecimal representation of the string
      * @return the byte string of which the string passed as argument is the hexadecimal representation
@@ -46,7 +44,7 @@ public final class ByteString {
     }
 
     /**
-     * size of the sequence
+     * Size of the sequence.
      *
      * @return the number of byte the string contains
      */
