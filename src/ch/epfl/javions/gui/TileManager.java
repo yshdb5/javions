@@ -21,21 +21,6 @@ import java.util.Map;
  * @author Gabriel Taieb (360560)
  */
 public final class TileManager {
-
-    /**
-     * Final TileManager record : represents the identity of an OSM tile.
-     *
-     * @param zoom the zoom level of the tile.
-     * @param x    the X index of the tile.
-     * @param y    the Y index of the tile.
-     */
-    public record TileId(int zoom, int x, int y) {
-        public static boolean isValid(int zoom, int x, int y) {
-            int maxIndex = 1 << zoom;
-            return (0 <= x && x < maxIndex) && (0 <= y && y < maxIndex);
-        }
-    }
-
     private final static int MAX_CAPACITY = 100;
     private final static float DEFAULT_LOAD_FACTOR = 0.75f;
     private final Path cachePath;
@@ -127,6 +112,20 @@ public final class TileManager {
             Image image = new Image(b);
             cacheMap.put(tileId, image);
             return image;
+        }
+    }
+
+    /**
+     * Final TileManager record : represents the identity of an OSM tile.
+     *
+     * @param zoom the zoom level of the tile.
+     * @param x    the X index of the tile.
+     * @param y    the Y index of the tile.
+     */
+    public record TileId(int zoom, int x, int y) {
+        public static boolean isValid(int zoom, int x, int y) {
+            int maxIndex = 1 << zoom;
+            return (0 <= x && x < maxIndex) && (0 <= y && y < maxIndex);
         }
     }
 }
