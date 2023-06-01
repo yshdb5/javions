@@ -44,7 +44,7 @@ public final class ColorRamp {
         Preconditions.checkArgument(color.length >= 2);
 
         colorList = List.of(color);
-        interval = ((double) 1) / (colorList.size() - 1);
+        interval =  1d / (colorList.size() - 1);
     }
 
     /**

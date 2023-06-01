@@ -16,9 +16,9 @@ import javafx.scene.text.Text;
  * @author Gabriel Taieb (360560)
  */
 public final class StatusLineController {
-    private BorderPane borderPane;
     private final IntegerProperty aircraftCountProperty;
     private final LongProperty messageCountProperty;
+    private BorderPane borderPane;
 
     /**
      * StatusLineController's default constructor.
@@ -26,7 +26,7 @@ public final class StatusLineController {
     public StatusLineController() {
         aircraftCountProperty = new SimpleIntegerProperty();
         messageCountProperty = new SimpleLongProperty();
-        createPane();
+        configurePane();
     }
 
     /**
@@ -56,7 +56,7 @@ public final class StatusLineController {
      * visible aircraft, and one for the number of received messages. These text objects
      * are bound to the respective properties, so they update automatically.
      */
-    private void createPane() {
+    private void configurePane() {
         borderPane = new BorderPane();
         borderPane.getStylesheets().add("/status.css");
 

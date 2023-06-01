@@ -96,8 +96,7 @@ public final class BaseMapController {
                     if (!TileManager.TileId.isValid(zoom, x, y)) continue;
                     graphicsContext.drawImage(tileManager.imageForTileAt(new TileManager.TileId(zoom, x, y)),
                             x * TILE_WIDTH - minX, y * TILE_WIDTH - minY);
-                } catch (IOException ignored) {
-                }
+                } catch (IOException ignored) {}
             }
         }
     }

@@ -318,7 +318,6 @@ public final class ObservableAircraftState implements AircraftStateSetter {
         this.trackOrHeading.set(trackOrHeading);
     }
 
-
     /**
      * Method to access the value of the positions in space that the aircraft has occupied since the first message received.
      *
@@ -338,8 +337,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
     private void updateTrajectory() {
         double actualAlt = getAltitude();
         GeoPos actualPos = getPosition();
-        if (actualPos == null) return;
-        if (Double.isNaN(actualAlt)) return;
+        if (actualPos == null || Double.isNaN(actualAlt)) return;
 
         double lastTimeStamp = getLastMessageTimeStampNs();
 
@@ -357,6 +355,5 @@ public final class ObservableAircraftState implements AircraftStateSetter {
      * @param pos
      * @param altitude
      */
-    public record AirbornePos(GeoPos pos, double altitude) {
-    }
+    public record AirbornePos(GeoPos pos, double altitude) {}
 }
