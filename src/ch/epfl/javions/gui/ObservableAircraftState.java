@@ -9,6 +9,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Objects;
+
 /**
  * Final class ObservableAircraftState : represents the state of an aircraft.
  *
@@ -85,7 +87,7 @@ public final class ObservableAircraftState implements AircraftStateSetter {
      * @param aircraftData the fixed characteristics of the aircraft
      */
     public ObservableAircraftState(IcaoAddress icaoAddress, AircraftData aircraftData) {
-        this.icaoAddress = icaoAddress;
+        this.icaoAddress = Objects.requireNonNull(icaoAddress);
         this.aircraftData = aircraftData;
         lastMessageTimeStampNs = new SimpleLongProperty();
         category = new SimpleIntegerProperty();

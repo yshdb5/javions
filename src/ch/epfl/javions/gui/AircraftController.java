@@ -28,6 +28,7 @@ import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Final  AircraftController class : manages the view of the aircraft.
@@ -58,7 +59,7 @@ public final class AircraftController {
     public AircraftController(MapParameters mapParameters,
                               ObservableSet<ObservableAircraftState> unmodifiableStatesAccumulatorList,
                               ObjectProperty<ObservableAircraftState> selectedAircraftStateProperty) {
-        this.mapParameters = mapParameters;
+        this.mapParameters = Objects.requireNonNull(mapParameters);
         this.unmodifiableStatesAccumulatorList = unmodifiableStatesAccumulatorList;
         this.selectedAircraftStateProperty = selectedAircraftStateProperty;
         this.pane = new Pane();

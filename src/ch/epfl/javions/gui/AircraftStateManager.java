@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Final AircraftStateManager class : is intended to keep the states of a set
@@ -34,7 +35,7 @@ public final class AircraftStateManager {
      * @param database the database containing the fixed characteristics of aircraft.
      */
     public AircraftStateManager(AircraftDatabase database) {
-        this.database = database;
+        this.database = Objects.requireNonNull(database);
         accumulatorMap = new HashMap<>();
         statesAccumulatorList = FXCollections.observableSet();
         unmodifiableStatesAccumulatorList = FXCollections.unmodifiableObservableSet(statesAccumulatorList);
