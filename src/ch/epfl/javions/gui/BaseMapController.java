@@ -32,6 +32,8 @@ public final class BaseMapController {
      *
      * @param tileManager   the tile manager to be used to get the tiles from the map.
      * @param mapParameters the parameters of the visible portion of the map.
+     *
+     * @throws NullPointerException if the tile manager is null.
      */
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
         this.tileManager = Objects.requireNonNull(tileManager);
