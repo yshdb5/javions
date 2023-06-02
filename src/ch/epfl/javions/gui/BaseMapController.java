@@ -10,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Final BaseMapController class : manages the display and interaction with the background map.
@@ -33,7 +34,7 @@ public final class BaseMapController {
      * @param mapParameters the parameters of the visible portion of the map.
      */
     public BaseMapController(TileManager tileManager, MapParameters mapParameters) {
-        this.tileManager = tileManager;
+        this.tileManager = Objects.requireNonNull(tileManager);
         this.mapParameters = mapParameters;
         canvas = new Canvas();
         pane = new Pane(canvas);
@@ -71,7 +72,6 @@ public final class BaseMapController {
      * This method will clear the canvas and redraw tiles within the visible
      * range of the map. The tiles are fetched from the TileManager and drawn
      * onto the canvas.
-     *
      */
     private void redrawIfNeeded() {
         if (!redrawNeeded) return;
