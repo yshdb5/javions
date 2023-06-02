@@ -11,15 +11,13 @@ import ch.epfl.javions.Units;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class CprDecoder {
     private static final int Z0 = 60;
     private static final int Z1 = 59;
     private static final double DELTA0 = (1.0) / Z0;
     private static final double DELTA1 = (1.0) / Z1;
 
-    private CprDecoder() {
-    }
+    private CprDecoder() {}
 
     /**
      * @param x0         global longitude of an even message
@@ -68,7 +66,9 @@ public final class CprDecoder {
      * @return the value of for this latitude.
      */
     private static double aOf(double latitude_TURN) {
-        double angle_rad = Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN)) * Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN));
+        double angle_rad = Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN))
+                * Math.cos(Units.convertFrom(latitude_TURN, Units.Angle.TURN));
+
         return 1 - ((1 - Math.cos(Units.Angle.TURN * DELTA0)) / (angle_rad));
     }
 

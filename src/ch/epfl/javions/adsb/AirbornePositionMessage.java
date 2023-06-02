@@ -48,7 +48,6 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int SHIFT_VALUE = 4;
     private final static double DIVISOR = Math.scalb(1d, -17);
 
-
     /**
      * @param timeStampNs the time stamp of the message, in nanoseconds
      * @param icaoAddress the ICAO address of the sender of the message

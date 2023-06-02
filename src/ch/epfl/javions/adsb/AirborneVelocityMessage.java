@@ -13,7 +13,6 @@ import java.util.Objects;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress, double speed,
                                       double trackOrHeading) implements Message {
     private final static int SUBTYPE_START = 48;
@@ -34,7 +33,6 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     private final static int AIRSPEED_START = 0;
     private static final double MIN_VALID_VALUE = 0;
 
-
     /**
      * AirborneVelocityMessage's constructor.
      *
@@ -47,9 +45,10 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
      */
     public AirborneVelocityMessage {
         Objects.requireNonNull(icaoAddress);
-        Preconditions.checkArgument((timeStampNs >= MIN_VALID_VALUE) && (speed >= MIN_VALID_VALUE) && (trackOrHeading >= MIN_VALID_VALUE));
+        Preconditions.checkArgument((timeStampNs >= MIN_VALID_VALUE)
+                && (speed >= MIN_VALID_VALUE)
+                && (trackOrHeading >= MIN_VALID_VALUE));
     }
-
 
     /**
      * @param rawMessage the airspeed message corresponding to the given raw message,or null if the
@@ -59,9 +58,7 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
         int subType = Bits.extractUInt(rawMessage.payload(), SUBTYPE_START, SUBTYPE_LENGTH);
         int subPayload = Bits.extractUInt(rawMessage.payload(), SUBPAYLOAD_START, SUBPAYLOAD_LENGTH);
 
-        if ((subType < SUBTYPE_MIN_VALUE) || (subType > SUBTYPE_MAX_VALUE)) {
-            return null;
-        }
+        if ((subType < SUBTYPE_MIN_VALUE) || (subType > SUBTYPE_MAX_VALUE)) return null;
 
         double track0rHeadingRadian;
         double speedNormMeterPerSecond;
@@ -80,7 +77,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
             speedNormMeterPerSecond = calculateSpeedNormMeterPerSecond(subType, speedNS, speedEW);
 
-            return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
+            return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(),
+                    speedNormMeterPerSecond, track0rHeadingRadian);
         } else {
 
             if (Bits.testBit(subPayload, HS_POSITION)) {
@@ -92,7 +90,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
 
                 speedNormMeterPerSecond = calculateSpeedNormMeterPerSecond(subType, temporarySpeed);
 
-                return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(), speedNormMeterPerSecond, track0rHeadingRadian);
+                return new AirborneVelocityMessage(rawMessage.timeStampNs(), rawMessage.icaoAddress(),
+                        speedNormMeterPerSecond, track0rHeadingRadian);
             }
             return null;
         }
@@ -111,7 +110,8 @@ public record AirborneVelocityMessage(long timeStampNs, IcaoAddress icaoAddress,
     }
 
     private static double calculateTrackHeading(int subPayload) {
-        return Units.convertFrom(Math.scalb(Bits.extractUInt(subPayload, TRACK_START, TRACK_LENGTH), -10), Units.Angle.TURN);
+        return Units.convertFrom(
+                Math.scalb(Bits.extractUInt(subPayload, TRACK_START, TRACK_LENGTH), -10), Units.Angle.TURN);
     }
 
     private static double calculateSpeedNormMeterPerSecond(int subType, double speedNS, double speedEW) {

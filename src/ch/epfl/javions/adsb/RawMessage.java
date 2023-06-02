@@ -17,7 +17,6 @@ import java.util.HexFormat;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public record RawMessage(long timeStampNs, ByteString bytes) {
     /**
      * LENGTH : constant of value 14
@@ -72,7 +71,6 @@ public record RawMessage(long timeStampNs, ByteString bytes) {
      * @param payload the ME attribute of a message
      * @return the type code of the ME attribute passed as an argument.
      */
-
     public static int typeCode(long payload) {
         return Bits.extractUInt(payload, TYPECODE_START, TYPECODE_LENGTH);
     }

@@ -7,11 +7,9 @@ package ch.epfl.javions.adsb;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
 public final class MessageParser {
 
-    private MessageParser() {
-    }
+    private MessageParser() {}
 
     /**
      * @param rawMessage that gives the instance of AircraftIdentificationMessage,

@@ -12,8 +12,6 @@ import java.util.Objects;
  * @author Yshai  (356356)
  * @author Gabriel Taieb (360560)
  */
-
-
 public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAddress, int category,
                                             CallSign callSign) implements Message {
     private final static int CA_START = 48;
@@ -28,6 +26,7 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
     private final static int NUMBERS_BOUND2 = 57;
     private final static int SPACE_CHAR = 32;
     private final static int GIVEN_CONST = 14;
+    private final static int SHIFT_VALUE = 4;
 
     /**
      * @param timeStampNs the time stamp of the message, in nanoseconds
@@ -63,17 +62,15 @@ public record AircraftIdentificationMessage(long timeStampNs, IcaoAddress icaoAd
 
         long timeStamps = rawMessage.timeStampNs();
         IcaoAddress icaoAddress = rawMessage.icaoAddress();
-        int category = Byte.toUnsignedInt((byte) (((GIVEN_CONST - typeCode) << 4) | categoryByte));
+        int category = Byte.toUnsignedInt((byte) (((GIVEN_CONST - typeCode) << SHIFT_VALUE) | categoryByte));
 
-        CallSign callSign = new CallSign(callString);
-
-        return new AircraftIdentificationMessage(timeStamps, icaoAddress, category, callSign);
+        return new AircraftIdentificationMessage(timeStamps, icaoAddress, category, new CallSign(callString));
     }
 
     private static String extractCallstring(long payload) {
-
         int bitStart = CHARS_START;
         StringBuilder callString = new StringBuilder();
+
         for (int i = 0; i < CHARS_NUMBER; i++) {
             int extractedInt = Bits.extractUInt(payload, bitStart, CHARS_SIZE);
             if (extractedInt >= LETTERS_BOUND1 && extractedInt <= LETTERS_BOUND2)
