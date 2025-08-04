@@ -115,7 +115,7 @@ public record AirbornePositionMessage(long timeStampNs, IcaoAddress icaoAddress,
 
     private static int disentangling(int altitude) {
 
-        int[] bitPositions = {D1_POS, D2_POS, D4_POS, A1_POS, A2_POS, A4_POS, B1_POS, B2_POS, B4_POS, C1_POS, C2_POS, C4_POS};
+        int [] bitPositions = {D1_POS, D2_POS, D4_POS, A1_POS, A2_POS, A4_POS, B1_POS, B2_POS, B4_POS, C1_POS, C2_POS, C4_POS};
         int disentangledAlt = 0;
 
         for (int i = 0; i < BITS_NUMBER; i++) {

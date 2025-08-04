@@ -25,7 +25,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" exported="" name="OpenJFX 20" level="application" />
-    <orderEntry type="library" exported="" name="OPENJFX 21" level="application" />
+    <orderEntry type="library" name="JavaFX 21" level="application" />
   </component>
 </module>
