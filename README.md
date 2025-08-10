@@ -121,3 +121,7 @@ This project was developed as part of the Object-Oriented Programming course (PP
 - **Gabriel Taieb** (360560)
 
 *Developed during Spring 2023 semester at EPFL*
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
